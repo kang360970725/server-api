@@ -4,37 +4,6 @@ let
     moment = require('moment');
 
 class dao {
-    static async isExistBusiness(connection, query) {
-        var where = [];
-        var where2 = [];
-        var params = [];
-        let sql = () => `
-            SELECT
-            businessId,businessName,businessPhone,createtime,state,businessType
-            FROM
-            user_business
-            where isDelete = ${BUSINESS.delete.notDelete} and (${where.join(' or ')}) ${where2.join(' ')}
-        `;
-
-        where.push(' businessPhone = ? ');
-        params.push(query.businessPhone);
-
-        where.push(' businessPhone = ? ');
-        params.push(query.businessPhone);
-
-        if (!str.isEmpty(query.businessId)) {
-            where2.push('and businessId <> ? ');
-            params.push(query.businessId);
-        }
-
-        return new Promise(async (resolve, reject) => {
-            connection.query(sql(), params, (err, result) => {
-                if (err) return reject(err);
-                resolve(result);
-            });
-        })
-    }
-
     static async getUsers(connection, query) {
         var where = []
         var params = [];
@@ -51,6 +20,8 @@ class dao {
             where.push('uuid = ?');
             params.push(query.uuId);
         }
+        where.push('third_party = 1');
+        params.push(query.uuId);
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
                 if (err) return reject(err);
@@ -77,7 +48,6 @@ class dao {
             });
         })
     }
-
     static async addUsers(connection, query) {
         var params = [];
         let Invitdcode = s8();
@@ -92,132 +62,45 @@ class dao {
             nickname,
             Invitcode,
             Invitdcode,
-            createtime
+            starttime,
+            createtime,
+            endtime,
+            bot_type,
+            third_party,
+            type,
+            activation_state
             ) 
             VALUES (
             LPAD((select max(a.id)+1 from users a), 7, 0),
-            ?,?,?,?,?,?,?,?)
+            ?,?,?,?,?,?,?,?,?,?,?,1,2,0)
             ;
         `;
-
         let timeNum = new Date().getTime();
         let time = moment(timeNum).format('YYYY-MM-DD HH:mm:ss');
+
+        let EndTime = timeNum + (86400000 * parseInt(query.openingtime));
+        let endTimes = moment(EndTime).format('YYYY-MM-DD HH:mm:ss');
         params.push(query.account);
         params.push('e10adc3949ba59abbe56e057f20f883e');
-        params.push(query.email);
-        params.push(query.phone);
-        params.push(query.nickname);
+        params.push(query.email || '');
+        params.push(query.phone || '');
+        params.push(query.nickname || '');
         params.push(Invitdcode);
-        params.push(query.Invitcode);
+        params.push(query.Invitcode || '');
         params.push(time);
+        params.push(time);
+        params.push(endTimes);
+        params.push(query.version);
+        console.log(params);
         return new Promise(async (resolve, reject) => {
+            console.log(sql());
             connection.query(sql(), params, (err, result) => {
+                console.log(err);
                 if (err) return reject(err);
                 resolve(result);
             });
         })
     }
-
-
-
-    static async searchBusiness(connection, query) {
-        var where = []
-        var params = [];
-        var and = 'and';
-        var limit = "LIMIT ";
-        let countSql = () => `
-        SELECT
-        count(businessId) as total
-        FROM
-        user_business
-        where isDelete = ${BUSINESS.delete.notDelete} and ${where.join(' and ')};`;
-        let sql = () => `
-            SELECT
-            businessId,businessName,businessPhone,createtime,state,businessType
-            FROM
-            user_business
-            where isDelete = ${BUSINESS.delete.notDelete}  ${and} ${where.join(' and ')}
-            ${limit};
-        `;
-
-        if (query.businessType) {
-            where.push(' businessType = ? ');
-            params.push(query.businessType);
-        }
-
-        if (!str.isEmpty(query.businessName)) {
-            where.push(' businessName = ? ');
-            params.push(query.businessName);
-        }
-        if (!str.isEmpty(query.businessPhone)) {
-            where.push(' businessPhone = ? ');
-            params.push(query.businessPhone);
-        }
-        if (!str.isEmpty(query.businesskeyword)) {
-            where.push('(businessPhone like ? or businessName like ?)  ');
-            params.push("%" + query.businesskeyword + "%");
-            params.push("%" + query.businesskeyword + "%");
-        }
-
-        if (where.length == 0) {
-            and = '';
-        }
-
-        limit += `${(query.pageIndex - 1) * query.pageSize}, ${query.pageSize}`;
-
-        return new Promise(async (resolve, reject) => {
-            connection.query(sql(),
-                params, (err, result) => {
-                    if (err) return reject(err);
-                    resolve(result);
-                });
-        })
-    }
-
-
-    static async searchBusinessCount(connection, query) {
-        var where = []
-        var params = [];
-        var and = 'and'
-        var limit = "LIMIT ";
-        let countSql = () => `
-        SELECT
-        count(businessId) as total
-        FROM
-        user_business
-        where isDelete = ${BUSINESS.delete.notDelete} ${and} ${where.join(' and ')};`;
-
-        if (query.businessType) {
-            where.push(' businessType = ? ');
-            params.push(query.businessType);
-        }
-
-        if (!str.isEmpty(query.businessName)) {
-            where.push(' businessName like ? ');
-            params.push("%" + query.businessName + "%");
-        }
-        if (!str.isEmpty(query.businessPhone)) {
-            where.push(' businessPhone like ? ');
-            params.push("%" + query.businessPhone + "%");
-        }
-
-        if (!str.isEmpty(query.businesskeyword)) {
-            where.push('(businessPhone like ? or businessName like ?)  ');
-            params.push("%" + query.businesskeyword + "%");
-            params.push("%" + query.businesskeyword + "%");
-        }
-        if (where.length == 0) {
-            and = '';
-        }
-        return new Promise(async (resolve, reject) => {
-            connection.query(countSql(),
-                params, (err, result) => {
-                    if (err) return reject(err);
-                    resolve(result);
-                });
-        })
-    }
-
     //写入用户默认bot配置数据
     static async insertUserBotSetting(connection, query) {
         let sql = () => `
@@ -225,7 +108,7 @@ class dao {
          (
          user_account, 
          \`api\`, 
-         secre,
+         \`secret\`,
          \`open\`, 
          entry, 
          trendfollow, 
@@ -259,6 +142,7 @@ class dao {
         params.push(query.account);
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
+                console.log(err);
                 if (err) return reject(err);
                 resolve(result);
             });
@@ -267,31 +151,16 @@ class dao {
     //添加token
     static async insertToken(connection, query) {
         let sql = () => `
-        INSERT INTO user_business (
-            businessId,
-            businessName,
-            businessPhone,
-            voucher,
-            businessType,
-            staffCount,
-            userId
-        )
-        VALUES
-            (
-                ?, ?, ?, ?,?,?,?
-            );
+            INSERT INTO 
+            verification(
+            account,
+            token
+            ) 
+            VALUES (?,?)
         `;
         var params = [];
-        if (str.isEmpty(query.staffCount)) {
-            query.staffCount = 0
-        }
-        params.push(query.businessId);
-        params.push(query.businessName);
-        params.push(query.businessPhone);
-        params.push(query.voucher);
-        params.push(query.businessType);
-        params.push(query.staffCount);
-        params.push(query.userId);
+        params.push(query.account);
+        params.push(query.token);
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
                 if (err) return reject(err);
@@ -299,48 +168,27 @@ class dao {
             });
         })
     }
-
-    static async updateBusiness(connection, query) {
-        var SET = [];
-        var params = [];
-        var where = []
+    //添加购买记录
+    static async insertPay(connection, query) {
         let sql = () => `
-        UPDATE user_business
-            SET updatetime = now(),
-                ${SET.join(' , ')}
-            WHERE
-                businessId = ?;
+            INSERT INTO 
+            pay_record(
+            account,
+            create_time,
+            type,
+            \`desc\`,
+            price,
+            data_time
+            ) 
+            VALUES (?,?,2,'API提供，第三方(许总会员购买记录)',?,?)
         `;
-        if (query.businessName) {
-            SET.push(' businessName = ? ');
-            params.push(query.businessName);
-        }
-
-        if (query.businessPhone) {
-            SET.push(' businessPhone = ? ');
-            params.push(query.businessPhone);
-        }
-
-        if (query.voucher) {
-            SET.push(' voucher = ? ');
-            params.push(query.voucher);
-        }
-
-        if (!str.isEmpty(query.state)) {
-            SET.push(' state = ? ');
-            params.push(query.state);
-        }
-
-        if (!str.isEmpty(query.businessType)) {
-            SET.push(' businessType = ? ');
-            params.push(query.businessType);
-        }
-        if (!str.isEmpty(query.staffCount)) {
-            SET.push(' staffCount = ? ');
-            params.push(query.staffCount);
-        }
-
-        params.push(query.businessId);
+        let params = [];
+        let timeNum = new Date().getTime();
+        let time = moment(timeNum).format('YYYY-MM-DD HH:mm:ss');
+        params.push(query.account);
+        params.push(time);
+        params.push(query.price);
+        params.push(query.openingtime);
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
                 if (err) return reject(err);
@@ -348,25 +196,7 @@ class dao {
             });
         })
     }
-
-    static async deleteBusiness(connection, query) {
-        let sql = () => `
-        UPDATE user_business
-            SET 
-                isDelete = ${BUSINESS.delete.isDelete}
-            WHERE
-                businessId = ?;
-        `;
-        var params = [];
-        params.push(query.businessId);
-        return new Promise(async (resolve, reject) => {
-            connection.query(sql(), params, (err, result) => {
-                if (err) return reject(err);
-                resolve(result);
-            });
-        })
-    }
-
+    //获取用户token
     static async getUserTokenFn(connection, query) {
         var params = [];
         let sql = () => `
@@ -386,43 +216,16 @@ class dao {
             });
         })
     }
-
-    static async insertUnionBusinessManuscript(connection, query) {
-        let sql = () => `
-        INSERT INTO user (
-            businessId,
-            manuscriptId
-        )
-        VALUES
-            (
-                ?, ?
-            );
-        `;
-        var params = [];
-        params.push(query.businessId);
-        params.push(query.manuscriptId);
-        return new Promise(async (resolve, reject) => {
-            connection.query(sql(), params, (err, result) => {
-                if (err) return reject(err);
-                resolve(result);
-            });
-        })
-    }
-
-    static async deleteUnionBusinessManuscript(connection, query) {
-        var where = [];
+    //token验证
+    static async generateToken(connection, query) {
         var params = [];
         let sql = () => `
-        DELETE FROM union_business_manuscript
-            WHERE
-            1 =1 and ${where.join(' and ')};
+            SELECT * FROM verification WHERE account = ? and token = ?
         `;
-        where.push(' businessId = ? ');
-        params.push(query.businessId);
-        if (query.manuscriptId) {
-            where.push(' manuscriptId = ? ');
-            params.push(query.manuscriptId);
-        }
+
+        params.push(query.account);
+        params.push(query.token);
+
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
                 if (err) return reject(err);
