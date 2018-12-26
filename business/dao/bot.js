@@ -26,20 +26,19 @@ class dao {
         })
     }
 
-    static async getUsersByAccount(connection, query) {
+    static async getBotPram(connection, query) {
         var params = [];
 
         let sql = () => `
-            SELECT
-            *
-            FROM
-            users
-            where account = \'${query.account}\'
-            ;
+        SELECT 
+        * 
+        FROM 
+        robot_parameter 
+        WHERE 
+        user_account = \'${query.account}\';
         `;
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
-                console.log(err);
                 if (err) return reject(err);
                 resolve(result);
             });
@@ -47,44 +46,41 @@ class dao {
     }
 
     //写入用户默认bot配置数据
-    static async insertUserBotSetting(connection, query) {
+    static async setBotPram(connection, param) {
         let sql = () => `
-        INSERT INTO robot_parameter
-         (
-         user_account, 
-         \`api\`, 
-         \`secret\`,
-         \`open\`, 
-         entry, 
-         trendfollow, 
-         mm, 
-         mmpercent, 
-         nanpin, 
-         maxnanpin, 
-         mmnanpin, 
-         maxleverage, 
-         leverage, 
-         sleep, 
-         longrange, 
-         longstop, 
-         shortrange, 
-         shortstop, 
-         losscut, 
-         \`time\`, 
-         longstopx, 
-         shortstopx, 
-         longorder, 
-         shortorder, 
-         nanpin_cancel, 
-         nanpin_order, 
-         doten
-         ) VALUES (
-         ?, 
-         '', '', '0', '250', '1', '1', '0.0007', '250', '28', '1.25', '50', '0', '40', '80', '28', '80', '28', '1', '5', '1999', '1999', '2', '2', '0', '0', '1'
-         )        
+        UPDATE 
+        robot_parameter 
+        SET 
+        api=\'${param.api}\',
+        secret=\'${param.secret}\',
+        open=\'${param.open}\',
+        entry=\'${param.entry}\',
+        trendfollow=\'${param.trendfollow}\',
+        mm=\'${param.mm}\',
+        mmpercent=\'${param.mmpercent}\',
+        nanpin=\'${param.nanpin}\',
+        maxnanpin=\'${param.maxnanpin}\',
+        mmnanpin=\'${param.mmnanpin}\',
+        maxleverage=\'${param.maxleverage}\',
+        leverage=\'${param.leverage}\',
+        sleep=\'${param.sleep}\',
+        longrange=\'${param.longrange}\',
+        longstop=\'${param.longstop}\',
+        shortrange=\'${param.shortrange}\',
+        shortstop=\'${param.shortstop}\',
+        losscut=\'${param.losscut}\',
+        time=\'${param.time}\',
+        longstopx=\'${param.longstopx}\',
+        shortstopx=\'${param.shortstopx}\',
+        longorder=\'${param.longorder}\',
+        shortorder=\'${param.shortorder}\',
+        nanpin_cancel=\'${param.nanpin_cancel}\',
+        nanpin_order=\'${param.nanpin_order}\',
+        doten=\'${param.doten}\' 
+        WHERE user_account = ?
         `;
         var params = [];
-        params.push(query.account);
+        params.push(param.account);
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
                 console.log(err);
@@ -96,4 +92,10 @@ class dao {
 }
 
 
-module.exports = dao
+module.exports = dao;
+
+
+
+
+
+

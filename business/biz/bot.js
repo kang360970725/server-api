@@ -40,27 +40,41 @@ class biz {
         return await dao.manageConnection(async (connection) => {
             //获取会员bot信息
             var result = await businessDao.getUsers(connection, params);
+            var resultData = {};
             if (result && result.length > 0) {
                 params.account = result[0].account;
                 let token = await businessDao.generateToken(connection, params);
                 if (token && token.length > 0) {
-                    result[0].password = '';
-                    result[0].disable = '';
-                    let date = new Date(result[0].endtime);
-                    let time = date.getTime();//转换成毫秒
-                    let nowTime = new Date().getTime();//转换成毫秒
-                    let times = time - nowTime;
-                    if (times <= 0) {
-                        times = 0;
-                    }
-                    result[0].endtime = times;
+                    resultData = await botDao.getBotPram(connection, params)
                 }else {
                     throw data.error('身份验证失败')
                 }
             }else {
                 throw data.error('身份验证失败')
             }
-            return result;
+            return resultData;
+        })
+    }
+    //修改bot相关参数
+    static async exitBotParm(params) {
+        return await dao.manageConnection(async (connection) => {
+            //获取会员bot信息
+            var result = await businessDao.getUsers(connection, params);
+            if (result && result.length > 0) {
+                params.account = result[0].account;
+                let token = await businessDao.generateToken(connection, params);
+                if (token && token.length > 0) {
+                    await botDao.setBotPram(connection, params)
+                }else {
+                    throw data.error('身份验证失败')
+                }
+            }else {
+                throw data.error('身份验证失败')
+            }
+            let retUser = {
+                desc:'修改成功'
+            };
+            return retUser;
         })
     }
 

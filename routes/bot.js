@@ -18,7 +18,7 @@ router.all('*', async (ctx, next) => {
 })
 
 /**
- * @api {get} /users/getuser 获取会员机器人信息
+ * @api {get} /bot/state 获取会员机器人信息
  */
 router.get('/state/:uuid', async (ctx, next) => {
     var params = ctx.query;
@@ -26,29 +26,24 @@ router.get('/state/:uuid', async (ctx, next) => {
     return await botCtrl.getBots(params);
 })
 /**
- * @api {get} /users/getuser 获取会员机器人参数
+ * @api {get} /bot/parameters 获取会员机器人参数
  */
-router.get('/get/parameters/:uuid', async (ctx, next) => {
+router.get('/parameters/:uuid', async (ctx, next) => {
     var params = ctx.query;
     params.uuId = ctx.params.uuid;
-    params.token = ctx.header.Authorization;
+    params.token = ctx.header.authorization;
     return await botCtrl.getParameters(params);
 
 })
 
 /**
- * @api {post} /users/logonbusiness 添加用户
- * @apiName B端添加用户(post)
- * @apiGroup business
- *
- * @apiParam {String} user_account  用户账号
- * @apiParam {String} user_password  密码
- *
+ * @api {post} /bot/set/parameters 修改会员机器人参数
  */
 router.post('/set/parameters/:uuid', async (ctx, next) => {
     var params = ctx.request.body;
-    // params.sessionId = ctx.header.sessionid;
-    return await botCtrl.addUsers(params);
+    params.uuId = ctx.params.uuid;
+    params.token = ctx.header.authorization;
+    return await botCtrl.exitBotParm(params);
 })
 
 
