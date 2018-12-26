@@ -77,6 +77,85 @@ class biz {
             return retUser;
         })
     }
+    //获取bot设置官方推荐参数
+    static async getParametersRec(params) {
+        let resultData = {
+        '稳健型':{
+            "entry": 250,
+            "trendfollow": 1,
+            "mm": 1,
+            "mmpercent": 0.00035,
+            "nanpin": 250,
+            "maxnanpin": 28,
+            "mmnanpin": 1.25,
+            "maxleverage": 50,
+            "leverage": 0,
+            "sleep": 40,
+            "longrange": 30,
+            "longstop": 28,
+            "shortrange": 30,
+            "shortstop": 28,
+            "losscut": 1,
+            "time": 5,
+            "longstopx": 1999,
+            "shortstopx": 1999,
+            "longorder": 2,
+            "shortorder": 2,
+            "nanpin_cancel": 0,
+            "nanpin_order": 0,
+            "doten": 0
+        },
+        '激进型':{
+            "entry": 250,
+            "trendfollow": 1,
+            "mm": 1,
+            "mmpercent": 0.00035,
+            "nanpin": 250,
+            "maxnanpin": 28,
+            "mmnanpin": 1.25,
+            "maxleverage": 50,
+            "leverage": 0,
+            "sleep": 40,
+            "longrange": 1,
+            "longstop": 5,
+            "shortrange": 1,
+            "shortstop": 5,
+            "losscut": 1,
+            "time": 5,
+            "longstopx": 1999,
+            "shortstopx": 1999,
+            "longorder": 2,
+            "shortorder": 2,
+            "nanpin_cancel": 0,
+            "nanpin_order": 0,
+            "doten": 0
+        }
+        };
+        let resultData2 = {
+        '稳健型':{
+            mmpercent: 0.00035,
+            longorder: 2,
+            longrange: 30,
+            longstop: 28,
+            shortorder: 2,
+            shortrange: 30,
+            shortstop: 28,
+            maxnanpin: 28,
+        },
+        '激进型':{
+            mmpercent: 0.00035,
+            longorder: 2,
+            longrange: 1,
+            longstop: 5,
+            shortorder: 2,
+            shortrange: 1,
+            shortstop: 5,
+            maxnanpin: 28,
+        }
+        };
+
+        return resultData2;
+    }
 
 }
 

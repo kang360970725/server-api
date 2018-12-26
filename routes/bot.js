@@ -46,5 +46,14 @@ router.post('/set/parameters/:uuid', async (ctx, next) => {
     return await botCtrl.exitBotParm(params);
 })
 
+/**
+ * @api {get} /bot/parameters 获取官方推荐参数
+ */
+router.get('/rec/parameters', async (ctx, next) => {
+    var params = ctx.query;
+    return await botCtrl.getParametersRec(params);
+
+})
+
 
 module.exports = router

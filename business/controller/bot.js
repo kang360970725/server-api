@@ -33,6 +33,9 @@ class ctrl {
         }
         return await botBiz.exitBotParm(params)
     }
+    static async getParametersRec(params) {
+        return await botBiz.getParametersRec(params)
+    }
 }
 
 module.exports = ctrl;
