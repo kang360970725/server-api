@@ -29,7 +29,11 @@ class ctrl {
         if (!params.version) {
             throw data.error('机器人版本格式不正确')
         }
-        return await businessBiz.addUsers(params)
+        if(!params.uuId){
+            return await businessBiz.addUsers(params);//uuid为空。添加用户
+        }else {
+            return await businessBiz.renewUsers(params);//包含uuid。续费用户
+        }
     }
 }
 

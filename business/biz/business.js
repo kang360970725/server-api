@@ -26,6 +26,8 @@ class biz {
                 //获取商家方案信息 遍历封装 （前台需要这个数据结构，暂时丢在服务器端，如后期需要优化可考虑前端进行该操作）
                 var tokenItem = await businessDao.getUserTokenFn(connection, result[0].account);
                 result[0]['token'] = !!tokenItem[0] ? tokenItem[0].token : '';
+                delete result[0].apikey;
+                delete result[0].secret;
             }
             return result;
         })
@@ -48,6 +50,31 @@ class biz {
                 uuid: newUsers[0].uuid,
                 token: params.token,
                 account: newUsers[0].account
+            };
+            return retUser
+        })
+    }
+
+    //用户续费
+    static async renewUsers(params) {
+        return await dao.manageConnection(async (connection) => {
+            console.log(params.uuId);
+            var getResult = await businessDao.getUsers(connection, params);
+            console.log(getResult);
+            console.log(params.account);
+            if (!getResult || getResult.length <= 0) {
+                throw data.error('该用户不存在')
+            }else if (getResult[0].account != params.account){
+                throw data.error('用户信息验证失败')
+            }
+            let paramUser = getResult[0];
+            params.endtime = paramUser.endtime;
+            var newSql = await businessDao.renewUsers(connection, params);
+            var setPay = await businessDao.insertPay(connection, params);//写入付费开通记录
+            var retUser = {
+                uuid: getResult[0].uuid,
+                account: getResult[0].account,
+                desc:'续费操作成功'
             };
             return retUser
         })

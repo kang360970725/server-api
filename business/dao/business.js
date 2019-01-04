@@ -48,6 +48,7 @@ class dao {
             });
         })
     }
+    //添加用户
     static async addUsers(connection, query) {
         var params = [];
         let Invitdcode = s8();
@@ -91,9 +92,7 @@ class dao {
         params.push(time);
         params.push(endTimes);
         params.push(query.version);
-        console.log(params);
         return new Promise(async (resolve, reject) => {
-            console.log(sql());
             connection.query(sql(), params, (err, result) => {
                 console.log(err);
                 if (err) return reject(err);
@@ -226,6 +225,34 @@ class dao {
         params.push(query.account);
         params.push(query.token);
 
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+    //续费用户
+    static async renewUsers(connection, query) {
+        var params = [];
+        let sql = () => `
+        UPDATE users 
+        SET 
+        endtime=?,
+        bot_type=? 
+        WHERE account = ? AND uuid = ?
+        ;
+        `;
+        let timeNum = new Date(query.endtime).getTime();
+
+        let EndTime = timeNum + (86400000 * parseInt(query.openingtime));
+        let endTimes = moment(EndTime).format('YYYY-MM-DD HH:mm:ss');
+        console.log(endTimes);
+
+        params.push(endTimes);
+        params.push(query.version);
+        params.push(query.account);
+        params.push(query.uuId);
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
                 if (err) return reject(err);
