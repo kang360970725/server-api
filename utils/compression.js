@@ -20,6 +20,10 @@ class compression {
             //         return console.log(err);
             //     }
             //     console.log("The file was saved!");
+
+
+
+            //asdas
             // });
             // return;
             output.on('close', () => {
