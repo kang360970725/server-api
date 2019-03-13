@@ -15,7 +15,7 @@ class biz {
             var retUser = {
                 uuid: params.uuId,
                 account: params.account,
-                desc:'操作成功'
+                desc:'操作成功！'
             };
             return retUser
         })
