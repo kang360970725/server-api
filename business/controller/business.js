@@ -3,12 +3,13 @@
 // let mscore = require("mscore"),
 let str = require("../../utils/stringHelper"),
     data = require('../../utils/data'),
+    exception = require('../../utils/exception.js'),
     businessBiz = require('../../business/biz/business');
 
 class ctrl {
     static async getUsers(params) {
         if (!params || str.isEmpty(params.uuId)) {
-            throw data.error('ID不能为空')
+            throw exception.BusinessException('商家ID不能为空',1)
         }
         return await businessBiz.getUsers(params)
     }

@@ -6,17 +6,6 @@ let
 
 router.prefix('/users')
 
-router.all('*', async (ctx, next) => {
-    try {
-        var result = await next();
-        ctx.body = data.success(result, "");
-    } catch (err) {
-        ctx.body = data.error(err);
-        ctx.body = err;
-        // ctx.body = { errorCode: 500, stack: err.stack }
-    }
-})
-
 /**
  * @api {get} /users/getuser 获取会员信息
  */
