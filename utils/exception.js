@@ -42,6 +42,15 @@ class exception extends Exception {
     static BusinessException(msg, code) {
         return new BusinessException(msg, code);
     }
+
+    /**
+     * 常规业务异常
+     * @param {string} 异常消息
+     * @returns {BusinessException} 返回异常消息对象。statusCode 是返回给客户端的状态码；code 是业务错误码，默认与状态码相同；message 是返回给客户端的消息。
+     */
+    static ParamException(msg) {
+        return new BusinessException(msg, 2);
+    }
     /**
      * 网络异常
      * @param {string} 异常消息

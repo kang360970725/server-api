@@ -3,6 +3,7 @@
 let dao = require("../../db_config/dao"),
     data = require('../../utils/data'),
     config = require('../../db_config/config'),
+    exception = require('../../utils/exception.js'),
     businessDao = require('../../business/dao/business');
 var uuid = require('node-uuid');
 
@@ -77,6 +78,46 @@ class biz {
                 desc:'续费操作成功'
             };
             return retUser
+        })
+    }
+
+    //用户续费
+    static async login(params) {
+        return await dao.manageConnection(async (connection) => {
+            console.log(params);
+            var result = await businessDao.login(connection, params);
+            console.log(result);
+            let results = result;
+            if (results.length > 0 && results[0].type != 3) {
+
+                    let date = new Date(result[0].endtime);
+                    let time = date.getTime();//转换成毫秒
+                    let nowTime = new Date().getTime();//转换成毫秒
+                    let times = time - nowTime;
+                    if (times <= 0) {
+                        times = 0;
+                    }
+                    let resDta = results[0];
+                    resDta.endtime = times;
+                    resDta['token'] = !!result[0].token ? result[0].token : '';
+                    resDta.password = '';
+                    result = {
+                        msg: '登录成功',
+                        data: resDta
+                    };
+                    result.sessionId = uuid.v4()
+                    let list = {
+                        type:0,
+                        desc:'(' + params.account + ')会员登录本系统！'
+                    }
+                    await businessDao.insertLogs(connection, list);
+
+            } else if (results.length > 0 && results[0].type == 3) {
+                throw exception.BusinessException('用户已被停止使用,请联系代理',200)
+            } else {
+                throw exception.ParamException('用户名或密码错误')
+            }
+            return result
         })
     }
 

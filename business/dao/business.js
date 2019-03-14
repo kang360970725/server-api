@@ -260,6 +260,43 @@ class dao {
             });
         })
     }
+
+    //用户login
+    static async login(connection, query) {
+        var params = [];
+        let sql = () => `
+            SELECT u.*,v.token FROM users u left join verification v on u.account = v.account WHERE u.account = ? and u.password = ?
+        `;
+
+        params.push(query.account);
+        params.push(query.pwd);
+
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+
+    //log
+    static async insertLogs(connection, query) {
+        var params = [];
+        let sql = () => `
+            INSERT INTO logs(type,create_time,\`desc\`) VALUES (?,?,?)
+        `;
+
+        params.push(query.type);
+        params.push(new Date());
+        params.push(query.desc);
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
 }
 function s8() {
     var data = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];

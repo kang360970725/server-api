@@ -36,6 +36,13 @@ class ctrl {
             return await businessBiz.renewUsers(params);//包含uuid。续费用户
         }
     }
+
+    static async login(params) {
+        if (!params || str.isEmpty(params.account) || str.isEmpty(params.pwd)) {
+            throw exception.ParamException('账号或密码不能为空')
+        }
+        return await businessBiz.login(params)
+    }
 }
 
 module.exports = ctrl;
