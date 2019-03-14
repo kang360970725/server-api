@@ -14,4 +14,9 @@ module.exports =
         //     database:'fomo888', // 前面建的user表位于这个数据库中
         //     port: 13338
         // }
+        ,
+        port:{
+            doc:3302,
+            api:3300
+        }
     };

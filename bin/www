@@ -8,12 +8,13 @@
 var app = require('../app');
 var debug = require('debug')('demo:server');
 var http = require('http');
+const dbConfig = require('../db_config/config');
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3300');
+var port = normalizePort(process.env.PORT || dbConfig.port.api);
 // app.set('port', port);
 
 /**
