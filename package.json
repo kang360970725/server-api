@@ -27,7 +27,12 @@
     "node-uuid": "^1.4.8",
     "pug": "^2.0.0-rc.1",
     "runkoa": "^1.5.2",
-    "update": "^0.7.4"
+    "moment": "^2.23.0",
+    "http-errors": "^1.6.3",
+    "node-uuid": "^1.4.8",
+    "@alicloud/sms-sdk":"^1.1.6",
+    "nodemailer":"^5.1.1"
+
   },
   "devDependencies": {
     "nodemon": "^1.8.1"

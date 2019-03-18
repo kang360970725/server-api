@@ -8,6 +8,7 @@ const logger = require('koa-logger')
 const createError = require('http-errors');
 const index = require('./routes/index')
 const resources = require('./routes/resources')
+const send = require('./routes/send-code')
 const business = require('./routes/business')
 const bot = require('./routes/bot')
 const bonus = require('./routes/bonus')
@@ -97,6 +98,7 @@ app.use(cors({
 // routes
 app.use(index.routes(), index.allowedMethods())
 app.use(resources.routes(), resources.allowedMethods())
+app.use(send.routes(), send.allowedMethods())
 app.use(business.routes(), business.allowedMethods())
 app.use(bot.routes(), bot.allowedMethods())
 app.use(bonus.routes(), bonus.allowedMethods())
