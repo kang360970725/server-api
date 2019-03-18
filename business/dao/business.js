@@ -100,6 +100,32 @@ class dao {
             });
         })
     }
+
+
+    //添加用户
+    static async updatePwd(connection, query) {
+
+
+        let sql = () => `
+            update users set password =? where uuid = ?
+        `;
+        let params = [];
+
+        if(!str.isEmpty(query.pwd)){
+            params.push(query.pwd);
+        }
+
+        if(!str.isEmpty(query.uuid)){
+            params.push(query.uuid);
+        }
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                console.log(err);
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
     //写入用户默认bot配置数据
     static async insertUserBotSetting(connection, query) {
         let sql = () => `
@@ -271,6 +297,99 @@ class dao {
         params.push(query.account);
         params.push(query.pwd);
 
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+
+    //用户信息
+    static async userInfo(connection, query) {
+        var params = [];
+        let sql = () => `
+            SELECT u.* FROM user_union_info u
+             
+            WHERE u.user_id = ? and u.user_info_type = ?
+        `;
+        params.push(query.user_id);
+        params.push(query.user_info_type);
+
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+
+    //用户
+    static async isExistUser(connection, query) {
+        var params = [];
+        var where = [];
+        let sql = () => `
+            SELECT * FROM users WHERE ${where.join(' and ')}
+            
+        `;
+        if(!str.isEmpty(query.account)){
+            where.push('account = ?')
+            params.push(query.account);
+        }
+
+        if(!str.isEmpty(query.invitcode)){
+            where.push('Invitcode = ?')
+            params.push(query.invitcode);
+        }
+
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+
+    //用户
+    static async isExistUser(connection, query) {
+        var params = [];
+        var where = [];
+        let sql = () => `
+            SELECT * FROM users WHERE ${where.join(' and ')}
+            
+        `;
+        if(!str.isEmpty(query.account)){
+            where.push('account = ?')
+            params.push(query.account);
+        }
+
+        if(!str.isEmpty(query.invitcode)){
+            where.push('Invitcode = ?')
+            params.push(query.invitcode);
+        }
+
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+
+    //校验验证码
+    static async verification(connection, query) {
+        var params = [];
+        let sql = () => `
+            SELECT * FROM code_verification WHERE code = ? AND account = ? AND type = ? AND endtime > ?
+        `;
+        params.push(query.code);
+        params.push(query.account);
+        params.push(query.type);
+        params.push(query.createTime);
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
                 if (err) return reject(err);

@@ -7,11 +7,12 @@ const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const createError = require('http-errors');
 const index = require('./routes/index')
-// const users = require('./routes/users')
+const resources = require('./routes/resources')
 const business = require('./routes/business')
 const bot = require('./routes/bot')
 const bonus = require('./routes/bonus')
 const responsed = require('./utils/data')
+const koaBody = require('koa-body')
 let cors = require('@koa/cors');
 
 
@@ -25,7 +26,12 @@ app.use(bodyparser({
 app.use(json())
 app.use(logger())
 app.use(require('koa-static')(__dirname + '/public'))
-
+app.use(koaBody({
+    multipart: true,
+    formidable: {
+        maxFileSize: 1000*1024*1024    // 设置上传文件大小最大限制，默认10M
+    }
+}));
 app.use(views(__dirname + '/views', {
     extension: 'pug'
 }))
@@ -90,7 +96,7 @@ app.use(cors({
 
 // routes
 app.use(index.routes(), index.allowedMethods())
-// app.use(users.routes(), users.allowedMethods())
+app.use(resources.routes(), resources.allowedMethods())
 app.use(business.routes(), business.allowedMethods())
 app.use(bot.routes(), bot.allowedMethods())
 app.use(bonus.routes(), bonus.allowedMethods())
