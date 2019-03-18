@@ -25,7 +25,9 @@
     "runkoa": "^1.5.2",
     "moment": "^2.23.0",
     "http-errors": "^1.6.3",
-    "node-uuid": "^1.4.8"
+    "node-uuid": "^1.4.8",
+    "@alicloud/sms-sdk":"^1.1.6",
+    "nodemailer":"^5.1.1"
   },
   "devDependencies": {
     "nodemon": "^1.8.1"

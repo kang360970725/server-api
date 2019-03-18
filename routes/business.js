@@ -7,9 +7,54 @@ let
 router.prefix('/users')
 
 /**
- * @api {get} /users/getuser 获取
+ * @api {get} /users/getuser 获取会员信息
+ * @apiName B端添加用户(get)
+ * @apiGroup business
  *
- * 会员信息
+ * @apiParam {String} uuId  用户UUid
+ *
+ * @apiSuccessExample 成功返回结果：
+ *
+ * {
+  "status": 0,
+  "message": "successful",
+  "data": [
+    {
+      "id": 1332,
+      "uuid": "001332",
+      "account": "15828982828@139.com",
+      "password": "",
+      "nickname": "15828982828@139.com",
+      "email": "15828982828@139.com",
+      "Invitcode": "3qtGt2Cw",
+      "Invitdcode": "12345",
+      "phone": "",
+      "wechat": null,
+      "walletaddress": null,
+      "type": 2,
+      "createtime": "2018-11-15T16:26:22.000Z",
+      "endtime": 21667314031,
+      "starttime": "2018-11-14T16:42:30.000Z",
+      "level": "-1",
+      "disable": "",
+      "principal": "0",
+      "bot_update": "0",
+      "bot_type": "1",
+      "user_principal": "0.09921545",
+      "popular_user": "0",
+      "activation_state": "1",
+      "bonus_base": "0.40000",
+      "bot_lirun": "0.20000",
+      "globalpartners": "0",
+      "bonus_ratio": "0.04834725",
+      "group": "a",
+      "third_party": "0",
+      "reset_api": "1",
+      "token": "670fd140-a392-41a5-8ffe-095ab1283876"
+    }
+  ]
+}
+ *
  */
 router.get('/getuser', async (ctx, next) => {
     var params = ctx.query;
@@ -21,6 +66,22 @@ router.get('/getuser', async (ctx, next) => {
 /**
  * @api {post} /users/logonbusiness 添加用户
  * @apiName B端添加用户(post)
+ * @apiGroup business
+ *
+ * @apiParam {String} user_account  用户账号
+ * @apiParam {String} user_password  密码
+ *
+ */
+router.post('/addusers', async (ctx, next) => {
+    var params = ctx.request.body;
+    // params.sessionId = ctx.header.sessionid;
+    return await businessCtrl.addUsers(params);
+})
+
+
+/**
+ * @api {post} /users/logonbusiness 短信(邮件)注册账户
+ * @apiName c端注册用户(post)
  * @apiGroup business
  *
  * @apiParam {String} user_account  用户账号

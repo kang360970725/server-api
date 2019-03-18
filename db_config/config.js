@@ -2,6 +2,7 @@ module.exports =
     {
         mysql: {
             host: '47.52.29.161',
+            // host: '127.0.0.1',
             user: 'root',
             password: '123456',
             database:'dev_platform', // 前面建的user表位于这个数据库中

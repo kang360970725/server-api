@@ -20,11 +20,13 @@ class dao {
             where.push('uuid = ?');
             params.push(query.uuId);
         }
-        where.push('third_party = 1');
+        // where.push('third_party = 1');
         params.push(query.uuId);
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
                 if (err) return reject(err);
+                console.log(result);
+                console.log('123');
                 resolve(result);
             });
         })
