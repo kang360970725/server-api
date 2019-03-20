@@ -3,7 +3,7 @@
 let dao = require("../../db_config/dao"),
     data = require('../../utils/data'),
     config = require('../../db_config/config'),
-    bonusDao = require('../../business/dao/send-code');
+    bonusDao = require('../../business/dao/sendCode');
 var uuid = require('node-uuid');
 
 class biz {

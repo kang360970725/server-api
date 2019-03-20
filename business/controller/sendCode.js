@@ -2,7 +2,7 @@
 
 let str = require("../../utils/stringHelper"),
     data = require('../../utils/data'),
-    bonusBiz = require('../../business/biz/send-code');
+    bonusBiz = require('../../business/biz/sendCode');
 
 class ctrl {
     //发送验证邮件

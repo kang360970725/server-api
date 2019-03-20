@@ -2,7 +2,7 @@ const router = require('koa-router')();
     data = require('../utils/data');
 
 let
-    bonusCtrl = require("../business/controller/send-code");
+    bonusCtrl = require("../business/controller/sendCode");
 
 router.prefix('/send')
 
