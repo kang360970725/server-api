@@ -23,8 +23,8 @@ router.all('*', async (ctx, next) => {
  * @apiGroup business
  *
  * @apiParam {String} account  终端账号
- * @apiParam {String} terminal  email 邮件 sms短信
- * @apiParam {String} busType  终端业务 1 注册  2 找回密码  3 绑定终端  ....
+ * @apiParam {String} terminal  0 短信 1 邮件
+ * @apiParam {String} busType  终端业务 0 注册  3 找回密码  4 绑定终端  ....
  *
  * @apiSuccessExample 成功返回结果:
  *  HTTP/1.1 200 OK
