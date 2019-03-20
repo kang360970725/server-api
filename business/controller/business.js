@@ -39,9 +39,29 @@ class ctrl {
 
     static async login(params) {
         if (!params || str.isEmpty(params.account) || str.isEmpty(params.pwd)) {
-            throw exception.ParamException('账号或密码不能为空')
+            throw exception.ParamException('账号和密码不能为空')
         }
         return await businessBiz.login(params)
+    }
+
+    static async register(params) {
+        if (!params || str.isEmpty(params.account) || str.isEmpty(params.pwd)) {
+            throw exception.ParamException('账号和密码不能为空')
+        }
+        return await businessBiz.register(params)
+    }
+
+    static async forgotPwd(params) {
+        if (!params || str.isEmpty(params.account) || str.isEmpty(params.pwd)) {
+            throw exception.ParamException('账号和密码不能为空')
+        }
+
+        if (str.isEmpty(params.code)) {
+            throw exception.ParamException('验证码不能为空')
+        }
+
+
+        return await businessBiz.forgotPwd(params)
     }
 }
 

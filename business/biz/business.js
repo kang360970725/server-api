@@ -81,14 +81,17 @@ class biz {
         })
     }
 
-    //用户续费
+    //用户登录
     static async login(params) {
         return await dao.manageConnection(async (connection) => {
             console.log(params);
-            var result = await businessDao.login(connection, params);
+            let result = await businessDao.login(connection, params);
             console.log(result);
             let results = result;
             if (results.length > 0 && results[0].type != 3) {
+                    params['user_id'] = results[0].uuid;
+                    params['user_info_type'] = 'orePool';
+                    let userInfos = await businessDao.userInfo(connection, params);
 
                     let date = new Date(result[0].endtime);
                     let time = date.getTime();//转换成毫秒
@@ -101,6 +104,7 @@ class biz {
                     resDta.endtime = times;
                     resDta['token'] = !!result[0].token ? result[0].token : '';
                     resDta.password = '';
+                    resDta['userInfos'] = userInfos ;
                     result = {
                         msg: '登录成功',
                         data: resDta
@@ -118,6 +122,70 @@ class biz {
                 throw exception.ParamException('用户名或密码错误')
             }
             return result
+        })
+    }
+
+
+    //用户登录
+    static async register(params) {
+        return await dao.manageConnection(async (connection) => {
+            console.log(params);
+            let result = await businessDao.isExistUser(connection, params);
+            if(result && result.length > 0){
+                throw exception.BusinessException('用户已存在',199)
+            }
+            result = await businessDao.verification(connection, params);
+            if(!result || result.length <= 0){
+                throw exception.BusinessException('验证码错误或已过期',198)
+            }
+
+            //添加用户
+            await businessDao.addUsers(connection, params);
+
+            result = await businessDao.isExistUser(connection, params);
+            if(!result || result.length <= 0){
+                throw exception.BusinessException('注册用户失败',197)
+            }
+
+            //设置默认参数
+            await businessDao.insertUserBotSetting(connection, params);
+            params['token'] = uuid.v4();
+            //设置token关系
+            await businessDao.insertToken(connection, params);
+            //写入付费开通记录
+            await businessDao.insertPay(connection, params);
+
+            var retUser = {
+                uuid: result[0].uuid,
+                token: params.token,
+                account: result[0].account
+            };
+            return retUser
+        })
+    }
+
+    //用户找回密码
+    static async forgotPwd(params) {
+        return await dao.manageConnection(async (connection) => {
+            console.log(params);
+            let result = await businessDao.isExistUser(connection, params);
+            if(result || result.length <= 0){
+                throw exception.BusinessException('用户不存在',196)
+            }
+            result = await businessDao.verification(connection, params);
+            if(!result || result.length <= 0){
+                throw exception.BusinessException('验证码错误或已过期',198)
+            }
+            params["uuid"] = result[0].uuid;
+            //更新密码
+            await businessDao.updatePwd(connection, params);
+
+            var retUser = {
+                uuid: result[0].uuid,
+                token: params.token,
+                account: result[0].account
+            };
+            return retUser
         })
     }
 

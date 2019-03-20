@@ -154,4 +154,13 @@ router.post('/login', async (ctx, next) => {
 })
 
 
+router.post('/register', async (ctx, next) => {
+    return await businessCtrl.register(ctx.request.body);
+})
+
+router.post('/forgotPwd', async (ctx, next) => {
+    return await businessCtrl.forgotPwd(ctx.request.body);
+})
+
+
 module.exports = router
