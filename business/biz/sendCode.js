@@ -18,7 +18,13 @@ let mailTransport = nodemailer.createTransport({
     },
 });
 
-//
+//短信配置相关
+const SMSClient = require('@alicloud/sms-sdk');
+const accessKeyId = 'LTAIpu10iPJzJ6uw';
+const secretAccessKey = 'oTIBvri8AW8OICLYUm1LQTHju9pi28';
+
+
+
 class biz {
 
     //发送验证码
@@ -27,18 +33,24 @@ class biz {
             var result = {}
             //发送短信
             if (params.terminal == 0) {
-                await senEmailFn(params, function (results) {
-                    result = results;
-                    params.code = results.code
-                })
-            }
-            //发送邮件
-            if (params.terminal == 1) {
-                result = await biz.senEmailFn(params);
+                result = await biz.senSmsFn(params);
+                params.code = result.code;
                 console.log(result);
                 if (result.status == 0) {
                     var newSql = await bonusDao.sendCode(connection, params);
                 }
+                delete result.code;
+                return result
+            }
+            //发送邮件
+            if (params.terminal == 1) {
+                result = await biz.senEmailFn(params);
+                params.code = result.code;
+                console.log(result);
+                if (result.status == 0) {
+                    var newSql = await bonusDao.sendCode(connection, params);
+                }
+                delete result.code;
                 return result
             }
         })
@@ -46,7 +58,7 @@ class biz {
 
 
     //Email模板
-    static async htmlTemp_register(obj) {
+    static async htmlTemp_Email(obj) {
         let html = '';
         let selectChar = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
         let code = '';
@@ -86,8 +98,7 @@ class biz {
         }
         return {html: html, code: code};
     };
-
-//发送邮件方法
+    //发送邮件方法
     static async senEmailFn(param) {
         var options = {
             from: '"蓝猫量化俱乐部" <kang360970725@qq.com>',
@@ -96,7 +107,7 @@ class biz {
             html: '<h5>你好，这是一封来自蓝猫量化俱乐部的邮件！</h5><p>......</p>'
         };
 
-        let result = await biz.htmlTemp_register(param);
+        let result = await biz.htmlTemp_Email(param);
         if (!!result) {
             options.html = result.html;
             const sendSucess = await mailTransport.sendMail(options);
@@ -110,6 +121,64 @@ class biz {
                 return {
                     status: 0,
                     msg: "发送邮件成功",
+                    code: result.code
+                };
+            }
+        } else {
+            return {
+                status: -200,
+                msg: '未处理异常!'
+            };
+        }
+    }
+
+
+    //短信模板
+    static async htmlTemp_Sms(obj) {
+        let html = '';
+        let code = '';
+        for(var i=0;i<6;i++){
+            code+=Math.floor(Math.random()*10)
+        }
+        let objs = {
+            code: code,
+            templateCode: ''
+        }
+        switch (obj.busType) {
+            case '0':
+                objs.templateCode = 'SMS_150737405';
+                break;
+            case '3':
+                objs.templateCode = 'SMS_152110354';
+                break;
+        }
+        return objs;
+    };
+    //发送短信件方法
+    static async senSmsFn(param) {
+        //初始化sms_client
+        let smsClient = new SMSClient({accessKeyId, secretAccessKey})
+        //发送短信
+
+        let result = await biz.htmlTemp_Sms(param);
+        if (!!result) {
+            var options = {
+                PhoneNumbers: param.account,
+                SignName: "蓝猫量化",//认证签名
+                TemplateCode: result.templateCode,//模板id
+                TemplateParam: "{\"code\": "+ result.code +"}"
+            };
+            var Sms = await smsClient.sendSMS(options)
+            if (Sms.Code != "OK") {
+                return {
+                    status: -200,
+                    msg: "发送短信失败"
+                };
+            }
+            else {
+                return {
+                    status: 0,
+                    msg: "发送短信成功",
                     code: result.code
                 };
             }

@@ -167,7 +167,6 @@ class biz {
     //用户找回密码
     static async forgotPwd(params) {
         return await dao.manageConnection(async (connection) => {
-            console.log(params);
             let result = await businessDao.isExistUser(connection, params);
             if(result || result.length <= 0){
                 throw exception.BusinessException('用户不存在',196)

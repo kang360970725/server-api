@@ -32,7 +32,8 @@ router.all('*', async (ctx, next) => {
     "status": 0,
     "message": " Interface response successful ",
     "data": {
-        "desc": "发送成功！"
+        "status": 0,
+        "msg": "发送邮件(短信)成功"
     }
 }
  */
