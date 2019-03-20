@@ -11,9 +11,7 @@
   "dependencies": {
     "@koa/cors": "^2.2.1",
     "debug": "^2.6.3",
-    "http-errors": "^1.6.3",
     "koa": "^2.2.0",
-    "koa-body": "^4.1.0",
     "koa-bodyparser": "^3.2.0",
     "koa-convert": "^1.2.0",
     "koa-json": "^2.0.2",
@@ -22,17 +20,12 @@
     "koa-router": "^7.1.1",
     "koa-static": "^3.0.0",
     "koa-views": "^5.2.1",
-    "moment": "^2.23.0",
-    "mysql": "^2.12.0",
-    "node-uuid": "^1.4.8",
     "pug": "^2.0.0-rc.1",
+    "mysql": "^2.12.0",
     "runkoa": "^1.5.2",
     "moment": "^2.23.0",
     "http-errors": "^1.6.3",
-    "node-uuid": "^1.4.8",
-    "@alicloud/sms-sdk":"^1.1.6",
-    "nodemailer":"^5.1.1"
-
+    "node-uuid": "^1.4.8"
   },
   "devDependencies": {
     "nodemon": "^1.8.1"
