@@ -62,38 +62,6 @@ router.get('/getuser', async (ctx, next) => {
     return await businessCtrl.getUsers(params);
 
 })
-
-/**
- * @api {post} /users/logonbusiness 添加用户
- * @apiName B端添加用户(post)
- * @apiGroup business
- *
- * @apiParam {String} user_account  用户账号
- * @apiParam {String} user_password  密码
- *
- */
-router.post('/addusers', async (ctx, next) => {
-    var params = ctx.request.body;
-    // params.sessionId = ctx.header.sessionid;
-    return await businessCtrl.addUsers(params);
-})
-
-
-/**
- * @api {post} /users/logonbusiness 短信(邮件)注册账户
- * @apiName c端注册用户(post)
- * @apiGroup business
- *
- * @apiParam {String} user_account  用户账号
- * @apiParam {String} user_password  密码
- *
- */
-router.post('/addusers', async (ctx, next) => {
-    var params = ctx.request.body;
-    // params.sessionId = ctx.header.sessionid;
-    return await businessCtrl.addUsers(params);
-})
-
 /**
  * @api {post} /users/login 登录
  * @apiName B端登录(post)
@@ -150,14 +118,66 @@ router.post('/addusers', async (ctx, next) => {
  *}
  */
 router.post('/login', async (ctx, next) => {
-    return await businessCtrl.login(ctx.request.body);
+    return ctx.session.user = await businessCtrl.login(ctx.request.body);
 })
 
-
+/**
+ * @api {post} /users/register 注册1
+ * @apiName B端注册
+ * @apiGroup business
+ *
+ * @apiParam {String} account  用户账号
+ * @apiParam {String} pwd  密码
+ * @apiParam {String} email  用户email
+ * @apiParam {String} phone  用户phone
+ * @apiParam {String} nickname  用户昵称
+ * @apiParam {String} Invitcode  邀请码
+ * @apiParam {String} version  用户等级
+ * @apiParam {String} code  验证码
+ * @apiParam {String} type  验证码类型 终端业务 0 注册  3 找回密码  4 绑定终端  ....
+ *
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ *
+ * {
+    "status": 0,
+    "message": "successful",
+    "data": {
+        "uuid": "0001469",
+        "token": "322e78c0-d030-4678-bd05-f82e572f1b68",
+        "account": "adminhy"
+    }
+   }
+ *}
+ */
 router.post('/register', async (ctx, next) => {
     return await businessCtrl.register(ctx.request.body);
 })
 
+/**
+ * @api {post} /users/forgotPwd 找回密码
+ * @apiName B端注册
+ * @apiGroup business
+ *
+ * @apiParam {String} account  用户账号
+ * @apiParam {String} pwd  密码
+ * @apiParam {String} code  验证码
+ * @apiParam {String} type  验证码类型 终端业务 0 注册  3 找回密码  4 绑定终端  ....
+ *
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ *
+ * {
+    "status": 0,
+    "message": "successful",
+    "data": {
+        "account": "adminhy"
+    }
+}
+ *}
+ */
 router.post('/forgotPwd', async (ctx, next) => {
     return await businessCtrl.forgotPwd(ctx.request.body);
 })

@@ -1,6 +1,7 @@
 const Koa = require('koa')
 const app = new Koa()
 const views = require('koa-views')
+const session = require('koa-session');
 const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
@@ -9,6 +10,7 @@ const createError = require('http-errors');
 const index = require('./routes/index')
 const send = require('./routes/sendCode')
 const business = require('./routes/business')
+const activity = require('./routes/activity')
 const bot = require('./routes/bot')
 const bonus = require('./routes/bonus')
 const responsed = require('./utils/data')
@@ -30,6 +32,18 @@ app.use(views(__dirname + '/views', {
     extension: 'pug'
 }))
 
+app.keys = ['some secret hurr'];
+const CONFIG = {
+    key: 'koa:sess',   //cookie key (default is koa:sess)
+    maxAge: 86400000,  // cookie的过期时间 maxAge in ms (default is 1 days)
+    overwrite: true,  //是否可以overwrite    (默认default true)
+    httpOnly: true, //cookie是否只有服务器端可以访问 httpOnly or not (default true)
+    signed: true,   //签名默认true
+    rolling: false,  //在每次请求时强行设置cookie，这将重置cookie过期时间（默认：false）
+    renew: false,  //(boolean) renew session when session is nearly expired,
+};
+
+app.use(session(CONFIG, app));
 // logger
 app.use(async (ctx, next) => {
     const start = new Date()
@@ -94,6 +108,7 @@ app.use(send.routes(), send.allowedMethods())
 app.use(business.routes(), business.allowedMethods())
 app.use(bot.routes(), bot.allowedMethods())
 app.use(bonus.routes(), bonus.allowedMethods())
+app.use(activity.routes(), activity.allowedMethods())
 
 module.exports = app
 
