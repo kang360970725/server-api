@@ -1,5 +1,5 @@
 const router = require('koa-router')();
-    data = require('../utils/data');
+data = require('../utils/data');
 
 let
     businessCtrl = require("../business/controller/business");
@@ -126,15 +126,15 @@ router.post('/login', async (ctx, next) => {
  * @apiName B端注册
  * @apiGroup business
  *
- * @apiParam {String} account  用户账号
- * @apiParam {String} pwd  密码
- * @apiParam {String} email  用户email
- * @apiParam {String} phone  用户phone
- * @apiParam {String} nickname  用户昵称
- * @apiParam {String} Invitcode  邀请码
- * @apiParam {String} version  用户等级
- * @apiParam {String} code  验证码
- * @apiParam {String} type  验证码类型 终端业务 0 注册  3 找回密码  4 绑定终端  ....
+ * @apiParam {String} account  用户账号 不可空
+ * @apiParam {String} pwd  密码 不可空
+ * @apiParam {String} email  用户email 可空
+ * @apiParam {String} phone  用户phone 可空
+ * @apiParam {String} nickname  用户昵称 可空
+ * @apiParam {String} Invitcode  邀请码 可空
+ * @apiParam {String} version  用户等级 可空
+ * @apiParam {String} code  验证码 不可空
+ * @apiParam {String} type  验证码类型 不可空 注册传0 终端业务 0 注册  3 找回密码  4 绑定终端  ....
  *
  *
  * @apiSuccessExample 成功返回结果:

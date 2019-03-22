@@ -124,7 +124,7 @@ router.post('/addorupdate', async (ctx, next) => {
  * @apiDescription 部分修改info信息可以使用
  * @apiGroup activity
  *
- * @apiParam {String} id  活动id 不可空
+ * @apiParam {String}  id  活动id 不可空
  * @apiParam {Array} infos  活动info信息
  * @apiParam {String} infos.id  info id 不可空
  * @apiParam {String} infos.type info类型  1返现 2免费 3打折 4积分奖励  200 轮播图片 201封面
