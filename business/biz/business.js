@@ -168,7 +168,7 @@ class biz {
     static async forgotPwd(params) {
         return await dao.manageConnection(async (connection) => {
             let result = await businessDao.isExistUser(connection, params);
-            if(result || result.length <= 0){
+            if(!result || result.length <= 0){
                 throw exception.BusinessException('用户不存在',196)
             }
             result = await businessDao.verification(connection, params);

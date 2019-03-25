@@ -18,9 +18,9 @@ router.all('*', async (ctx, next) => {
 })
 
 /**
- * @api {post} /send 发送(短信、邮件)验证码
+ * @api {post} send/send 发送(短信、邮件)验证码
  * @apiName C端发送短信或者邮件验证码(post)
- * @apiGroup business
+ * @apiGroup send
  *
  * @apiParam {String} account  终端账号
  * @apiParam {String} terminal  0 短信 1 邮件

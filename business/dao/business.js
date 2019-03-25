@@ -53,7 +53,7 @@ class dao {
     //添加用户
     static async addUsers(connection, query) {
         var params = [];
-        let Invitdcode = s8();
+        let Invitdcode = str.s8();
 
         let sql = () => `
             INSERT INTO users(
@@ -84,7 +84,7 @@ class dao {
         let EndTime = timeNum + (86400000 * parseInt(query.openingtime));
         let endTimes = moment(EndTime).format('YYYY-MM-DD HH:mm:ss');
         params.push(query.account);
-        params.push('e10adc3949ba59abbe56e057f20f883e');
+        params.push(query.pwd);
         params.push(query.email || '');
         params.push(query.phone || '');
         params.push(query.nickname || '');
@@ -109,7 +109,7 @@ class dao {
 
 
         let sql = () => `
-            update users set password =? where uuid = ?
+            update users set password =? where account = ?
         `;
         let params = [];
 
@@ -117,8 +117,8 @@ class dao {
             params.push(query.pwd);
         }
 
-        if(!str.isEmpty(query.uuid)){
-            params.push(query.uuid);
+        if(!str.isEmpty(query.account)){
+            params.push(query.account);
         }
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
@@ -386,12 +386,11 @@ class dao {
     static async verification(connection, query) {
         var params = [];
         let sql = () => `
-            SELECT * FROM code_verification WHERE code = ? AND account = ? AND type = ? AND endtime > ?
+            SELECT * FROM code_verification WHERE code = ? AND account = ? AND type = ? AND endtime > now();
         `;
         params.push(query.code);
         params.push(query.account);
         params.push(query.type);
-        params.push(query.createTime);
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
                 if (err) return reject(err);
@@ -418,16 +417,6 @@ class dao {
             });
         })
     }
-}
-function s8() {
-    var data = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
-    // for (var j = 0; j < line; j++) {    //500为想要产生的行数
-    let result = "";
-    for (var i = 0; i < 8; i++) {   //产生8位就使i<8
-        let r = Math.floor(Math.random() * 62);     //16为数组里面数据的数量，目的是以此当下标取数组data里的值！
-        result += data[r];        //输出20次随机数的同时，让rrr加20次，就是20位的随机字符串了。
-    }
-    return result;
 }
 
 module.exports = dao
