@@ -2,7 +2,7 @@
 /**
  * @api {get} v1/users/getuser 获取会员信息
  * @apiName B端添加用户(get)
- * @apiGroup business
+ * @apiGroup users
  * @apiVersion 1.0.0
  * @apiParam {String} uuId  用户UUid
  *
@@ -54,7 +54,7 @@
 /**
  * @api {post} v1/users/login 登录
  * @apiName B端登录(post)
- * @apiGroup business
+ * @apiGroup users
  * @apiVersion 1.0.0
  *
  * @apiParam {String} account  用户账号
@@ -111,7 +111,7 @@
 /**
  * @api {post} v1/users/register 注册1
  * @apiName B端注册
- * @apiGroup business
+ * @apiGroup users
  * @apiVersion 1.0.0
  *
  * @apiParam {String} account  用户账号 不可空
@@ -143,7 +143,7 @@
 /**
  * @api {post} v1/users/forgotPwd 找回密码
  * @apiName B端注册
- * @apiGroup business
+ * @apiGroup users
  * @apiVersion 1.0.0
  *
  * @apiParam {String} account  用户账号

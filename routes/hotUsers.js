@@ -1,7 +1,7 @@
 /**
  * @api {get} v1/hot/users 获取排行榜用户和热门用户
  * @apiName 获取排行榜用户和热门用户
- * @apiGroup business
+ * @apiGroup hot
  *
  * @apiParam {String} type  1 热门用户列表  2 排行榜用户列表
  * @apiParam {int} pagesize  分页、取多少条
