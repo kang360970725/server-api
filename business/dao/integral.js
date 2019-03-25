@@ -23,13 +23,10 @@ class dao {
         params.push(query.id);
         set.push('id=VALUES(id)')
         if (!str.isEmpty(query.integral) && query.integral > 0) {
-            params.push(query.integral)
-            params.push(query.integral)
-            set.push('integral_total= VALUES(integral_total) + ?')
-            set.push('integral_current=VALUES(integral_current) + ?')
+            set.push(`integral_total = integral_total  + ${query.integral}`)
+            set.push(`integral_current = integral_current + ${query.integral} `)
         } else if (query.integral <= 0) {
-            params.push(query.integral)
-            set.push('integral_current=VALUES(integral_current) + ?')
+            set.push(`integral_current = integral_current + ${query.integral} `)
         } else {
             return;
         }

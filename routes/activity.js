@@ -1,9 +1,10 @@
 
 
 /**
- * @api {get} /activity/activitys 活动查询
+ * @api {get} v1/activity/activitys 活动查询
  * @apiName 活动查询
  * @apiGroup activity
+ * @apiVersion 1.0.0
  *
  * @apiParam {String} id  活动id 可空
  * @apiParam {String} info  是否查询活动info信息 非空查询 空不查询
@@ -52,17 +53,13 @@
 }
  *}
  */
-router.get('/activitys', async (ctx, next) => {
-    var params = ctx.query;
-    return await activityCtrl.activitys(params);
-})
-
 
 /**
- * @api {POST} /activity/addorupdate 活动添加和修改
+ * @api {POST} v1/activity/addorupdate 活动添加和修改
  * @apiName 活动添加和修改
  * @apiDescription 使用该接口进行修改会进行全修改
  * @apiGroup activity
+ * @apiVersion 1.0.0
  *
  * @apiParam {String} id  活动id 空新增 不为空修改
  * @apiParam {String} name  活动名称 不可空
@@ -103,17 +100,14 @@ router.get('/activitys', async (ctx, next) => {
 }
  *}
  */
-router.post('/addorupdate', async (ctx, next) => {
-    var params = ctx.request.body;
-    return await activityCtrl.addOrUpdateActivitys(params);
-})
 
 
 /**
- * @api {POST} /activity/updateinfo 活动info修改
+ * @api {POST} v1/activity/updateinfo 活动info修改
  * @apiName 活动info修改 部分修改info信息可以使用
  * @apiDescription 部分修改info信息可以使用
  * @apiGroup activity
+ * @apiVersion 1.0.0
  *
  * @apiParam {String}  id  活动id 不可空
  * @apiParam {Array} infos  活动info信息

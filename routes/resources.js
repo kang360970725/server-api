@@ -4,15 +4,34 @@ const path = require('path');
 exception = require('../utils/exception.js'),
     data = require('../utils/data');
 
-let
-    businessCtrl = require("../business/controller/business");
 
 router.prefix('/resources')
 
+
 /**
  * @api {post} /resources/uploadfiles 上传文件
+ * @apiName B端注册
+ * @apiGroup resources
+ * @apiVersion 1.0.0
  *
- * 上传文件
+ * @apiParam {String} file  文件
+ * @apiParam {String} file  多个问题文件
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ *
+ * {
+    "status": 0,
+    "message": "successful",
+    "data": {
+        "path": [
+            "/upload/0.37204773307559713.jpg",
+            "/upload/0.30853986909127484.jpg"
+        ],
+        "message": "上传成功！"
+    }
+}
+ *}
  */
 router.post('/uploadfiles', async (ctx, next) => {
     // 上传多个文件
@@ -31,6 +50,7 @@ router.post('/uploadfiles', async (ctx, next) => {
         path:path,
         message:"上传成功！"
     }
+    ctx.status = 200;
     return reslut
 })
 

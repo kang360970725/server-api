@@ -1,16 +1,9 @@
-const router = require('koa-router')();
-data = require('../utils/data');
-
-let
-    businessCtrl = require("../business/controller/business");
-
-router.prefix('/users')
 
 /**
- * @api {get} /users/getuser 获取会员信息
+ * @api {get} v1/users/getuser 获取会员信息
  * @apiName B端添加用户(get)
  * @apiGroup business
- *
+ * @apiVersion 1.0.0
  * @apiParam {String} uuId  用户UUid
  *
  * @apiSuccessExample 成功返回结果：
@@ -56,16 +49,13 @@ router.prefix('/users')
 }
  *
  */
-router.get('/getuser', async (ctx, next) => {
-    var params = ctx.query;
-    params.sessionId = ctx.header.sessionid;
-    return await businessCtrl.getUsers(params);
 
-})
+
 /**
- * @api {post} /users/login 登录
+ * @api {post} v1/users/login 登录
  * @apiName B端登录(post)
  * @apiGroup business
+ * @apiVersion 1.0.0
  *
  * @apiParam {String} account  用户账号
  * @apiParam {String} pwd  密码
@@ -117,14 +107,12 @@ router.get('/getuser', async (ctx, next) => {
 }
  *}
  */
-router.post('/login', async (ctx, next) => {
-    return ctx.session.user = await businessCtrl.login(ctx.request.body);
-})
 
 /**
- * @api {post} /users/register 注册1
+ * @api {post} v1/users/register 注册1
  * @apiName B端注册
  * @apiGroup business
+ * @apiVersion 1.0.0
  *
  * @apiParam {String} account  用户账号 不可空
  * @apiParam {String} pwd  密码 不可空
@@ -151,14 +139,12 @@ router.post('/login', async (ctx, next) => {
    }
  *}
  */
-router.post('/register', async (ctx, next) => {
-    return await businessCtrl.register(ctx.request.body);
-})
 
 /**
- * @api {post} /users/forgotPwd 找回密码
+ * @api {post} v1/users/forgotPwd 找回密码
  * @apiName B端注册
  * @apiGroup business
+ * @apiVersion 1.0.0
  *
  * @apiParam {String} account  用户账号
  * @apiParam {String} pwd  密码
@@ -178,9 +164,3 @@ router.post('/register', async (ctx, next) => {
 }
  *}
  */
-router.post('/forgotPwd', async (ctx, next) => {
-    return await businessCtrl.forgotPwd(ctx.request.body);
-})
-
-
-module.exports = router

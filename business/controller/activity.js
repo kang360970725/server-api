@@ -11,7 +11,7 @@ class ctrl {
         return await activityBiz.activitys(params)
     }
 
-    static async addOrUpdateActivitys(params) {
+    static async addorupdate(params) {
         return await activityBiz.addOrUpdateActivitys(params)
     }
 

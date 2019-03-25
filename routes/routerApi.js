@@ -4,7 +4,7 @@ const fs = require('fs-extra');
 
 const Route = require('koa-router');
 
-const router = new Route({ prefix: '/api' })
+const router = new Route({ prefix: '/v1' })
 const ctrlRoot = __dirname+`/../business/controller`;
 
 // 如果存在 controllers 目录自动处理api请求路由
