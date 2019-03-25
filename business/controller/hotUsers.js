@@ -5,7 +5,7 @@ let str = require("../../utils/stringHelper"),
     hotUsersBiz = require('../../business/biz/hotUsers');
 
 class ctrl {
-    //发送验证邮件
+    //获取热门用户
     static async getUserList(params) {
         if (!params) {
             throw data.error('请求参数缺失')
