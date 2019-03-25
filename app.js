@@ -41,9 +41,13 @@ app.use(session(CONFIG, app));
 // logger
 app.use(async (ctx, next) => {
     const start = new Date()
+    const defaultMessage = 'Internal Server Error';
     try {
         ctx.set('X-Powered-By', 'koa@2');
         let result = await next();
+        if (ctx.status === 404 && !ctx.response.body) {
+            ctx.throw(404,'Not Found', {code: 404 });
+        }
         if (!ctx.body) {
             ctx.body = responsed.success(result, 'successful')
         }
@@ -95,14 +99,10 @@ app.use(cors({
     origin: '*',
     exposeHeaders: ['Token']
 }));
-
+let apiroutes = require('./routes/routerApi');
 // routes
-app.use(index.routes(), index.allowedMethods())
-app.use(send.routes(), send.allowedMethods())
-app.use(business.routes(), business.allowedMethods())
-app.use(bot.routes(), bot.allowedMethods())
-app.use(bonus.routes(), bonus.allowedMethods())
-app.use(activity.routes(), activity.allowedMethods())
+app.use(apiroutes.routes(), apiroutes.allowedMethods())
+
 
 module.exports = app
 
