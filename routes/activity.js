@@ -1,13 +1,4 @@
-const router = require('koa-router')();
-const fs = require('fs');
-const path = require('path');
-exception = require('../utils/exception.js'),
-    data = require('../utils/data');
 
-let
-    activityCtrl = require("../business/controller/activity");
-
-router.prefix('/activity')
 
 /**
  * @api {get} /activity/activitys 活动查询
@@ -153,9 +144,3 @@ router.post('/addorupdate', async (ctx, next) => {
 }
  *}
  */
-router.post('/updateinfo', async (ctx, next) => {
-    var params = ctx.request.body;
-    return await activityCtrl.updateinfo(params);
-})
-
-module.exports = router

@@ -12,6 +12,7 @@
     "@alicloud/sms-sdk": "^1.1.6",
     "@koa/cors": "^2.2.1",
     "debug": "^2.6.3",
+    "fs-extra": "^7.0.1",
     "http-errors": "^1.6.3",
     "koa": "^2.2.0",
     "koa-bodyparser": "^3.2.0",
