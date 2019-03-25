@@ -7,12 +7,6 @@ const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const createError = require('http-errors');
-const index = require('./routes/index')
-const send = require('./routes/sendCode')
-const business = require('./routes/business')
-const activity = require('./routes/activity')
-const bot = require('./routes/bot')
-const bonus = require('./routes/bonus')
 const responsed = require('./utils/data')
 let cors = require('@koa/cors');
 
