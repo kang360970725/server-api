@@ -1,26 +1,8 @@
-const router = require('koa-router')();
-    data = require('../utils/data');
-
-let
-    hotUsersCtrl = require("../business/controller/hotUsers");
-
-router.prefix('/hot')
-
-router.all('*', async (ctx, next) => {
-    try {
-        var result = await next();
-        ctx.body = data.success(result, "");
-    } catch (err) {
-        ctx.body = data.error(err);
-        ctx.body = err;
-        // ctx.body = { errorCode: 500, stack: err.stack }
-    }
-})
-
 /**
- * @api {get} /users 获取排行榜用户和热门用户
+ * @api {get} V1/hot/users 获取排行榜用户和热门用户
  * @apiName 获取排行榜用户和热门用户
  * @apiGroup business
+ * @apiVersion 1.0.0
  *
  * @apiParam {String} type  1 热门用户列表  2 排行榜用户列表
  * @apiParam {int} pagesize  分页、取多少条
@@ -48,10 +30,3 @@ router.all('*', async (ctx, next) => {
 }
 }
  */
-router.get('/users', async (ctx, next) => {
-    var params = ctx.query;
-    return await hotUsersCtrl.getUserList(params);
-
-})
-
-module.exports = router
