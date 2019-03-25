@@ -18,6 +18,11 @@ class biz {
                 result.list = await hotUsersDao.getHotUserList(connection, params);
                 result.count = await hotUsersDao.getHotUserListCount(connection, params);
             }
+            if (params.type == 2) {
+                result.list = await hotUsersDao.getRankingUserList(connection, params);
+                // result.count = await hotUsersDao.getRankingUserListCount(connection, params);
+                result.count = 10;
+            }
             return result
         })
     }
