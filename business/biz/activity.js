@@ -15,6 +15,11 @@ class biz {
         return await dao.manageConnection(async (connection) => {
             //获取活动主信息
             var result = await activityDao.queryMain(connection, params);
+            var resultCount = await activityDao.queryMainCount(connection, params);
+            let count = 0;
+            if(resultCount && resultCount.length > 0){
+                count = resultCount[0].count;
+            }
             //封装其他信息
             if (result && result.length > 0 && (params.info || params.types)) {
                 for (let item of result) {
@@ -23,7 +28,11 @@ class biz {
                     item.infos.push(await activityDao.queryInfo(connection, params));
                 }
             }
-            return result;
+
+            return {
+                "list":result,
+                "count":count
+            };
         })
     }
 

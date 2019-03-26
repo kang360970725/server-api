@@ -1,7 +1,7 @@
 
 /**
  * @api {get} v1/users/getuser 获取会员信息
- * @apiName B端添加用户(get)
+ * @apiName v1/users/getuser
  * @apiGroup users
  * @apiVersion 1.0.0
  * @apiParam {String} uuId  用户UUid
@@ -53,7 +53,7 @@
 
 /**
  * @api {post} v1/users/login 登录
- * @apiName B端登录(post)
+ * @apiName v1/users/login
  * @apiGroup users
  * @apiVersion 1.0.0
  *
@@ -109,8 +109,8 @@
  */
 
 /**
- * @api {post} v1/users/register 注册1
- * @apiName B端注册
+ * @api {post} v1/users/register 注册
+ * @apiName v1/users/register
  * @apiGroup users
  * @apiVersion 1.0.0
  *
@@ -122,7 +122,7 @@
  * @apiParam {String} Invitcode  邀请码 可空
  * @apiParam {String} version  用户等级 可空
  * @apiParam {String} code  验证码 不可空
- * @apiParam {String} type  验证码类型 不可空 注册传0 终端业务 0 注册  3 找回密码  4 绑定终端  ....
+ * @apiParam {String} type  验证码类型 不可空 注册传0 终端业务 0 注册  3 找回密码  4 绑定终端
  *
  *
  * @apiSuccessExample 成功返回结果:
@@ -137,12 +137,11 @@
         "account": "adminhy"
     }
    }
- *}
  */
 
 /**
  * @api {post} v1/users/forgotPwd 找回密码
- * @apiName B端注册
+ * @apiName v1/users/forgotPwd
  * @apiGroup users
  * @apiVersion 1.0.0
  *
@@ -161,6 +160,5 @@
     "data": {
         "account": "adminhy"
     }
-}
- *}
+    }
  */

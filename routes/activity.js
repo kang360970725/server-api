@@ -16,41 +16,43 @@
  * @apiParam {String} startTime  活动开始时间 可空
  * @apiParam {String} endTime  活动结束时间 可空
  * @apiParam {String} content 是否查询活动内容信息 非空查询 空不查询
+ * @apiParam {String} type 类型 0活动 1产品 2服务 空查询全部
+ * @apiParam {String} pageSize 数据量 非空
+ * @apiParam {String} pageIndex 0开始 页数 非空
  *
  *
  * @apiSuccessExample 成功返回结果:
  *  HTTP/1.1 200 OK
  *
- * {
-    "status": 0,
-    "message": "successful",
-    "data": [
-        {
-            "activity_id": 6,
-            "activity_name": "adminhy",
-            "activity_title": "12345677",
-            "activity_code": "jj8dFU2A",
-            "infos": [
-                [
-                    {
-                        "id": 1,
-                        "activity_id": 1,
-                        "info_type": 1,
-                        "info_value": 1,
-                        "info_explain": "1"
-                    },
-                    {
-                        "id": 2,
-                        "activity_id": 1,
-                        "info_type": 2,
-                        "info_value": 1234,
-                        "info_explain": "1232333"
-                    }
+ * "data": {
+        "list": [
+            {
+                "activity_id": 6,
+                "activity_name": "adminhy",
+                "activity_title": "12345677",
+                "activity_code": "jj8dFU2A",
+                "infos": [
+                    [
+                        {
+                            "id": 1,
+                            "activity_id": 1,
+                            "info_type": 1,
+                            "info_value": 1,
+                            "info_explain": "1"
+                        },
+                        {
+                            "id": 2,
+                            "activity_id": 1,
+                            "info_type": 2,
+                            "info_value": 1234,
+                            "info_explain": "1232333"
+                        }
+                    ]
                 ]
-            ]
-        }
-    ]
-}
+            }
+        ],
+        "count": 1
+    }
  *}
  */
 
@@ -67,6 +69,7 @@
  * @apiParam {String} startTime  活动开始时间 可空
  * @apiParam {String} endTime  活动结束时间 可空
  * @apiParam {String} content 询活动内容信息 不可空
+ * @apiParam {String} type 类型 0活动 1产品 2服务
  * @apiParam {String} forbidden 活动是否有效 0有效 1无效 默认0 可空
  * @apiParam {Array} infos  活动info信息
  * @apiParam {String} infos.type info类型  1返现 2免费 3打折 4积分奖励  200 轮播图片 201封面

@@ -8,6 +8,9 @@ let str = require("../../utils/stringHelper"),
 
 class ctrl {
     static async activitys(params) {
+        if(str.isEmpty(params.pageIndex) || str.isEmpty(params.pageSize)){
+            throw exception.ParamException('分页数据不能为空')
+        }
         return await activityBiz.activitys(params)
     }
 

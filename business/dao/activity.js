@@ -14,9 +14,9 @@ class dao {
         activity_code, 
         activity_content, 
         start_time,
-        end_time)
+        end_time,type)
         VALUES 
-        (?, ?, ?, ?, ?, ?);
+        (?, ?, ?, ?, ?, ?,?);
         `;
         let params = [];
         params.push(query.name);
@@ -25,6 +25,7 @@ class dao {
         params.push(query.content);
         params.push(query.startTime);
         params.push(query.endTime);
+        params.push(query.type);
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
                 if (err) return reject(err);
@@ -91,11 +92,14 @@ class dao {
     static async queryMain(connection, query) {
         let where = [];
         let content = [];
+        var limit = "LIMIT ";
         let sql = () => `
         SELECT 
         ${content.join(' , ')}
         FROM activity_main
         WHERE ${where.join(' and ')}
+        
+        ${limit};
         `;
         let params = [];
         content.push(' activity_id ');
@@ -129,6 +133,11 @@ class dao {
             params.push(query.code);
         }
 
+        if (!str.isEmpty(query.type)) {
+            where.push(' type = ? ');
+            params.push(query.type);
+        }
+
         if (query.startTime) {
             where.push(' start_time >= ? ');
             params.push(query.startTime);
@@ -138,6 +147,66 @@ class dao {
             where.push(' end_time <= ? ');
             params.push(query.endTime);
         }
+
+        limit += `${(query.pageIndex) * query.pageSize}, ${query.pageSize}`;
+
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+
+    static async queryMainCount(connection, query) {
+        let where = [];
+        let sql = () => `
+        SELECT 
+        count(1) as count
+        FROM activity_main
+        WHERE ${where.join(' and ')}
+        `;
+        let params = [];
+        where.push(' 1 = 1 ');
+        if (!str.isEmpty(query.forbidden)) {
+            where.push(' activity_forbidden = ? ');
+            params.push(query.forbidden);
+        }
+
+        if (!str.isEmpty(query.id)) {
+            where.push(' activity_id = ? ');
+            params.push(query.id);
+        }
+
+        if (!str.isEmpty(query.name)) {
+            where.push(' activity_name like ? ');
+            params.push("%" + query.name + "%");
+        }
+        if (!str.isEmpty(query.title)) {
+            where.push(' activity_title like ? ');
+            params.push("%" + query.title + "%");
+        }
+        if (!str.isEmpty(query.code)) {
+            where.push(' activity_code = ? ');
+            params.push(query.code);
+        }
+
+        if (!str.isEmpty(query.type)) {
+            where.push(' type = ? ');
+            params.push(query.type);
+        }
+
+        if (query.startTime) {
+            where.push(' start_time >= ? ');
+            params.push(query.startTime);
+        }
+
+        if (query.endTime) {
+            where.push(' end_time <= ? ');
+            params.push(query.endTime);
+        }
+
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
                 if (err) return reject(err);
@@ -231,7 +300,7 @@ class dao {
             where.push('activity_id = ?');
             params.push(query.mainId)
         }
-        if (set.length <= 0 || where.length <= 0 || params.length <=0) {
+        if (set.length <= 0 || where.length <= 0 || params.length <= 0) {
             return 0;
         }
 
