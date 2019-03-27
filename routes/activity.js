@@ -8,7 +8,8 @@
  *
  * @apiParam {String} id  活动id 可空
  * @apiParam {String} info  是否查询活动info信息 非空查询 空不查询
- * @apiParam {String} types 查询info类型  1返现 2免费 3打折 4积分奖励  200 轮播图片 201封面 如需多类型逗号隔开 如 1,2,3,4 空为全部类型
+ * @apiParam {String} types 查询info类型  0 价格 1返现 2免费 3打折 4积分奖励 5 月卡价格 6季卡价格 7 年卡价格 200 轮播图片 201封面 如需多类型逗号隔开 如 1,2,3,4 空为全部类型
+ *
  * @apiParam {String} forbidden  活动是否有效 0有效 1无效 app传0 空为全部
  * @apiParam {String} name  活动名称 模糊查询 可空
  * @apiParam {String} title  活动title 模糊查询 可空
@@ -16,7 +17,7 @@
  * @apiParam {String} startTime  活动开始时间 可空
  * @apiParam {String} endTime  活动结束时间 可空
  * @apiParam {String} content 是否查询活动内容信息 非空查询 空不查询
- * @apiParam {String} type 类型 0活动 1产品 2服务 空查询全部
+ * @apiParam {String} type 类型 0活动 1产品 2矿池 空查询全部
  * @apiParam {String} pageSize 数据量 非空
  * @apiParam {String} pageIndex 0开始 页数 非空
  *
@@ -69,10 +70,10 @@
  * @apiParam {String} startTime  活动开始时间 可空
  * @apiParam {String} endTime  活动结束时间 可空
  * @apiParam {String} content 询活动内容信息 不可空
- * @apiParam {String} type 类型 0活动 1产品 2服务
+ * @apiParam {String} type 类型 0活动 1产品 2矿池
  * @apiParam {String} forbidden 活动是否有效 0有效 1无效 默认0 可空
  * @apiParam {Array} infos  活动info信息
- * @apiParam {String} infos.type info类型  1返现 2免费 3打折 4积分奖励  200 轮播图片 201封面
+ * @apiParam {String} infos.type info类型  1返现 2免费 3打折 4积分奖励 5 月卡价格 6季卡价格 7 年卡价格 200 轮播图片 201封面
  * @apiParam {String} infos.value  活动info内容
  * @apiParam {String} infos.explain  活动info说明
  *

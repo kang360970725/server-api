@@ -6,29 +6,29 @@ const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const resources  = require('./routes/resources')
+let apiroutes = require('./routes/routerApi');
 const logger = require('koa-logger')
 const createError = require('http-errors');
 const responsed = require('./utils/data')
 const koaBody = require('koa-body')
 let cors = require('@koa/cors');
-
-
-// error handler
-onerror(app)
-
-// middlewares
-app.use(bodyparser({
-    enableTypes: ['json', 'form', 'text']
-}))
-app.use(json())
-app.use(logger())
-app.use(require('koa-static')(__dirname + '/public'))
 app.use(koaBody({
     multipart: true,
     formidable: {
         maxFileSize: 1000*1024*1024    // 设置上传文件大小最大限制，默认10M
     }
 }));
+// error handler
+onerror(app)
+// middlewares
+app.use(bodyparser({
+    enableTypes: ['json', 'form', 'text']
+}))
+
+app.use(json())
+app.use(logger())
+app.use(require('koa-static')(__dirname + '/public'))
+
 app.use(views(__dirname + '/views', {
     extension: 'pug'
 }))
@@ -106,11 +106,11 @@ app.use(cors({
     origin: '*',
     exposeHeaders: ['Token']
 }));
-let apiroutes = require('./routes/routerApi');
+
+// app.use(koaBody());
 // routes
 app.use(apiroutes.routes(), apiroutes.allowedMethods())
 app.use(resources.routes(), resources.allowedMethods())
 
 
 module.exports = app
-
