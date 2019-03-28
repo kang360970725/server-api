@@ -1,5 +1,5 @@
 /**
- * @api {get} v1/hot/users 获取排行榜用户和热门用户
+ * @api {get} v1/hotUsers/getUserList 获取排行榜用户和热门用户
  * @apiName 获取排行榜用户和热门用户
  * @apiGroup hot
  *

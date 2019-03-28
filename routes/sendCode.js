@@ -1,5 +1,5 @@
 /**
- * @api {post} v1/send/send 发送(短信、邮件)验证码
+ * @api {post} v1/sendCode/sendCode 发送(短信、邮件)验证码
  * @apiName C端发送短信或者邮件验证码(post)
  * @apiGroup send
  * @apiVersion 1.0.0

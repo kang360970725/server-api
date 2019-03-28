@@ -17,7 +17,7 @@ class biz {
             var result = await activityDao.queryMain(connection, params);
             var resultCount = await activityDao.queryMainCount(connection, params);
             let count = 0;
-            if(resultCount && resultCount.length > 0){
+            if (resultCount && resultCount.length > 0) {
                 count = resultCount[0].count;
             }
             //封装其他信息
@@ -30,8 +30,8 @@ class biz {
             }
 
             return {
-                "list":result,
-                "count":count
+                "list": result,
+                "count": count
             };
         })
     }
@@ -78,6 +78,49 @@ class biz {
                     result.push(item.id)
                 }
             }
+            return result;
+        })
+    }
+
+
+    //添加用户关联关系
+    static async addUserUnion(params) {
+        return await dao.manageTransactionConnection(async (connection) => {
+            try {
+                let result = await activityDao.addUserUnion(connection, params);
+                if (result && result.insertId) {
+                    params.id = result.insertId;
+                    await activityDao.addRenew(connection, params);
+                } else {
+                    throw exception.BusinessException("提交失败", 200)
+                }
+                return result;
+            }catch (e) {
+                throw exception.BusinessException("重复提交", 200)
+            }
+        })
+    }
+
+    //更新用户关联关系
+    static async updateUserUnion(params) {
+        return await dao.manageTransactionConnection(async (connection) => {
+            //需要区分 用户还是管理员
+            let result = await activityDao.queryRenew(connection, params);
+            if(result && result.length > 0 && result[0].data_time){
+                await activityDao.updateRenew(connection, params);
+                params.id = result[0].data_time;
+                if(params.adminUser){
+                    await activityDao.updateUserUnion(connection, params);
+                }
+            }
+            return result;
+        })
+    }
+
+    //添加用户关联关系
+    static async queryUserUnion(params) {
+        return await dao.manageConnection(async (connection) => {
+            let result = await activityDao.queryUserUnion(connection, params);
             return result;
         })
     }

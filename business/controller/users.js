@@ -7,9 +7,9 @@ let str = require("../../utils/stringHelper"),
     businessBiz = require('../../business/biz/business');
 
 class ctrl {
-    static async getUsers(params) {
+    static async getuser(params) {
         if (!params || str.isEmpty(params.uuId)) {
-            throw exception.BusinessException('商家ID不能为空',1)
+            throw exception.BusinessException('商家ID不能为空', 1)
         }
         return await businessBiz.getUsers(params)
     }
@@ -30,9 +30,9 @@ class ctrl {
         if (!params.version) {
             throw data.error('机器人版本格式不正确')
         }
-        if(!params.uuId){
+        if (!params.uuId) {
             return await businessBiz.addUsers(params);//uuid为空。添加用户
-        }else {
+        } else {
             return await businessBiz.renewUsers(params);//包含uuid。续费用户
         }
     }

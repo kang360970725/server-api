@@ -36,7 +36,7 @@ app.use(views(__dirname + '/views', {
 app.keys = ['some secret hurr'];
 const CONFIG = {
     key: 'koa:sess',   //cookie key (default is koa:sess)
-    maxAge: 86400000,  // cookie的过期时间 maxAge in ms (default is 1 days)
+    maxAge: 1000 * 60 * 60 * 24 * 30,  // cookie的过期时间 maxAge in ms (default is 1 days)
     overwrite: true,  //是否可以overwrite    (默认default true)
     httpOnly: true, //cookie是否只有服务器端可以访问 httpOnly or not (default true)
     signed: true,   //签名默认true

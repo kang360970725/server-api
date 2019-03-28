@@ -1,11 +1,11 @@
-
 const path = require('path');
 const fs = require('fs-extra');
-
+const exception = require('../utils/exception.js');
 const Route = require('koa-router');
 
-const router = new Route({ prefix: '/v1' })
-const ctrlRoot = __dirname+`/../business/controller`;
+const router = new Route({prefix: '/v1'})
+
+const ctrlRoot = __dirname + `/../business/controller`;
 
 // 如果存在 controllers 目录自动处理api请求路由
 if (fs.existsSync(ctrlRoot)) {
@@ -21,27 +21,43 @@ if (fs.existsSync(ctrlRoot)) {
     })
 
     router.all('/:controller/:action', async function filter(ctx, next) {
-        let { controller, action } = ctx.params;
-        let params ;
-        if(ctx.method == 'GET'){
+        let {controller, action} = ctx.params;
+        let params;
+        if (ctx.method == 'GET') {
             params = ctx.query;
-        }else{
+        } else {
             params = ctx.request.body;
         }
         if (!controller) {
-            ctx.throw(404,'Not Found', {code: 404 });
+            ctx.throw(404, 'Not Found', {code: 404});
         }
         let Controller = ControllerPool[`${controller}`]; // require(`${process.cwd()}/controllers/${controller}Controller`)
         if (!Controller) {
-            ctx.throw(404,'Not Found', {code: 404 });
+            ctx.throw(404, 'Not Found', {code: 404});
         }
         let instance = Controller;
         let asyncAction = instance[action || 'index'];
         if (!asyncAction) {
-            ctx.throw(404,'Not Found', {code: 404 });
+            ctx.throw(404, 'Not Found', {code: 404});
+        }
+        let currentUser = ctx.session.user;
+
+        if (currentUser.level && currentUser.level >= 5) {
+            //管理员登录
+            params.adminUser = currentUser;
+        } else if (currentUser.level < 5) {
+            //用户登录
+            params.currentUser = currentUser;
+        } else {
+            throw exception.BusinessException("未登录", -2);
+        }
+
+        let result = await asyncAction.call(instance, params);
+        if (controller === 'users' && action === 'login') {
+            ctx.session.user = result.data;
         }
         ctx.status = 200;
-        return await asyncAction.call(instance, params);
+        return result;
     })
 }
 

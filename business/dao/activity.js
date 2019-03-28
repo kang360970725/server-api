@@ -341,6 +341,191 @@ class dao {
             });
         })
     }
+
+
+    //添加活动信息数据
+    static async addUserUnion(connection, query) {
+        let sql = () => `
+        INSERT INTO 
+        user_union_info
+        (user_id, 
+        user_info_type,
+        user_info_union,
+        end_time,
+        is_valid
+        ) VALUES 
+        (?,?,?,?,?);
+        `;
+        let params = [];
+        params.push(query.id);
+        params.push(query.type);
+        params.push(query.value);
+        params.push(query.endTime);
+        params.push(query.isValid);
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+
+    //添加记录
+    static async addRenew(connection, query) {
+        let sql = () => `
+        INSERT INTO pay_record(account,create_time,type,\`desc\`,price,data_time) VALUES (?,now(),0,?,?,?);
+        `;
+        let params = [];
+        params.push(query.account);
+        params.push(query.desc);
+        params.push(query.price);
+        params.push(query.id);
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+
+    static async updateUserUnion(connection, query) {
+        let set = [];
+        let params = [];
+        let sql = () => `
+        UPDATE user_union_info 
+        SET
+        ${set.join(' , ')}
+        WHERE
+        id = ?
+        `;
+
+        if (!str.isEmpty(query.endTime)) {
+            set.push('end_time = ?');
+            params.push(query.endTime)
+        }
+        if (!str.isEmpty(query.isValid)) {
+            set.push('is_valid = ?');
+            params.push(query.isValid)
+        }
+        params.push(query.id)
+
+        if (set.length <= 0 || params.length <= 0) {
+            return 0;
+        }
+
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+    //添加记录
+    static async updateRenew(connection, query) {
+        let params = [];
+        let sets = [];
+        let sql = () => `
+        UPDATE pay_record 
+        SET 
+        ${sets.join(" , ")}
+        WHERE 
+        id = ?
+        ;
+        `;
+
+        if (!str.isEmpty(query.credential)) {
+            sets.push(" credential= ? ")
+            params.push(query.credential);
+        }
+        if (!str.isEmpty(query.type)) {
+            sets.push(" type= ? ")
+            params.push(query.type);
+        }
+        if (!str.isEmpty(query.desc)) {
+            sets.push(" `desc` = ? ")
+            params.push(query.desc);
+        }
+        params.push(query.id);
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+
+    //添加记录
+    static async queryRenew(connection, query) {
+        let params = [];
+        var limit = "LIMIT ";
+        let sql = () => `
+        SELECT * FROM pay_record 
+        WHERE
+        id = ? 
+        order by create_time DESC
+        ${limit}
+        ;
+        `;
+        params.push(query.id);
+        if(str.isEmpty(query.pageIndex) || str.isEmpty(query.pageSize)){
+            limit = "";
+        }else{
+            limit += `${(query.pageIndex) * query.pageSize}, ${query.pageSize}`;
+        }
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+    static async queryUserUnion(connection, query) {
+        let where = [];
+        let sql = () => `
+        SELECT 
+        *
+        FROM user_union_info
+        WHERE ${where.join(' AND ')}
+        `;
+        let params = [];
+        params.push(' 1 = 1 ');
+        if (!str.isEmpty(query.id)) {
+            where.push(' id = ? ');
+            params.push(query.id);
+        }
+
+        if (!str.isEmpty(query.uuid)) {
+            where.push(' user_id = ? ');
+            params.push(query.uuid);
+        }
+
+        if (!str.isEmpty(query.types)) {
+            let types = query.types.split(',')
+            where.push(` user_info_type in ( ${types.join(',')} ) `);
+        }
+
+        if (!str.isEmpty(query.endTime)) {
+            where.push(' end_time <= ? ');
+            params.push(query.endTime);
+        }
+
+        if (!str.isEmpty(query.isValid)) {
+            where.push(' is_valid = ? ');
+            params.push(query.isValid);
+        }
+
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
 }
 
 module.exports = dao
