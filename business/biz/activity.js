@@ -101,6 +101,24 @@ class biz {
         })
     }
 
+    //添加用户关联关系
+    static async addUserPoolUnion(params) {
+        return await dao.manageTransactionConnection(async (connection) => {
+            try {
+                let result = await activityDao.addUserUnion(connection, params);
+                if (result && result.insertId) {
+                    params.unionId = result.insertId;
+                    await activityDao.addPool(connection, params);
+                } else {
+                    throw exception.BusinessException("提交失败", 200)
+                }
+                return result;
+            }catch (e) {
+                throw exception.BusinessException("重复提交", 200)
+            }
+        })
+    }
+
     //更新用户关联关系
     static async updateUserUnion(params) {
         return await dao.manageTransactionConnection(async (connection) => {
@@ -109,6 +127,23 @@ class biz {
             if(result && result.length > 0 && result[0].data_time){
                 await activityDao.updateRenew(connection, params);
                 params.id = result[0].data_time;
+                if(params.adminUser){
+                    await activityDao.updateUserUnion(connection, params);
+                }
+            }
+            return result;
+        })
+    }
+
+
+    //更新用户关联关系
+    static async updateUserPoolUnion(params) {
+        return await dao.manageTransactionConnection(async (connection) => {
+            //需要区分 用户还是管理员
+            let result = await activityDao.queryPool(connection, params);
+            if(result && result.length > 0 && result[0].data_time){
+                await activityDao.updatePool(connection, params);
+                params.id = result[0].union_id;
                 if(params.adminUser){
                     await activityDao.updateUserUnion(connection, params);
                 }

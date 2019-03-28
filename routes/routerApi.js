@@ -40,16 +40,19 @@ if (fs.existsSync(ctrlRoot)) {
         if (!asyncAction) {
             ctx.throw(404, 'Not Found', {code: 404});
         }
-        let currentUser = ctx.session.user;
-
-        if (currentUser.level && currentUser.level >= 5) {
-            //管理员登录
-            params.adminUser = currentUser;
-        } else if (currentUser.level < 5) {
-            //用户登录
-            params.currentUser = currentUser;
+        if (controller === 'users' && action === 'login') {
+            console.log("用户登录")
         } else {
-            throw exception.BusinessException("未登录", -2);
+            let currentUser = ctx.session.user;
+            if (currentUser.level && currentUser.level >= 5) {
+                //管理员登录
+                params.adminUser = currentUser;
+            } else if (currentUser.level < 5) {
+                //用户登录
+                params.currentUser = currentUser;
+            } else {
+                throw exception.BusinessException("未登录", -2);
+            }
         }
 
         let result = await asyncAction.call(instance, params);

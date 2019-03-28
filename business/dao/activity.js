@@ -390,6 +390,71 @@ class dao {
     }
 
 
+    //添加记录
+    static async addPool(connection, query) {
+        let fields = [];
+        let values = [];
+        let params = [];
+        let sql = () => `
+        INSERT INTO user_pool_record
+        ( ${fields.join(" , ")})
+        VALUES 
+        ( ${values.join(" , ")});
+        `;
+        if (!str.isEmpty(query.uuid)) {
+            fields.push("user_uuid")
+            values.push("?")
+            params.push(query.uuid)
+        }
+
+        if (!str.isEmpty(query.relname)) {
+            fields.push("user_relname")
+            values.push("?")
+            params.push(query.relname)
+        }
+
+        if (!str.isEmpty(query.phone)) {
+            fields.push("user_phone")
+            values.push("?")
+            params.push(query.phone)
+        }
+        if (!str.isEmpty(query.email)) {
+            fields.push("user_email")
+            values.push("?")
+            params.push(query.email)
+        }
+        if (!str.isEmpty(query.amount)) {
+            fields.push("amount")
+            values.push("?")
+            params.push(query.amount)
+        }
+        if (!str.isEmpty(query.updatetime)) {
+            fields.push("updatetime")
+            values.push("?")
+            params.push(query.updatetime)
+        }
+        if (!str.isEmpty(query.poolId)) {
+            fields.push("pool_id")
+            values.push("?")
+            params.push(query.poolId)
+        }
+        if (!str.isEmpty(query.unionId)) {
+            fields.push("union_id")
+            values.push("?")
+            params.push(query.unionId)
+        }
+        if (fields.length <= 0 || values.length <= 0 || params.length <= 0) {
+            return;
+        }
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+
     static async updateUserUnion(connection, query) {
         let set = [];
         let params = [];
@@ -449,6 +514,49 @@ class dao {
             params.push(query.desc);
         }
         params.push(query.id);
+        if (sets.length <= 0) {
+            return
+        }
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+//添加记录
+    static async queryRenew(connection, query) {
+        let params = [];
+        let where = [];
+        var limit = "LIMIT ";
+        let sql = () => `
+        SELECT * FROM pay_record 
+        WHERE
+        ${where.join(" , ")}
+        order by create_time DESC
+        ${limit}
+        ;
+        `;
+        where.push(" 1 = 1 ")
+        if (str.isEmpty(query.id)) {
+            where.push(" id = ? ")
+            params.push(query.id);
+        }
+        if (str.isEmpty(query.account)) {
+            where.push(" account = ? ")
+            params.push(query.account);
+        }
+        if (str.isEmpty(query.unionId)) {
+            where.push(" data_time = ? ")
+            params.push(query.unionId);
+        }
+
+        if (str.isEmpty(query.pageIndex) || str.isEmpty(query.pageSize)) {
+            limit = "";
+        } else {
+            limit += `${(query.pageIndex) * query.pageSize}, ${query.pageSize}`;
+        }
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
                 if (err) return reject(err);
@@ -459,21 +567,118 @@ class dao {
 
 
     //添加记录
-    static async queryRenew(connection, query) {
+    static async updatePool(connection, query) {
         let params = [];
+        let sets = [];
+        let sql = () => `
+        UPDATE user_pool_record 
+        SET 
+        ${sets.join(" , ")}
+        WHERE 
+        id = ?
+        ;
+        `;
+
+        if (str.isEmpty(query.relname)) {
+            sets.push(" user_relname = ? ")
+            params.push("%" + query.relname + "%");
+        }
+
+        if (str.isEmpty(query.nickname)) {
+            sets.push(" user_nickname = ? ")
+            params.push("%" + query.nickname + "%");
+        }
+
+        if (str.isEmpty(query.phone)) {
+            sets.push(" user_phone = ? ")
+            params.push("%" + query.phone + "%");
+        }
+
+        if (str.isEmpty(query.email)) {
+            sets.push(" user_email = ? ")
+            params.push("%" + query.email + "%");
+        }
+
+        if (str.isEmpty(query.amount)) {
+            sets.push(" amount = ? ")
+            params.push(query.amount);
+        }
+
+        if (str.isEmpty(query.poolId)) {
+            sets.push(" pool_id = ? ")
+            params.push(query.poolId);
+        }
+        params.push(query.id);
+
+        if (sets.length <= 0) {
+            return
+        }
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+    //添加记录
+    static async queryPool(connection, query) {
+        let params = [];
+        let where = [];
         var limit = "LIMIT ";
         let sql = () => `
-        SELECT * FROM pay_record 
+        SELECT * FROM user_pool_record 
         WHERE
-        id = ? 
-        order by create_time DESC
+        ${where.join(" , ")}
+        order by updatetime DESC,create_time DESC
         ${limit}
         ;
         `;
-        params.push(query.id);
-        if(str.isEmpty(query.pageIndex) || str.isEmpty(query.pageSize)){
+        where.push(" 1 = 1 ")
+        if (str.isEmpty(query.id)) {
+            where.push(" id = ? ")
+            params.push(query.id);
+        }
+
+        if (str.isEmpty(query.uuid)) {
+            where.push(" user_uuid = ? ")
+            params.push(query.uuid);
+        }
+
+        if (str.isEmpty(query.relname)) {
+            where.push(" user_relname like ? ")
+            params.push("%" + query.relname + "%");
+        }
+
+        if (str.isEmpty(query.nickname)) {
+            where.push(" user_nickname like ? ")
+            params.push("%" + query.nickname + "%");
+        }
+
+        if (str.isEmpty(query.phone)) {
+            where.push(" user_phone like ? ")
+            params.push("%" + query.phone + "%");
+        }
+
+        if (str.isEmpty(query.email)) {
+            where.push(" user_email like ? ")
+            params.push("%" + query.email + "%");
+        }
+
+
+        if (str.isEmpty(query.poolId)) {
+            where.push(" pool_id = ? ")
+            params.push(query.poolId);
+        }
+
+        if (str.isEmpty(query.unionId)) {
+            where.push(" union_id = ? ")
+            params.push(query.unionId);
+        }
+
+        if (str.isEmpty(query.pageIndex) || str.isEmpty(query.pageSize)) {
             limit = "";
-        }else{
+        } else {
             limit += `${(query.pageIndex) * query.pageSize}, ${query.pageSize}`;
         }
         return new Promise(async (resolve, reject) => {
