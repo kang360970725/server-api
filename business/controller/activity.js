@@ -160,6 +160,9 @@ class ctrl {
         if (params.adminUser) {
             if (!str.isEmpty(params.poolId)) {
                 params.isValid = 0;
+                if (str.isEmpty(params.token)) {
+                    throw exception.ParamException('矿池token[token]不能为空')
+                }
             }
         } else if (params.currentUser) {
             params.isValid = "";//审核中

@@ -615,6 +615,10 @@ class dao {
             sets.push(" pool_id = ? ")
             params.push(query.poolId);
         }
+        if (!str.isEmpty(query.token)) {
+            sets.push(" token = ? ")
+            params.push(query.token);
+        }
         params.push(query.id);
 
         if (sets.length <= 0) {
