@@ -513,6 +513,10 @@ class dao {
             sets.push(" `desc` = ? ")
             params.push(query.desc);
         }
+        if (!str.isEmpty(query.price)) {
+            sets.push(" price = ? ")
+            params.push(query.price);
+        }
         params.push(query.id);
         if (sets.length <= 0) {
             return
@@ -533,25 +537,28 @@ class dao {
         let sql = () => `
         SELECT * FROM pay_record 
         WHERE
-        ${where.join(" , ")}
+        ${where.join(" AND ")}
         order by create_time DESC
         ${limit}
         ;
         `;
         where.push(" 1 = 1 ")
-        if (str.isEmpty(query.id)) {
+        if (!str.isEmpty(query.id)) {
             where.push(" id = ? ")
             params.push(query.id);
         }
-        if (str.isEmpty(query.account)) {
+        if (!str.isEmpty(query.account)) {
             where.push(" account = ? ")
             params.push(query.account);
         }
-        if (str.isEmpty(query.unionId)) {
+        if (!str.isEmpty(query.unionId)) {
             where.push(" data_time = ? ")
             params.push(query.unionId);
         }
-
+        if (!str.isEmpty(query.type)) {
+            where.push(" type = ? ")
+            params.push(query.type);
+        }
         if (str.isEmpty(query.pageIndex) || str.isEmpty(query.pageSize)) {
             limit = "";
         } else {
@@ -579,32 +586,32 @@ class dao {
         ;
         `;
 
-        if (str.isEmpty(query.relname)) {
+        if (!str.isEmpty(query.relname)) {
             sets.push(" user_relname = ? ")
             params.push("%" + query.relname + "%");
         }
 
-        if (str.isEmpty(query.nickname)) {
+        if (!str.isEmpty(query.nickname)) {
             sets.push(" user_nickname = ? ")
             params.push("%" + query.nickname + "%");
         }
 
-        if (str.isEmpty(query.phone)) {
+        if (!str.isEmpty(query.phone)) {
             sets.push(" user_phone = ? ")
             params.push("%" + query.phone + "%");
         }
 
-        if (str.isEmpty(query.email)) {
+        if (!str.isEmpty(query.email)) {
             sets.push(" user_email = ? ")
             params.push("%" + query.email + "%");
         }
 
-        if (str.isEmpty(query.amount)) {
+        if (!str.isEmpty(query.amount)) {
             sets.push(" amount = ? ")
             params.push(query.amount);
         }
 
-        if (str.isEmpty(query.poolId)) {
+        if (!str.isEmpty(query.poolId)) {
             sets.push(" pool_id = ? ")
             params.push(query.poolId);
         }
@@ -629,49 +636,54 @@ class dao {
         let sql = () => `
         SELECT * FROM user_pool_record 
         WHERE
-        ${where.join(" , ")}
-        order by updatetime DESC,create_time DESC
+        ${where.join(" AND ")}
+        order by updatetime DESC,createtime DESC
         ${limit}
         ;
         `;
         where.push(" 1 = 1 ")
-        if (str.isEmpty(query.id)) {
+        if (!str.isEmpty(query.id)) {
             where.push(" id = ? ")
             params.push(query.id);
         }
 
-        if (str.isEmpty(query.uuid)) {
+        if (!str.isEmpty(query.uuid)) {
             where.push(" user_uuid = ? ")
             params.push(query.uuid);
         }
 
-        if (str.isEmpty(query.relname)) {
+        if (!str.isEmpty(query.relname)) {
             where.push(" user_relname like ? ")
             params.push("%" + query.relname + "%");
         }
 
-        if (str.isEmpty(query.nickname)) {
+        if (!str.isEmpty(query.nickname)) {
             where.push(" user_nickname like ? ")
             params.push("%" + query.nickname + "%");
         }
 
-        if (str.isEmpty(query.phone)) {
+        if (!str.isEmpty(query.phone)) {
             where.push(" user_phone like ? ")
             params.push("%" + query.phone + "%");
         }
 
-        if (str.isEmpty(query.email)) {
+        if (!str.isEmpty(query.email)) {
             where.push(" user_email like ? ")
             params.push("%" + query.email + "%");
         }
 
-
-        if (str.isEmpty(query.poolId)) {
-            where.push(" pool_id = ? ")
-            params.push(query.poolId);
+        if (!str.isEmpty(query.poolId)) {
+            if(query.poolId == "ALL"){
+                where.push(` pool_id is not null `);
+            }else{
+                let poolIds = query.poolId.split(',')
+                where.push(` pool_id in ( ${poolIds.join(',')} ) `);
+            }
+        }else{
+            where.push(" pool_id is null ")
         }
 
-        if (str.isEmpty(query.unionId)) {
+        if (!str.isEmpty(query.unionId)) {
             where.push(" union_id = ? ")
             params.push(query.unionId);
         }

@@ -62,14 +62,9 @@ class ctrl {
             throw exception.ParamException('价格[price]不能为空')
         }
 
-        if (str.isEmpty(params.desc)) {
-            throw exception.ParamException('说明[desc]不能为空')
-        }
-
         if (!expression.isInteger.test(params.isValid) || params.isValid > 3) {
             throw exception.ParamException('产品时间类别[isValid]格式错误')
         }
-
 
         let endTime = new Date();
         if (params.isValid === 1) {//月
@@ -97,7 +92,7 @@ class ctrl {
             throw exception.ParamException('账号[account]不能为空')
         }
 
-        if (str.isEmpty(params.id)) {
+        if (str.isEmpty(params.uuid)) {
             throw exception.ParamException('账号uuid[id]不能为空')
         }
 
@@ -131,7 +126,7 @@ class ctrl {
         if (!expression.isInteger.test(params.isValid) || params.isValid > 3) {
             throw exception.ParamException('是否有效[isValid]格式错误')
         }
-
+        params.endTime = new Date();
         return await activityBiz.addUserPoolUnion(params)
     }
 
@@ -152,6 +147,7 @@ class ctrl {
                 throw exception.ParamException('凭证[credential]不能为空')
             }
             params.type = 1;//审核中
+            params.price = "";
         }
         if (str.isEmpty(params.id)) {
             throw exception.ParamException('记录[id]不能为空')
@@ -162,17 +158,34 @@ class ctrl {
     //审核矿池
     static async updateuserpoolunion(params) {
         if (params.adminUser) {
-            if (str.isEmpty(params.poolId)) {
-                throw exception.ParamException('矿池id[poolId]不能为空')
+            if (!str.isEmpty(params.poolId)) {
+                params.isValid = 0;
             }
-            params.isValid = 0;
         } else if (params.currentUser) {
             params.isValid = "";//审核中
         }
         if (str.isEmpty(params.id)) {
-            throw exception.ParamException('记录[id]不能为空')
+            throw exception.ParamException('矿池加入申请记录[id]不能为空')
         }
         return await activityBiz.updateUserPoolUnion(params)
+    }
+
+    //申请记录查询
+    static async renew(params) {
+         if (params.currentUser) {
+            params.uuid = params.currentUser.uuid;
+            params.account = params.currentUser.account;
+        }
+        return await activityBiz.queryRenews(params)
+    }
+
+    //矿池申请记录查询
+    static async pool(params) {
+        if (params.currentUser) {
+            params.uuid = params.currentUser.uuid;
+            params.account = params.currentUser.account;
+        }
+        return await activityBiz.queryPools(params)
     }
 }
 

@@ -95,7 +95,7 @@ class biz {
                     throw exception.BusinessException("提交失败", 200)
                 }
                 return result;
-            }catch (e) {
+            } catch (e) {
                 throw exception.BusinessException("重复提交", 200)
             }
         })
@@ -113,7 +113,7 @@ class biz {
                     throw exception.BusinessException("提交失败", 200)
                 }
                 return result;
-            }catch (e) {
+            } catch (e) {
                 throw exception.BusinessException("重复提交", 200)
             }
         })
@@ -123,11 +123,14 @@ class biz {
     static async updateUserUnion(params) {
         return await dao.manageTransactionConnection(async (connection) => {
             //需要区分 用户还是管理员
+            let type = params.type;
+            params.type = "";
             let result = await activityDao.queryRenew(connection, params);
-            if(result && result.length > 0 && result[0].data_time){
+            params.type = type;
+            if (result && result.length > 0 && result[0].data_time) {
                 await activityDao.updateRenew(connection, params);
                 params.id = result[0].data_time;
-                if(params.adminUser){
+                if (params.adminUser) {
                     await activityDao.updateUserUnion(connection, params);
                 }
             }
@@ -140,11 +143,14 @@ class biz {
     static async updateUserPoolUnion(params) {
         return await dao.manageTransactionConnection(async (connection) => {
             //需要区分 用户还是管理员
+            let poolId = params.poolId;
+            params.poolId = "";
             let result = await activityDao.queryPool(connection, params);
-            if(result && result.length > 0 && result[0].data_time){
+            if (result && result.length > 0 && result[0].union_id) {
+                params.poolId = poolId;
                 await activityDao.updatePool(connection, params);
                 params.id = result[0].union_id;
-                if(params.adminUser){
+                if (params.adminUser) {
                     await activityDao.updateUserUnion(connection, params);
                 }
             }
@@ -156,6 +162,22 @@ class biz {
     static async queryUserUnion(params) {
         return await dao.manageConnection(async (connection) => {
             let result = await activityDao.queryUserUnion(connection, params);
+            return result;
+        })
+    }
+
+    //查询产品购买申请
+    static async queryRenews(params) {
+        return await dao.manageConnection(async (connection) => {
+            let result = await activityDao.queryRenew(connection, params);
+            return result;
+        })
+    }
+
+    //查询矿池申请
+    static async queryPools(params) {
+        return await dao.manageConnection(async (connection) => {
+            let result = await activityDao.queryPool(connection, params);
             return result;
         })
     }

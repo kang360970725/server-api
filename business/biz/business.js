@@ -4,7 +4,8 @@ let dao = require("../../db_config/dao"),
     data = require('../../utils/data'),
     config = require('../../db_config/config'),
     exception = require('../../utils/exception.js'),
-    businessDao = require('../../business/dao/business');
+    businessDao = require('../../business/dao/business'),
+    activityDao = require('../../business/dao/activity');
 var uuid = require('node-uuid');
 
 class biz {
@@ -29,6 +30,7 @@ class biz {
                 result[0]['token'] = !!tokenItem[0] ? tokenItem[0].token : '';
                 delete result[0].apikey;
                 delete result[0].secret;
+                result[0]['unions'] = await activityDao.queryUserUnion(connection, params);
             }
             return result;
         })

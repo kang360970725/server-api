@@ -142,3 +142,268 @@
 }
  *}
  */
+
+
+/**
+ * @api {POST} v1/activity/adduserunion 申请购买产品
+ * @apiName activity/adduserunion
+ * @apiDescription 申请购买产品
+ * @apiGroup activity
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {String}  id   用户id 可空 管理员需传
+ * @apiParam {String} account  用户账号 可空 管理员需传
+ * @apiParam {String} value  活动id 不可空
+ * @apiParam {String} isValid 产品时间类别  不可空 1月 2季度 3年
+ * @apiParam {String} price  价格 不可空
+ * @apiParam {String} desc  说明 可空
+ *
+ * @apiParamExample {json} 请求参数:
+ {
+       "id":"",
+       "account":"17313208597@163.com",
+       "value":"9",
+       "isValid":"1",
+       "price":"0.222",
+       "desc":"test"
+}
+ *
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ *
+ {
+    "status": 0,
+    "message": "successful",
+    "data": {
+        "fieldCount": 0,
+        "affectedRows": 1,
+        "insertId": 4,
+        "serverStatus": 1,
+        "warningCount": 0,
+        "message": "",
+        "protocol41": true,
+        "changedRows": 0
+    }
+}
+ */
+
+/**
+ * @api {POST} v1/activity/updateuserunion 审核or上传购买凭证
+ * @apiName activity/updateuserunion
+ * @apiDescription 审核or上传购买凭证
+ * @apiGroup activity
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {String}  id   申购产品记录id 不可空
+ * @apiParam {String} type  是否审核成功 可空 2成功 其他不成功 管理员需传
+ * @apiParam {String} credential 凭证路径（图片上传返回的路径）  可空  用户需传
+ * @apiParam {String} price  价格 可空 管理员可修改价格
+ * @apiParam {String} desc  说明 可空
+ *
+ * @apiParamExample {json} 请求参数:
+ {
+       "id":44,
+       "type":"2",
+       "price":"0.222",
+       "desc":"test",
+       "credential":"123123123132131"
+}
+ *
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ *
+ {
+    "status": 0,
+    "message": "successful",
+    "data": {
+        "fieldCount": 0,
+        "affectedRows": 1,
+        "insertId": 4,
+        "serverStatus": 1,
+        "warningCount": 0,
+        "message": "",
+        "protocol41": true,
+        "changedRows": 0
+    }
+}
+ */
+
+/**
+ * @api {POST} v1/activity/adduserpoolunion 加入矿池申请
+ * @apiName activity/adduserpoolunion
+ * @apiDescription 加入矿池申请
+ * @apiGroup activity
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {String}  uuid   用户id 可空 管理员需传
+ * @apiParam {String} account  用户账号 可空 管理员需传
+ * @apiParam {String} isValid  是否有效 可空 管理员需传 0有效 1无效
+ * @apiParam {String} value  活动id 不可空
+ * @apiParam {String} nickname  昵称 不可空
+ * @apiParam {String} relname  真名 不可空
+ * @apiParam {String} phone  电话 可空 邮件和电话必须有一个
+ * @apiParam {String} email  邮件 可空
+ * @apiParam {String} amount  币量 不可空
+ * @apiParam {String} amount  币量 不可空
+ *
+ *
+ * @apiParamExample {json} 请求参数:
+ {
+       "id":"001332",
+       "account":"15828982828@139.com",
+       "relname":"1",
+       "value":"8",
+       "nickname":"1",
+       "phone":"0.222",
+       "email":"test",
+       "amount":"123.2",
+       "isValid":"1"
+}
+ *
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ *
+ {
+    "status": 0,
+    "message": "successful",
+    "data": {
+        "fieldCount": 0,
+        "affectedRows": 1,
+        "insertId": 6,
+        "serverStatus": 1,
+        "warningCount": 0,
+        "message": "",
+        "protocol41": true,
+        "changedRows": 0
+    }
+}
+ */
+
+
+/**
+ * @api {POST} v1/activity/updateuserpoolunion 审核
+ * @apiName activity/updateuserpoolunion
+ * @apiDescription 审核or上传购买凭证
+ * @apiGroup activity
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {String} id  申请加入矿池记录id 不可空
+ * @apiParam {String} value  活动id 不可空
+ * @apiParam {String} isValid  是否有效 可空 管理员需传 0有效 1无效
+ * @apiParam {String} nickname  昵称 不可空
+ * @apiParam {String} relname  真名 不可空
+ * @apiParam {String} phone  电话 可空 邮件和电话必须有一个
+ * @apiParam {String} email  邮件 可空
+ * @apiParam {String} amount  币量 不可空
+ * @apiParam {String} poolId  矿池id 可空 如果该字段不为空 则isValid为 0
+ *
+ * @apiParamExample {json} 请求参数:
+ {
+       "id":44,
+       "type":"2",
+       "price":"0.222",
+       "desc":"test",
+       "credential":"123123123132131"
+}
+ *
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ *
+ {
+    "status": 0,
+    "message": "successful",
+    "data": {
+        "fieldCount": 0,
+        "affectedRows": 1,
+        "insertId": 4,
+        "serverStatus": 1,
+        "warningCount": 0,
+        "message": "",
+        "protocol41": true,
+        "changedRows": 0
+    }
+}
+ */
+
+
+/**
+ * @api {get} v1/activity/renew 产品购买申请记录查询
+ * @apiName activity/renew
+ * @apiGroup activity
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {String} id  申请id 可空
+ * @apiParam {String} account  用户账户 可空
+ * @apiParam {String} unionId  用户关联id 可空
+ * @apiParam {String} type 申请状态 可空 0 待上传凭证   1 审核中  2 完成  3 失败被拒绝
+ * @apiParam {String} pageSize 数据量 非空
+ * @apiParam {String} pageIndex 0开始 页数 非空
+ *
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ *
+ {
+    "status": 0,
+    "message": "successful",
+    "data": [
+        {
+            "id": 21,
+            "account": "15828982828@139.com",
+            "create_time": "2018-12-11T07:57:17.000Z",
+            "type": "3",
+            "desc": "",
+            "credential": "public/images/2018-12-10/15828982828@139.compay.png",
+            "price": "0.584",
+            "data_time": "2"
+        }
+    ]
+}
+ */
+
+
+/**
+ * @api {get} v1/activity/pool 矿池申请记录查询
+ * @apiName activity/pool
+ * @apiGroup activity
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {String} id  申请id 可空
+ * @apiParam {String} uuid  用户编号 可空
+ * @apiParam {String} relname  真实姓名 可空
+ * @apiParam {String} nickname 昵称 可空
+ * @apiParam {String} phone  电话 可空
+ * @apiParam {String} email  邮件 可空
+ * @apiParam {String} poolId  矿池id 可空 如需多个矿池逗号隔开 如 1,2,3,4 空为还未分配矿池申请 ALL为全部已分配矿池申请
+ * @apiParam {String} unionId  用户关联id 可空
+ * @apiParam {String} pageSize 数据量 非空
+ * @apiParam {String} pageIndex 0开始 页数 非空
+ *
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ *
+ {
+    "status": 0,
+    "message": "successful",
+    "data": [
+        {
+            "id": 2,
+            "user_uuid": 0,
+            "user_relname": "1",
+            "user_nickname": null,
+            "user_phone": "0.222",
+            "user_email": "test",
+            "amount": 123.2,
+            "createtime": "2019-03-29T03:17:44.000Z",
+            "updatetime": "0000-00-00 00:00:00",
+            "pool_id": "1",
+            "union_id": 6
+        }
+    ]
+}
+ */
