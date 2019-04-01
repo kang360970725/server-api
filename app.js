@@ -47,7 +47,8 @@ const CONFIG = {
 app.use(session(CONFIG, app));
 let whiteList = ["192.168.0.198:9527"];
 app.use(async (ctx, next) => {
-    if (ctx.request.header.origin !== ctx.origin && whiteList.includes(ctx.request.header.origin)) {
+    let origin  = ctx.request.header.origin.toString()
+    if (ctx.request.header.origin !== ctx.origin && whiteList.includes(origin.indexOf(":") != -1 ? origin.split("//")[1] : origin)) {
         ctx.set('Access-Control-Allow-Origin', ctx.request.header.origin);
         ctx.set('Access-Control-Allow-Headers', "Content-Type,XFILENAME,XFILECATEGORY,XFILESIZE,X-Token");
         ctx.set('Access-Control-Allow-Credentials', true);

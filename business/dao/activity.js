@@ -739,6 +739,9 @@ class dao {
             where.push(' is_valid = ? ');
             params.push(query.isValid);
         }
+        if(where.length<=0){
+            return
+        }
 
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
