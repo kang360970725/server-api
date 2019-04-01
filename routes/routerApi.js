@@ -44,10 +44,10 @@ if (fs.existsSync(ctrlRoot)) {
             console.log("用户登录")
         } else {
             let currentUser = ctx.session.user;
-            if (currentUser.level && currentUser.level >= 5) {
+            if (currentUser && currentUser.level && currentUser.level >= 5) {
                 //管理员登录
                 params.adminUser = currentUser;
-            } else if (currentUser.level < 5) {
+            } else if (currentUser && currentUser.level < 5) {
                 //用户登录
                 params.currentUser = currentUser;
             } else {
