@@ -3,7 +3,6 @@
 // let mscore = require("mscore"),
 let str = require("../../utils/stringHelper"),
     timeUtil = require("../../utils/timeUtil"),
-    data = require('../../utils/data'),
     expression = require('../../constant/expression.js'),
     exception = require('../../utils/exception.js'),
     activityBiz = require('../../business/biz/activity');
@@ -58,9 +57,9 @@ class ctrl {
             throw exception.ParamException('产品时间类别[isValid]不能为空')
         }
 
-        if (str.isEmpty(params.price)) {
-            throw exception.ParamException('价格[price]不能为空')
-        }
+        // if (str.isEmpty(params.price)) {
+        //     throw exception.ParamException('价格[price]不能为空')
+        // }
 
         if (!expression.isInteger.test(params.isValid) || params.isValid > 3) {
             throw exception.ParamException('产品时间类别[isValid]格式错误')
@@ -155,6 +154,15 @@ class ctrl {
         return await activityBiz.updateUserUnion(params)
     }
 
+
+    //审核/上传购买凭证
+    static async confirmuserunion(params) {
+        if (str.isEmpty(params.id)) {
+            throw exception.ParamException('记录[id]不能为空')
+        }
+        return await activityBiz.updateUserUnion({id: params.id, type: 0})
+    }
+
     //审核矿池
     static async updateuserpoolunion(params) {
         if (params.adminUser) {
@@ -175,7 +183,7 @@ class ctrl {
 
     //申请记录查询
     static async renew(params) {
-         if (params.currentUser) {
+        if (params.currentUser) {
             params.uuid = params.currentUser.uuid;
             params.account = params.currentUser.account;
         }
@@ -190,6 +198,21 @@ class ctrl {
         }
         return await activityBiz.queryPools(params)
     }
+
+    //矿池申请记录查询
+    static async pool(params) {
+        if (params.currentUser) {
+            params.uuid = params.currentUser.uuid;
+            params.account = params.currentUser.account;
+        }
+        return await activityBiz.queryPools(params)
+    }
+
+    static async nowbtcprice(params) {
+        return await activityBiz.nowBTCPrice(params)
+    }
+
+
 }
 
 module.exports = ctrl;

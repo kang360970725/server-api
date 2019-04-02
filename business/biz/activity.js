@@ -1,6 +1,8 @@
 'use strict';
 
 let dao = require("../../db_config/dao"),
+    request = require("request"),
+    Decimal = require("decimal.js"),
     data = require('../../utils/data'),
     config = require('../../db_config/config'),
     exception = require('../../utils/exception.js'),
@@ -86,18 +88,95 @@ class biz {
     //添加用户关联关系
     static async addUserUnion(params) {
         return await dao.manageTransactionConnection(async (connection) => {
+
+            let info = {};
+            let type = "";
+            let main = await activityDao.queryMain(connection, {"id": params.value});
+            //月卡
+            if (params.isValid == 1) {
+                type = "5";
+            }
+            //季卡
+            if (params.isValid == 2) {
+                type = "6";
+            }
+            //年卡
+            if (params.isValid == 3) {
+                type = "7";
+            }
+            if (main && main[0] || main[0].type != 1) {
+                info = await activityDao.queryInfo(connection, {
+                    "id": params.value,
+                    "types": type
+                })
+                if (!info || !info[0]) {
+                    throw exception.BusinessException("无该产品", 200)
+                }
+            } else {
+                throw exception.BusinessException("无该产品", 200)
+            }
+
+            let activityInfo = {};
+            let activityMain = {};
+            if (!str.isEmpty(params.activityId)) {
+                activityMain = await activityDao.queryMain(connection, {"id": params.activityId});
+                if (activityMain || activityMain[0] || activityMain[0].type != 0) {
+                    activityInfo = await activityDao.queryInfo(connection, {
+                        "id": params.activityId,
+                        "types": "1,2,3,4"
+                    })
+                    if (!activityInfo || activityInfo <= 0) {
+                        throw exception.BusinessException("无该活动", 200)
+                    }
+                } else {
+                    throw exception.BusinessException("无该活动", 200)
+                }
+            }
+            params.isValid = -1;
+            let btcPrice = await biz.nowBTCPrice(connection);
+            let unionResult
             try {
-                let result = await activityDao.addUserUnion(connection, params);
-                if (result && result.insertId) {
-                    params.id = result.insertId;
-                    await activityDao.addRenew(connection, params);
+                unionResult = await activityDao.addUserUnion(connection, params);
+                if (unionResult && unionResult.insertId) {
+                    let price = info[0].info_value;
+                    if (activityInfo && activityInfo.length > 0 && btcPrice) {
+                        btcPrice.originalprice = price;
+                        let BTC = 0;
+                        for (let item of activityInfo) {
+                            //免费
+                            if (item.info_type == 2) {
+                                price = 0;
+                            }
+                            //打折
+                            if (item.info_type == 3) {
+                                if (!str.isEmpty(item.info_value) && item.info_value != 0) {
+                                    let USD = new Decimal(price).mul(new Decimal(item.info_value)).div(new Decimal(10));
+                                    price = USD.toNumber();
+                                    BTC = USD.div(new Decimal(btcPrice.huobi)).toNumber();
+                                }
+                            }
+                        }
+                        params.id = unionResult.insertId;
+                        params.type = -1;
+                        params.price = price;
+                        btcPrice.nowPrice = price;
+                        btcPrice.BTCPrice = BTC;
+                        let renewResult = await activityDao.addRenew(connection, params);
+                        if (!renewResult || !renewResult.insertId) {
+                            throw exception.BusinessException("提交失败", 200);
+                        }
+                        btcPrice.id = renewResult.insertId;
+                    } else {
+                        throw exception.BusinessException("提交失败", 200)
+                    }
                 } else {
                     throw exception.BusinessException("提交失败", 200)
                 }
-                return result;
             } catch (e) {
                 throw exception.BusinessException("重复提交", 200)
             }
+            return btcPrice;
+
         })
     }
 
@@ -179,6 +258,42 @@ class biz {
         return await dao.manageConnection(async (connection) => {
             let result = await activityDao.queryPool(connection, params);
             return result;
+        })
+    }
+
+    //当前比特币价格
+    static async nowBTCPrice(connection) {
+        return await new Promise(async (resolve, reject) => {
+            request({
+                url: "https://apibtc.btc123.com/v1/index/getNewIndexMarket?sign=BTC&type=1",
+                method: "GET",
+                json: true,
+                headers: {
+                    "content-type": "application/json",
+                },
+                body: JSON.stringify("")
+            }, function (error, response, body) {
+                if (error) return reject(error);
+                if (response.statusCode != 200) return reject(response);
+                let result = {};
+                if (body.code == 1) {
+                    let list = body.data[0].ticker;
+                    for (let i in list) {
+                        if (list[i].platFromSign == 'HUOBIPRO') {
+                            result["huobi"] = list[i].last;
+                        }
+                        if (list[i].platFromSign == 'OKEX') {
+                            result["OKEX"] = list[i].last;
+                        }
+                        if (list[i].platFromSign == 'BINANCE') {
+                            result["bian"] = list[i].last;
+                        }
+                    }
+                }
+                //TODO 添加转账图片
+                result["img"] = "";
+                resolve(result);
+            });
         })
     }
 }

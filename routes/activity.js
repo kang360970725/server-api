@@ -147,15 +147,15 @@
 /**
  * @api {POST} v1/activity/adduserunion 申请购买产品
  * @apiName activity/adduserunion
- * @apiDescription 申请购买产品
+ * @apiDescription 申请购买产品 申请后需要确认申请 调用confirmuserunion接口 不然无法显示该申请（用户点击完成转账）
  * @apiGroup activity
  * @apiVersion 1.0.0
  *
  * @apiParam {String}  id   用户id 可空 管理员需传
  * @apiParam {String} account  用户账号 可空 管理员需传
- * @apiParam {String} value  活动id 不可空
+ * @apiParam {String} value  产品id 不可空
  * @apiParam {String} isValid 产品时间类别  不可空 1月 2季度 3年
- * @apiParam {String} price  价格 不可空
+ * @apiParam {String} activityId 活动id 可空
  * @apiParam {String} desc  说明 可空
  *
  * @apiParamExample {json} 请求参数:
@@ -229,6 +229,42 @@
     }
 }
  */
+
+/**
+ * @api {POST} v1/activity/confirmuserunion 确认申请
+ * @apiName activity/confirmuserunion
+ * @apiDescription 确认申请
+ * @apiGroup activity
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {String}  id   申购产品记录id 不可空
+ *
+ * @apiParamExample {json} 请求参数:
+ {
+       "id":44
+}
+ *
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ *
+ {
+    "status": 0,
+    "message": "successful",
+    "data": {
+        "fieldCount": 0,
+        "affectedRows": 1,
+        "insertId": 4,
+        "serverStatus": 1,
+        "warningCount": 0,
+        "message": "",
+        "protocol41": true,
+        "changedRows": 0
+    }
+}
+ */
+
+
 
 /**
  * @api {POST} v1/activity/adduserpoolunion 加入矿池申请

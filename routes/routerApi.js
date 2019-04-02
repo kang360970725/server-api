@@ -20,6 +20,14 @@ if (fs.existsSync(ctrlRoot)) {
         }
     })
 
+    //不用登录访问的接口
+    let whiteApiList =
+        [
+            "users/login",
+            "users/register",
+            "users/forgotPwd",
+            "sendCode/sendCode"
+        ];
     router.all('/:controller/:action', async function filter(ctx, next) {
         let {controller, action} = ctx.params;
         let params;
@@ -40,8 +48,9 @@ if (fs.existsSync(ctrlRoot)) {
         if (!asyncAction) {
             ctx.throw(404, 'Not Found', {code: 404});
         }
-        if (controller === 'users' && action === 'login') {
-            console.log("用户登录")
+
+        if (whiteApiList.includes(controller+"/"+action)){
+            console.log("白名单接口访问");
         } else {
             let currentUser = ctx.session.user;
             if (currentUser && currentUser.level && currentUser.level >= 5) {

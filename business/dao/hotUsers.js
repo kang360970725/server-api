@@ -25,7 +25,7 @@ class dao {
         LIMIT ?,?
         `;
         let params = [];
-        params.push((parseInt(query.index) - 1) * parseInt(query.pagesize));
+        params.push((parseInt(query.index)) * parseInt(query.pagesize));
         params.push(parseInt(query.pagesize));
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
@@ -98,7 +98,7 @@ class dao {
             c.bot_amount DESC
         `;
         let params = [];
-        params.push((parseInt(query.index) - 1) * parseInt(query.pagesize));
+        params.push((parseInt(query.index)) * parseInt(query.pagesize));
         params.push(parseInt(query.pagesize));
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {

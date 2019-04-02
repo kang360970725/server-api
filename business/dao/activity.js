@@ -134,6 +134,7 @@ class dao {
         }
 
         if (!str.isEmpty(query.type)) {
+            content.push(' type ');
             where.push(' type = ? ');
             params.push(query.type);
         }
@@ -148,7 +149,11 @@ class dao {
             params.push(query.endTime);
         }
 
-        limit += `${(query.pageIndex) * query.pageSize}, ${query.pageSize}`;
+        if (str.isEmpty(query.pageIndex) || str.isEmpty(query.pageSize)) {
+            limit = "";
+        } else {
+            limit += `${(query.pageIndex) * query.pageSize}, ${query.pageSize}`;
+        }
 
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
@@ -322,7 +327,7 @@ class dao {
         WHERE ${where.join(' AND ')}
         `;
         let params = [];
-        params.push(' 1 = 1 ');
+        where.push(' 1 = 1 ');
         if (!str.isEmpty(query.id)) {
             where.push(' activity_id = ? ');
             params.push(query.id);
@@ -374,10 +379,11 @@ class dao {
     //添加记录
     static async addRenew(connection, query) {
         let sql = () => `
-        INSERT INTO pay_record(account,create_time,type,\`desc\`,price,data_time) VALUES (?,now(),0,?,?,?);
+        INSERT INTO pay_record(account,create_time,type,\`desc\`,price,data_time) VALUES (?,now(),?,?,?,?);
         `;
         let params = [];
         params.push(query.account);
+        params.push(query.type);
         params.push(query.desc);
         params.push(query.price);
         params.push(query.id);
@@ -558,6 +564,8 @@ class dao {
         if (!str.isEmpty(query.type)) {
             where.push(" type = ? ")
             params.push(query.type);
+        }else if(str.isEmpty(query.id)){
+            where.push(" type <> -1 ")
         }
         if (str.isEmpty(query.pageIndex) || str.isEmpty(query.pageSize)) {
             limit = "";
@@ -707,11 +715,14 @@ class dao {
 
     static async queryUserUnion(connection, query) {
         let where = [];
+        var limit = "LIMIT ";
         let sql = () => `
         SELECT 
         *
         FROM user_union_info
         WHERE ${where.join(' AND ')}
+        order by creat_time desc 
+        ${limit}
         `;
         let params = [];
         params.push(' 1 = 1 ');
@@ -738,11 +749,17 @@ class dao {
         if (!str.isEmpty(query.isValid)) {
             where.push(' is_valid = ? ');
             params.push(query.isValid);
+        } else if(str.isEmpty(query.id)) {
+            where.push(' is_valid <> -1 ');
         }
         if(where.length<=0){
             return
         }
-
+        if (str.isEmpty(query.pageIndex) || str.isEmpty(query.pageSize)) {
+            limit = "";
+        } else {
+            limit += `${(query.pageIndex) * query.pageSize}, ${query.pageSize}`;
+        }
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
                 if (err) return reject(err);
