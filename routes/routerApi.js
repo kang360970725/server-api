@@ -36,6 +36,12 @@ if (fs.existsSync(ctrlRoot)) {
         } else {
             params = ctx.request.body;
         }
+
+        // 获取上传文件
+        if(ctx.request.files && ctx.request.files.file){
+            params.files = ctx.request.files.file;
+        }
+
         if (!controller) {
             ctx.throw(404, 'Not Found', {code: 404});
         }

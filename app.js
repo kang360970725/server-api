@@ -126,7 +126,7 @@ app.use(async (ctx, next) => {
 // app.use(koaBody());
 // routes
 app.use(apiroutes.routes(), apiroutes.allowedMethods())
-app.use(resources.routes(), resources.allowedMethods())
+// app.use(resources.routes(), resources.allowedMethods())
 
 
 module.exports = app

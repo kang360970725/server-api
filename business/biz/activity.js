@@ -7,7 +7,8 @@ let dao = require("../../db_config/dao"),
     config = require('../../db_config/config'),
     exception = require('../../utils/exception.js'),
     str = require("../../utils/stringHelper"),
-    activityDao = require('../../business/dao/activity.js');
+    activityDao = require('../../business/dao/activity.js'),
+    sysDao = require('../../business/dao/sysConfig.js');
 
 var uuid = require('node-uuid');
 
@@ -133,7 +134,7 @@ class biz {
                 }
             }
             params.isValid = -1;
-            let btcPrice = await biz.nowBTCPrice(connection);
+            let btcPrice = await biz.nowBTCPrice();
             let unionResult
             try {
                 unionResult = await activityDao.addUserUnion(connection, params);
@@ -166,6 +167,13 @@ class biz {
                             throw exception.BusinessException("提交失败", 200);
                         }
                         btcPrice.id = renewResult.insertId;
+                        let sysconfig = await sysDao.query(connection,{type:"sys_img",pageIndex:0,pageSize:1})
+                        if(sysconfig && sysconfig[0]){
+                            btcPrice.img = sysconfig[0].sys_value;
+                        }else{
+                            btcPrice.img = "";
+                        }
+
                     } else {
                         throw exception.BusinessException("提交失败", 200)
                     }
@@ -262,7 +270,7 @@ class biz {
     }
 
     //当前比特币价格
-    static async nowBTCPrice(connection) {
+    static async nowBTCPrice() {
         return await new Promise(async (resolve, reject) => {
             request({
                 url: "https://apibtc.btc123.com/v1/index/getNewIndexMarket?sign=BTC&type=1",
@@ -290,8 +298,7 @@ class biz {
                         }
                     }
                 }
-                //TODO 添加转账图片
-                result["img"] = "";
+
                 resolve(result);
             });
         })
