@@ -44,7 +44,7 @@ class biz {
     }
     static async dopipe(file) {
         let date = await biz.getNowFormatDate();
-        let __dirname = "D:/blue/upload/"+ date;
+        let __dirname = config.url.upload + date;
         biz.mkdirsSync(__dirname);
         // 创建可读流
         const reader = fs.createReadStream(file.path);
