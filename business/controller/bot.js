@@ -40,7 +40,8 @@ class ctrl {
 
 
     static async poollist(params) {
-        return await poolBiz.list(params);
+        let result = await params.redis.get("poolInfo");
+        return JSON.parse(result)
     }
 
     static async pooldetails(params) {

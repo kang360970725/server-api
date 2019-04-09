@@ -82,7 +82,7 @@ class ctrl {
     static async adduserpoolunion(params) {
 
         if (params.currentUser) {
-            params.uuid = params.currentUser.uuid;
+            params.id = params.currentUser.uuid;
             params.account = params.currentUser.account;
             params.isValid = 1;
         }
@@ -91,7 +91,7 @@ class ctrl {
             throw exception.ParamException('账号[account]不能为空')
         }
 
-        if (str.isEmpty(params.uuid)) {
+        if (str.isEmpty(params.id)) {
             throw exception.ParamException('账号uuid[id]不能为空')
         }
 

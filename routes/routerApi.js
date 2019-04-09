@@ -36,7 +36,9 @@ if (fs.existsSync(ctrlRoot)) {
         } else {
             params = ctx.request.body;
         }
-
+        if(ctx.redis){
+            params.redis = ctx.redis;
+        }
         // 获取上传文件
         if(ctx.request.files && ctx.request.files.file){
             params.files = ctx.request.files.file;

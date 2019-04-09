@@ -201,6 +201,7 @@ class biz {
                 }
                 return result;
             } catch (e) {
+                console.log(e.message)
                 throw exception.BusinessException("重复提交", 200)
             }
         })

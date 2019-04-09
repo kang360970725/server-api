@@ -17,6 +17,17 @@ module.exports =
         //     port: 13338
         // }
         ,
+        redis : {
+            port: 6379,          // Redis port
+            host: '192.168.0.214',   // Redis host
+            prefix: 'sam:', //存诸前缀
+            ttl: 60 * 60 * 24 * 1000 * 1.5,  //过期时间
+            db: 0,
+            family: 4, // ip地址族
+            keepAlive: 0.1 * (1000 * 60 * 60), //保持连接24h
+            connectTimeout: 1000 * 5, //连接超时
+            readOnly: false
+        },
         port:{
             doc:3302,
             api:3300
