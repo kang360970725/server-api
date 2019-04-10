@@ -1,9 +1,6 @@
 'use strict';
 
-// let mscore = require("mscore"),
-let str = require("stringHelper"),
-    data = require('data'),
-    exception = require('exception.js'),
+let
     integralBiz = require('../business/biz/integral');
 
 class integralUtil {
@@ -12,14 +9,14 @@ class integralUtil {
      * @param params id 用户id  integral 相关积分  explain 积分说明
      * @returns {Promise<*>}
      */
-    static async recordIntegral(id, integral, explain) {
+    static async recordIntegral(connection,id, integral, explain) {
         let params = {
             "id": id,
             "integral": integral,
             "explain": explain
         }
-        return await integralBiz.recordIntegral(params)
+        return await integralBiz.recordTransactionIntegral(connection,params)
     }
 }
 
-module.exports = ctrl;
+module.exports = integralUtil;

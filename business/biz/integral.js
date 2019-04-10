@@ -26,7 +26,7 @@ class biz {
     }
 
     //添加活动详情
-    static async recordIntegral (params) {
+    static async recordIntegral (connection,params) {
         return await dao.manageTransactionConnection(async (connection) => {
             let result = await integralDao.creatIntegral(connection, params);
             if(result){
@@ -38,6 +38,19 @@ class biz {
             }
             return result;
         })
+    }
+
+    //添加活动详情
+    static async recordTransactionIntegral(connection, params) {
+        let result = await integralDao.creatIntegral(connection, params);
+        if (result) {
+            result = await integralDao.queryIntegral(connection, params)
+            if (result && result[0] && result[0].integral_current < 0) {
+                throw exception.BusinessException('积分不足', 2001)
+            }
+            await integralDao.creatIntegralInfo(connection, params);
+        }
+        return result;
     }
 }
 
