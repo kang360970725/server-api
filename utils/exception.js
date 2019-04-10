@@ -58,7 +58,7 @@ class exception extends Exception {
      * @returns {BusinessException} 返回异常消息对象。statusCode 是返回给客户端的状态码；code 是业务错误码，默认与状态码相同；message 是返回给客户端的消息。
      */
     static PowerException(msg) {
-        if(msg){
+        if(!msg){
             msg = "无该接口权限"
         }
         return new BusinessException(msg, 3);

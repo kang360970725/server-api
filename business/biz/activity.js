@@ -274,6 +274,35 @@ class biz {
     static async nowBTCPrice() {
         return await new Promise(async (resolve, reject) => {
             request({
+                url: "https://apioperate.btc123.com/api/market/index/noAuth/exchange/price",
+                method: "GET",
+                json: true,
+                headers: {
+                    "content-type": "application/json",
+                },
+                body: JSON.stringify("")
+            }, function (error, response, body) {
+                if (error) return reject(error);
+                if (response.statusCode != 200) return reject(response);
+                let result = {};
+                if (body.success) {
+                    let list = body.data[0].exchangeList;
+                    for (let i in list) {
+                        if (list[i].chartKey == 'HUOBIPROBTCUSDT') {
+                            result["huobi"] = list[i].usdPrice;
+                            break;
+                        }
+                    }
+                }
+                resolve(result);
+            });
+        })
+    }
+
+    //当前比特币价格老版本接口
+    static async nowBTCPrice_apibtc() {
+        return await new Promise(async (resolve, reject) => {
+            request({
                 url: "https://apibtc.btc123.com/v1/index/getNewIndexMarket?sign=BTC&type=1",
                 method: "GET",
                 json: true,
@@ -290,16 +319,18 @@ class biz {
                     for (let i in list) {
                         if (list[i].platFromSign == 'HUOBIPRO') {
                             result["huobi"] = list[i].last;
+                            continue;
                         }
                         if (list[i].platFromSign == 'OKEX') {
                             result["OKEX"] = list[i].last;
+                            continue;
                         }
                         if (list[i].platFromSign == 'BINANCE') {
                             result["bian"] = list[i].last;
+                            continue;
                         }
                     }
                 }
-
                 resolve(result);
             });
         })

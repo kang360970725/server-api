@@ -282,7 +282,7 @@
  * @apiParam {String} phone  电话 可空 邮件和电话必须有一个
  * @apiParam {String} email  邮件 可空
  * @apiParam {String} amount  币量 不可空
- * @apiParam {String} amount  币量 不可空
+ * @apiParam {String} desc  描述 可空
  *
  *
  * @apiParamExample {json} 请求参数:

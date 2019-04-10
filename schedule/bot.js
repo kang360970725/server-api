@@ -23,7 +23,7 @@ class ctrl {
     static async poollist(redis) {
         console.log("开始获取矿池数据");
         let result = await poolBiz.minepools()
-        if (result) {
+        if (result && result.length > 0) {
             for (let item of result) {
                 let balance = await poolBiz.minepools({poolId:item.id,balance:1})
                 let info = await poolBiz.minepools({poolId:item.id})

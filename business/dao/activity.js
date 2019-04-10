@@ -107,6 +107,7 @@ class dao {
         content.push(' activity_title ');
         content.push(' activity_code ');
         content.push(' creat_time ');
+        content.push(' `desc` ');
         if (!str.isEmpty(query.content)) {
             content.push(' content ');
         }
@@ -449,6 +450,11 @@ class dao {
             fields.push("union_id")
             values.push("?")
             params.push(query.unionId)
+        }
+        if (!str.isEmpty(query.desc)) {
+            fields.push("desc")
+            values.push("?")
+            params.push(query.desc)
         }
         if (fields.length <= 0 || values.length <= 0 || params.length <= 0) {
             return;
