@@ -12,17 +12,12 @@ const redis = require('../utils/redisClient');
 const dbConfig = require('../db_config/config');
 
 const rediss = redis.redis(dbConfig.redis);
-let rule3 = new schedule.RecurrenceRule();
-let times3 = [14];
-rule3.hour = times3;
-rule3.minute = 0;
-// 每天14点 0分 0秒执行
-schedule.scheduleJob("0 0 14 * * *", function () {
+// 每天14点 0分 2秒执行
+schedule.scheduleJob("2 0 14 * * *", function () {
     ctrl.poollist(rediss);
 });
-
-// 每 20秒执行
-schedule.scheduleJob("*/20 * * * * *", function () {
+// 每 10秒执行
+schedule.scheduleJob("*/10 * * * * *", function () {
     ctrl.BTCPrice(rediss);
 });
 

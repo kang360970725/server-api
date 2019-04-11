@@ -3,6 +3,7 @@
 let dao = require("../../db_config/dao"),
     data = require('../../utils/data'),
     config = require('../../db_config/config'),
+    exception = require('../../utils/exception.js'),
     sysDao = require('../../business/dao/sysConfig');
 const fs = require('fs');
 const path = require('path');
@@ -20,10 +21,12 @@ class biz {
             let path = [];
             if (files && files.length && files.length > 1) {
                 for (let file of files) {
-                    path.push(await biz.dopipe(file));
+                    let url = await biz.dopipe(file)
+                    path.push(config.host + url);
                 }
             } else if (files.length = 1) {
-                path.push(await biz.dopipe(files));
+              let url = await biz.dopipe(files)
+                path.push(config.host + url);
             } else {
                 throw  exception.BusinessException("上传错误", 201);
             }
