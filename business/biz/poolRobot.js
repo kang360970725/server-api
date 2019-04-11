@@ -23,6 +23,9 @@ class biz {
                 if (str.isEmpty(param.tokenValue) || str.isEmpty(param.poolId)) {
                     return;
                 }
+                if(params.balance){
+                    return JSON.parse(await params.redis.get("poolbalance_"+param.poolId));
+                }
                 return JSON.parse(await params.redis.get("poolinfo_"+param.poolId));
                 // await biz.minepools(param);
             }
