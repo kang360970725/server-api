@@ -4,7 +4,7 @@ let
     moment = require('moment');
 
 class dao {
-    static async getBots(connection, query) {
+    static async getBots(connection, query) { // 查询机器人状态
         var params = [];
 
         let sql = () => `
@@ -18,6 +18,30 @@ class dao {
             ;
         `;
         params.push(query.currentUser.account);
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+    static async getPoolList(connection, query) { // 查询矿池列表
+        var params = [];
+
+        let sql = () => `
+            SELECT
+                GROUP_CONCAT(r.pool_id) As pools
+            FROM
+                 user_pool_record r
+            LEFT JOIN user_union_info b ON r.union_id = b.id
+            WHERE
+                b.is_valid = 0
+            AND b.user_id = ?
+            and b.user_info_type = 2
+            ;
+        `;
+        params.push(query.currentUser.uuid);
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
                 if (err) return reject(err);
