@@ -20,10 +20,12 @@ class biz {
             let path = [];
             if (files && files.length && files.length > 1) {
                 for (let file of files) {
-                    path.push(await biz.dopipe(file));
+                    let url = await biz.dopipe(files)
+                    path.push(config.host + url);
                 }
             } else if (files.length = 1) {
-                path.push(await biz.dopipe(files));
+              let url = await biz.dopipe(files)
+                path.push(config.host + url);
             } else {
                 throw  exception.BusinessException("上传错误", 201);
             }
@@ -34,7 +36,6 @@ class biz {
                     }
                 })
             }
-            path = config.host + path;
             return {
                 path: path,
                 message: "上传成功！"
