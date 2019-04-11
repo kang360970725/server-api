@@ -23,7 +23,8 @@ class biz {
                 if (str.isEmpty(param.tokenValue) || str.isEmpty(param.poolId)) {
                     return;
                 }
-                return await biz.minepools(param);
+                return await params.redis.get("poolInfo_"+param.poolId);
+                // await biz.minepools(param);
             }
         })
     }
