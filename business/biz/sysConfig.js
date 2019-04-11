@@ -34,6 +34,7 @@ class biz {
                     }
                 })
             }
+            path = config.host + path;
             return {
                 path: path,
                 message: "上传成功！"

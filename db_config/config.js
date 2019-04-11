@@ -38,6 +38,9 @@ module.exports =
             upload:"/user/img/upload/"
         }
         ,
+        host:
+            "http://192.168.0.33/source/"
+        ,
         pool:{
             token_name : "Authorization",
             token_type : "Token ",
