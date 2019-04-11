@@ -171,27 +171,27 @@
         ],
         "bot": {
             "id": 84,
-            "user_account": "maoxrr@qq.com",
-            "created": "2019-03-18T01:48:56.000Z",
-            "level": "VIP新版39s",
-            "new_position_qty": "417",
-            "bot_nanpin": "521",
-            "max_position_qty": "15005",
-            "nanpin_count": "31",
-            "status": "补仓满了,等待机会解套",
-            "bot_side": "SHORT",
-            "bot_size": "-16789",
-            "bot_avgEntryPrice": "3933.4461",
-            "bot_liquidationPrice": "7605",
-            "bot_mex_last": "3998.5",
-            "bot_balance": "2.0118961",
-            "marginLeverage": "2.1",
-            "bot_prevDeposited": "2.0",
-            "bot_prevWithdrawn": "0.0",
-            "bot_amount": "2.08754453",
-            "bot_lirun": "0.08754453000000018",
-            "shortrange": "80",
-            "longrange": "80"
+            "user_account": "maoxrr@qq.com",        //账号
+            "created": "2019-03-18T01:48:56.000Z",  //更新时间
+            "level": "VIP新版39s",                   //机器人版本
+            "new_position_qty": "417",          //头寸金额
+            "bot_nanpin": "521",                //补仓金额
+            "max_position_qty": "15005",        //最大持仓
+            "nanpin_count": "31",               //已补次数
+            "status": "补仓满了,等待机会解套",    //机器人状态
+            "bot_side": "SHORT",                //持仓方向   LONG 多军   SHORT 空军
+            "bot_size": "-16789",               //持仓数量
+            "bot_avgEntryPrice": "3933.4461",   //持仓均价
+            "bot_liquidationPrice": "7605",     //爆仓点位
+            "bot_mex_last": "3998.5",           //最新价
+            "bot_balance": "2.0118961",         //余额
+            "marginLeverage": "2.1",            //已用杠杆
+            "bot_prevDeposited": "2.0",         //账户充币合计
+            "bot_prevWithdrawn": "0.0",         //账户提币合计
+            "bot_amount": "2.08754453",         //账户钱包余额
+            "bot_lirun": "0.08754453000000018", //账户盈亏合计字段
+            "shortrange": "80",                 //空军止赢间距
+            "longrange": "80"                   //空军止赢间距
         }
     }
 }
