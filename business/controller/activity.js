@@ -209,7 +209,8 @@ class ctrl {
     }
 
     static async nowbtcprice(params) {
-        return await activityBiz.nowBTCPrice(params)
+        let result = await params.redis.get("btcPrice");
+        return JSON.parse(result)
     }
 
 

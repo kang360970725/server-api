@@ -134,7 +134,8 @@ class biz {
                 }
             }
             params.isValid = -1;
-            let btcPrice = await biz.nowBTCPrice();
+            let btcPriceResult = await params.redis.get("btcPrice");
+            let btcPrice = JSON.parse(btcPriceResult).btcPrice;
             let unionResult
             try {
                 unionResult = await activityDao.addUserUnion(connection, params);
@@ -286,13 +287,50 @@ class biz {
                 if (response.statusCode != 200) return reject(response);
                 let result = {};
                 if (body.success) {
-                    let list = body.data[0].exchangeList;
-                    for (let i in list) {
-                        if (list[i].chartKey == 'HUOBIPROBTCUSDT') {
-                            result["huobi"] = list[i].usdPrice;
+                    for (let item of body.data) {
+                        if(item.currency == "BTC"){
+                            let list = item.exchangeList;
+                            for (let i of list) {
+                                if (i.chartKey == 'HUOBIPROBTCUSDT') {
+                                    result["huobi"] = i.usdPrice;
+
+                                }
+                                if (i.chartKey == 'OKEXBTCUSDT') {
+                                    result["OKEx"] = i.usdPrice;
+
+                                }
+                                if (i.chartKey == 'BINANCEBTCUSDT') {
+                                    result["Binance"] = i.usdPrice;
+
+                                }
+                            }
                             break;
                         }
                     }
+                }
+                resolve(result);
+            });
+        })
+    }
+
+
+    //预测比特币价格
+    static async quotationBTCPrice() {
+        return await new Promise(async (resolve, reject) => {
+            request({
+                url: "https://www.bluecatbot.com/api/quotation/?coin_type=0",
+                method: "GET",
+                json: true,
+                headers: {
+                    "content-type": "application/json",
+                },
+                body: JSON.stringify("")
+            }, function (error, response, body) {
+                if (error) return reject(error);
+                if (response.statusCode != 200) return reject(response);
+                let result = {};
+                if (body && body.length > 0) {
+                    result = body[0];
                 }
                 resolve(result);
             });

@@ -444,3 +444,42 @@
     ]
 }
  */
+
+
+/**
+ * @api {get} /v1/activity/nowbtcprice 比特币价格查询
+ * @apiName /v1/activity/nowbtcprice
+ * @apiGroup activity
+ * @apiVersion 1.0.0
+ *
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ *
+ {
+    "status": 0,
+    "message": "successful",
+    "data": {
+        "btcPrice": {
+            "Binance": 5255.87, 币安
+            "huobi": 5256.98,火币
+            "OKEx": 5257.2 OK
+        },
+        "quotationBTCPrice": {
+            "id": 816115,
+            "mex_high": 5333,压力位
+            "mex_low": 5283.5,支撑位
+            "mex_last": 5290,现价(最新价)
+            "coin_type": 0,
+            "exchange": "",
+            "pair_currency": "",
+            "change_24_absolute": null,
+            "change_rate": null,
+            "volume_24h": null,
+            "created": "2019-04-11T10:34:19.663751+08:00",
+            "modified": "2019-04-11T10:34:19.663922+08:00"
+        }
+    }
+}
+ */
+

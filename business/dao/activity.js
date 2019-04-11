@@ -107,7 +107,6 @@ class dao {
         content.push(' activity_title ');
         content.push(' activity_code ');
         content.push(' creat_time ');
-        content.push(' `desc` ');
         if (!str.isEmpty(query.content)) {
             content.push(' content ');
         }
