@@ -408,10 +408,10 @@ class dao {
         VALUES 
         ( ${values.join(" , ")});
         `;
-        if (!str.isEmpty(query.uuid)) {
+        if (!str.isEmpty(query.id)) {
             fields.push("user_uuid")
             values.push("?")
-            params.push(query.uuid)
+            params.push(query.id)
         }
 
         if (!str.isEmpty(query.relname)) {
