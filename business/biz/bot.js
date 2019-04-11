@@ -10,16 +10,13 @@ class biz {
     static async getBots(params) {
         return await dao.manageConnection(async (connection) => {
             //获取会员bot信息
-            var result = await businessDao.getUsers(connection, params);
             var resultData = {};
-            if (result && result.length > 0) {
-                params.account = result[0].account;
                 let queryBot = await botDao.getBots(connection, params);
                 if (queryBot && queryBot.length > 0) {
                     resultData = queryBot[0];
                 }else {
                     resultData = {
-                        "user_account": result[0].account,
+                        "user_account": params.currentUser.account,
                         "created": "",
                         "level": "-",
                         "new_position_qty": "0",
@@ -29,9 +26,6 @@ class biz {
                         "status": "未启动"
                     };
                 }
-            }else {
-                throw data.error('身份验证失败')
-            }
             return resultData;
         })
     }

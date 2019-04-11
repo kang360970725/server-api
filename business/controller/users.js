@@ -63,6 +63,36 @@ class ctrl {
 
         return await businessBiz.forgotPwd(params)
     }
+
+    static async getUsersList(params) { //后台获取用户列表
+        if (!params.adminUser) {
+            throw exception.PowerException()
+        }
+        if (!params.pagesize || !params.index) {
+            throw data.error('请求参数缺失')
+        }
+        return await businessBiz.getUsersList(params)
+    }
+
+    static async setHotUsers(params) { //后台设置热门用户
+        if (!params.adminUser) {
+            throw exception.PowerException()
+        }
+        if (!params.account || !params.uuid || !params.popular_user) {
+            throw data.error('请求参数缺失')
+        }
+        return await businessBiz.setHotUsers(params)
+    }
+
+    static async setUserState(params) { //后台禁/启用用户
+        if (!params.adminUser) {
+            throw exception.PowerException()
+        }
+        if (!params.account || !params.uuid || !params.type) {
+            throw data.error('请求参数缺失')
+        }
+        return await businessBiz.setUserState(params)
+    }
 }
 
 module.exports = ctrl;

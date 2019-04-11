@@ -190,6 +190,56 @@ class biz {
         })
     }
 
+    //管理获取用户列表
+    static async getUsersList(params) {
+        return await dao.manageConnection(async (connection) => {
+            var userList = await businessDao.getUsersList(connection, params);
+            var count = await businessDao.getUsersListCount(connection, params);
+            userList = userList.map(function (item) {
+                let date = new Date(item.endtime);
+                let time = date.getTime();//转换成毫秒
+                let nowTime = new Date().getTime();//转换成毫秒
+                let times = time - nowTime;
+                if (times <= 0) {
+                    time = 0;
+                }
+                item.endtime = times;
+                item.endtimems = time;
+                return item;
+            })
+            var retUser = {
+                list: userList,
+                token: params.token,
+                count: count
+            };
+            return retUser
+        })
+    }
+
+    //后台设置热门用户
+    static async setHotUsers(params) {
+        return await dao.manageConnection(async (connection) => {
+            var userList = await businessDao.setHotUsers(connection, params);
+            var retUser = {
+                msg: '操作成功',
+                token: params.token
+            };
+            return retUser
+        })
+    }
+
+    //管理禁启用用户
+    static async setUserState(params) {
+        return await dao.manageConnection(async (connection) => {
+            var userList = await businessDao.setUserState(connection, params);
+            var retUser = {
+                msg: '操作成功',
+                token: params.token
+            };
+            return retUser
+        })
+    }
+
 }
 
 module.exports = biz;

@@ -25,8 +25,6 @@ class dao {
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
                 if (err) return reject(err);
-                console.log(result);
-                console.log('123');
                 resolve(result);
             });
         })
@@ -355,33 +353,6 @@ class dao {
     }
 
 
-    //用户
-    static async isExistUser(connection, query) {
-        var params = [];
-        var where = [];
-        let sql = () => `
-            SELECT * FROM users WHERE ${where.join(' and ')}
-            
-        `;
-        if(!str.isEmpty(query.account)){
-            where.push('account = ?')
-            params.push(query.account);
-        }
-
-        if(!str.isEmpty(query.invitcode)){
-            where.push('Invitcode = ?')
-            params.push(query.invitcode);
-        }
-
-        return new Promise(async (resolve, reject) => {
-            connection.query(sql(), params, (err, result) => {
-                if (err) return reject(err);
-                resolve(result);
-            });
-        })
-    }
-
-
     //校验验证码
     static async verification(connection, query) {
         var params = [];
@@ -410,6 +381,105 @@ class dao {
         params.push(query.type);
         params.push(new Date());
         params.push(query.desc);
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+    //查询所有用户
+    static async getUsersList(connection, query) {
+        var params = [];
+        var where = [];
+        let sql = () => `
+            SELECT *,
+            IFNULL(b.integral_current, 0) AS current,
+            IFNULL(b.integral_total, 0) AS total 
+            FROM users a 
+            LEFT JOIN user_integral b ON a.uuid = b.user_uuid
+            WHERE ${where.join(' and ')} 
+            ORDER BY a.createtime DESC
+            LIMIT ?,?
+        `;
+        if (!str.isEmpty(query.account)) {
+            where.push('a.account LIKE ?');
+            params.push('%'+query.account+'%');
+        }
+
+        if (!str.isEmpty(query.type)) {
+            where.push('a.type = ?');
+            params.push(query.type);
+        }
+        where.push('a.level < 5')
+        params.push((parseInt(query.index) - 1) * parseInt(query.pagesize));
+        params.push(parseInt(query.pagesize));
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+
+    //统计排行榜榜单总数
+    static async getUsersListCount(connection, query) {
+        let params = [];
+        var where = [];
+        let sql = () => `
+            SELECT count(1) as count FROM users WHERE ${where.join(' and ')}`;
+        if (!str.isEmpty(query.account)) {
+            where.push('account LIKE ?');
+            params.push(query.account);
+        }
+        if (!str.isEmpty(query.type)) {
+            where.push('type = ?');
+            params.push(query.type);
+        }
+        where.push('level < 5');
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result[0].count);
+            });
+        })
+    }
+
+
+    //后台设置热门用户
+    static async setHotUsers(connection, query) {
+        var params = [];
+        let sql = () => `
+            UPDATE users SET 
+            popular_user = ? 
+            WHERE account = ? 
+            AND uuid = ?
+        `;
+        params.push(query.popular_user);
+        params.push(query.account);
+        params.push(query.uuid);
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+    //管理禁启用用户
+    static async setUserState(connection, query) {
+        var params = [];
+        let sql = () => `
+            UPDATE users SET 
+            type = ? 
+            WHERE account = ? 
+            AND uuid = ?
+        `;
+        params.push(query.type);
+        params.push(query.account);
+        params.push(query.uuid);
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
                 if (err) return reject(err);

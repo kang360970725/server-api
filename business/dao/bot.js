@@ -17,7 +17,7 @@ class dao {
             r.user_account = b.user_account WHERE b.user_account = ?
             ;
         `;
-        params.push(query.account);
+        params.push(query.currentUser.account);
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
                 if (err) return reject(err);
