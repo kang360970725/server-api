@@ -43,7 +43,7 @@
       "group": "a",
       "third_party": "0",
       "reset_api": "1",
-      "dead_portrait": "1",头像
+      "head_portrait": "1",头像
       "token": "670fd140-a392-41a5-8ffe-095ab1283876"
     }
   ]
@@ -101,6 +101,7 @@
             "group": "",
             "third_party": "0",
             "reset_api": "0",
+            "head_portrait": "1",头像
             "token": ""
         },
         "sessionId": "29f78ba7-e629-4acf-a0ff-14be80f001d4"

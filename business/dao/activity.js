@@ -97,61 +97,75 @@ class dao {
         let where = [];
         let content = [];
         var limit = "LIMIT ";
+        var group = "GROUP BY activity_id ";
+        var letfJoin = "LEFT JOIN user_union_info u on u.user_info_union = a.activity_id and u.user_info_type = a.type and u.is_valid = 0 " +
+                       "LEFT JOIN users us on u.user_id = us.uuid ";
         let sql = () => `
         SELECT 
         ${content.join(' , ')}
-        FROM activity_main
+        FROM activity_main a
+        ${letfJoin}
         WHERE ${where.join(' and ')}
-        
+        ${group}
         ${limit};
         `;
         let params = [];
-        content.push(' activity_id ');
-        content.push(' activity_name ');
-        content.push(' activity_title ');
-        content.push(' activity_code ');
-        content.push(' creat_time ');
-        content.push(' pv ');
-        content.push(' type ');
+        content.push(' a.activity_id ');
+        content.push(' a.activity_name ');
+        content.push(' a.activity_title ');
+        content.push(' a.activity_code ');
+        content.push(' a.creat_time ');
+        content.push(' a.start_time ');
+        content.push(' a.end_time ');
+        content.push(' a.pv ');
+        content.push(' a.type ');
         if (!str.isEmpty(query.content)) {
-            content.push(' activity_content ');
+            content.push(' a.activity_content ');
         }
+
+        if (!str.isEmpty(query.heads)) {
+            content.push(' GROUP_CONCAT(us.head_portrait) as heads ');
+        }else{
+            group = '';
+            letfJoin = '';
+        }
+
         where.push(' 1 = 1 ');
         if (!str.isEmpty(query.forbidden)) {
-            where.push(' activity_forbidden = ? ');
+            where.push(' a.activity_forbidden = ? ');
             params.push(query.forbidden);
         }
 
         if (!str.isEmpty(query.id)) {
-            where.push(' activity_id = ? ');
+            where.push(' a.activity_id = ? ');
             params.push(query.id);
         }
 
         if (!str.isEmpty(query.name)) {
-            where.push(' activity_name like ? ');
+            where.push(' a.activity_name like ? ');
             params.push("%" + query.name + "%");
         }
         if (!str.isEmpty(query.title)) {
-            where.push(' activity_title like ? ');
+            where.push(' a.activity_title like ? ');
             params.push("%" + query.title + "%");
         }
         if (!str.isEmpty(query.code)) {
-            where.push(' activity_code = ? ');
+            where.push(' a.activity_code = ? ');
             params.push(query.code);
         }
 
         if (!str.isEmpty(query.type)) {
             let types = query.type.split(',')
-            where.push(` type in ( ${types.join(',')} ) `);
+            where.push(` a.type in ( ${types.join(',')} ) `);
         }
 
         if (query.startTime) {
-            where.push(' start_time >= ? ');
+            where.push(' a.start_time >= ? ');
             params.push(query.startTime);
         }
 
         if (query.endTime) {
-            where.push(' end_time <= ? ');
+            where.push(' a.end_time <= ? ');
             params.push(query.endTime);
         }
 

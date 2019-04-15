@@ -133,7 +133,7 @@ class dao {
     static async updateHead(connection, query) {
 
         let sql = () => `
-            update users set dead_portrait =? where uuid = ?
+            update users set head_portrait =? where uuid = ?
         `;
         let params = [];
 
