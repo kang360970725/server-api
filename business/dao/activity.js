@@ -142,8 +142,8 @@ class dao {
         }
 
         if (!str.isEmpty(query.type)) {
-            where.push(' type = ? ');
-            params.push(query.type);
+            let types = query.type.split(',')
+            where.push(` type in ( ${types.join(',')} ) `);
         }
 
         if (query.startTime) {
@@ -204,9 +204,13 @@ class dao {
             params.push(query.code);
         }
 
+        // if (!str.isEmpty(query.type)) {
+        //     where.push(' type = ? ');
+        //     params.push(query.type);
+        // }
         if (!str.isEmpty(query.type)) {
-            where.push(' type = ? ');
-            params.push(query.type);
+            let types = query.type.split(',')
+            where.push(` type in ( ${types.join(',')} ) `);
         }
 
         if (query.startTime) {
