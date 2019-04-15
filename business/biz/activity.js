@@ -41,6 +41,16 @@ class biz {
 
 
     //添加活动详情
+    static async addPv(params) {
+        return await dao.manageConnection(async (connection) => {
+            if (params.id) {
+                await activityDao.updateMain(connection, {id: params.id, pv: 1});
+            }
+            return;
+        })
+    }
+
+    //添加活动详情
     static async addOrUpdateActivitys(params) {
         return await dao.manageConnection(async (connection) => {
             let result;
@@ -168,10 +178,10 @@ class biz {
                             throw exception.BusinessException("提交失败", 200);
                         }
                         btcPrice.id = renewResult.insertId;
-                        let sysconfig = await sysDao.query(connection,{type:"sys_img",pageIndex:0,pageSize:1})
-                        if(sysconfig && sysconfig[0]){
+                        let sysconfig = await sysDao.query(connection, {type: "sys_img", pageIndex: 0, pageSize: 1})
+                        if (sysconfig && sysconfig[0]) {
                             btcPrice.img = sysconfig[0].sys_value;
-                        }else{
+                        } else {
                             btcPrice.img = "";
                         }
 
@@ -288,7 +298,7 @@ class biz {
                 let result = {};
                 if (body.success) {
                     for (let item of body.data) {
-                        if(item.currency == "BTC"){
+                        if (item.currency == "BTC") {
                             let list = item.exchangeList;
                             for (let i of list) {
                                 if (i.chartKey == 'HUOBIPROBTCUSDT') {

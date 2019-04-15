@@ -43,6 +43,7 @@
       "group": "a",
       "third_party": "0",
       "reset_api": "1",
+      "dead_portrait": "1",头像
       "token": "670fd140-a392-41a5-8ffe-095ab1283876"
     }
   ]
@@ -160,6 +161,26 @@
     "data": {
         "account": "adminhy"
     }
+    }
+ */
+
+/**
+ * @api {post} v1/users/headportrait 上传头像
+ * @apiName v1/users/headportrait
+ * @apiGroup users
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {String} uuid  用户id 可空 后台用户使用
+ * @apiParam {String} headPortrait  头像地址 不可空
+ *
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ *
+ * {
+    "status": 0,
+    "message": "successful",
+    "data": "http://192.168.0.33/source/2019-04-11/0.22082375855971814.jpg"
     }
  */
 

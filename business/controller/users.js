@@ -74,7 +74,7 @@ class ctrl {
         return await businessBiz.getUsersList(params)
     }
 
-    static async headPortrait(params) { //上传头像
+    static async headportrait(params) { //上传头像
         if (params.adminUser) {
             if (str.isEmpty(params.uuid)) {
                 throw exception.ParamException('用户uuid[uuid]不能为空')

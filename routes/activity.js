@@ -17,7 +17,7 @@
  * @apiParam {String} startTime  活动开始时间 可空
  * @apiParam {String} endTime  活动结束时间 可空
  * @apiParam {String} content 是否查询活动内容信息 非空查询 空不查询
- * @apiParam {String} type 类型 0活动 1产品 2矿池 空查询全部
+ * @apiParam {String} type 类型 0活动 1产品 2矿池 空查询全部  查询多个用,号隔开
  * @apiParam {String} pageSize 数据量 非空
  * @apiParam {String} pageIndex 0开始 页数 非空
  *
@@ -90,6 +90,31 @@
 
        }]
 }
+ *
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ *
+ * {
+    "status": 0,
+    "message": "successful",
+    "data": {
+        "id": "6"
+    }
+}
+ *}
+ */
+
+
+/**
+ * @api {POST} v1/activity/addpv 添加浏览记录
+ * @apiName v1/activity/addpv
+ * @apiDescription 添加浏览记录
+ * @apiGroup activity
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {String} id  活动id 空新增 不为空修改
+ *
  *
  *
  * @apiSuccessExample 成功返回结果:

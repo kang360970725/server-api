@@ -23,6 +23,13 @@ class ctrl {
         }
     }
 
+    static async addpv(params) {
+        if (str.isEmpty(params.id)) {
+            throw exception.ParamException('id[id]不能为空')
+        }
+        return await activityBiz.addPv(params)
+    }
+
     static async updateinfo(params) {
         if (params.adminUser) {
             return await activityBiz.updateinfo(params)
