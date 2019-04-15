@@ -93,7 +93,6 @@ class dao {
     }
 
 
-
     static async queryMain(connection, query) {
         let where = [];
         let content = [];
@@ -115,7 +114,7 @@ class dao {
         content.push(' pv ');
         content.push(' type ');
         if (!str.isEmpty(query.content)) {
-            content.push(' content ');
+            content.push(' activity_content ');
         }
         where.push(' 1 = 1 ');
         if (!str.isEmpty(query.forbidden)) {
@@ -580,7 +579,7 @@ class dao {
         if (!str.isEmpty(query.type)) {
             where.push(" type = ? ")
             params.push(query.type);
-        }else if(str.isEmpty(query.id)){
+        } else if (str.isEmpty(query.id)) {
             where.push(" type <> -1 ")
         }
         if (str.isEmpty(query.pageIndex) || str.isEmpty(query.pageSize)) {
@@ -701,13 +700,13 @@ class dao {
         }
 
         if (!str.isEmpty(query.poolId)) {
-            if(query.poolId == "ALL"){
+            if (query.poolId == "ALL") {
                 where.push(` pool_id is not null `);
-            }else{
+            } else {
                 let poolIds = query.poolId.split(',')
                 where.push(` pool_id in ( ${poolIds.join(',')} ) `);
             }
-        }else{
+        } else {
             where.push(" pool_id is null ")
         }
 
@@ -765,10 +764,10 @@ class dao {
         if (!str.isEmpty(query.isValid)) {
             where.push(' is_valid = ? ');
             params.push(query.isValid);
-        } else if(str.isEmpty(query.id)) {
+        } else if (str.isEmpty(query.id)) {
             where.push(' is_valid <> -1 ');
         }
-        if(where.length<=0){
+        if (where.length <= 0) {
             return
         }
         if (str.isEmpty(query.pageIndex) || str.isEmpty(query.pageSize)) {
