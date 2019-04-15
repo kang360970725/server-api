@@ -67,7 +67,7 @@ class biz {
             console.log(params.account);
             if (!getResult || getResult.length <= 0) {
                 throw data.error('该用户不存在')
-            }else if (getResult[0].account != params.account){
+            } else if (getResult[0].account != params.account) {
                 throw data.error('用户信息验证失败')
             }
             let paramUser = getResult[0];
@@ -77,7 +77,7 @@ class biz {
             var retUser = {
                 uuid: getResult[0].uuid,
                 account: getResult[0].account,
-                desc:'续费操作成功'
+                desc: '续费操作成功'
             };
             return retUser
         })
@@ -91,35 +91,35 @@ class biz {
             console.log(result);
             let results = result;
             if (results.length > 0 && results[0].type != 3) {
-                    params['user_id'] = results[0].uuid;
-                    params['user_info_type'] = 'orePool';
-                    let userInfos = await businessDao.userInfo(connection, params);
+                params['user_id'] = results[0].uuid;
+                params['user_info_type'] = 'orePool';
+                let userInfos = await businessDao.userInfo(connection, params);
 
-                    let date = new Date(result[0].endtime);
-                    let time = date.getTime();//转换成毫秒
-                    let nowTime = new Date().getTime();//转换成毫秒
-                    let times = time - nowTime;
-                    if (times <= 0) {
-                        times = 0;
-                    }
-                    let resDta = results[0];
-                    resDta.endtime = times;
-                    resDta['token'] = !!result[0].token ? result[0].token : '';
-                    resDta.password = '';
-                    resDta['userInfos'] = userInfos ;
-                    result = {
-                        msg: '登录成功',
-                        data: resDta
-                    };
-                    result.sessionId = uuid.v4()
-                    let list = {
-                        type:0,
-                        desc:'(' + params.account + ')会员登录本系统！'
-                    }
-                    await businessDao.insertLogs(connection, list);
+                let date = new Date(result[0].endtime);
+                let time = date.getTime();//转换成毫秒
+                let nowTime = new Date().getTime();//转换成毫秒
+                let times = time - nowTime;
+                if (times <= 0) {
+                    times = 0;
+                }
+                let resDta = results[0];
+                resDta.endtime = times;
+                resDta['token'] = !!result[0].token ? result[0].token : '';
+                resDta.password = '';
+                resDta['userInfos'] = userInfos;
+                result = {
+                    msg: '登录成功',
+                    data: resDta
+                };
+                result.sessionId = uuid.v4()
+                let list = {
+                    type: 0,
+                    desc: '(' + params.account + ')会员登录本系统！'
+                }
+                await businessDao.insertLogs(connection, list);
 
             } else if (results.length > 0 && results[0].type == 3) {
-                throw exception.BusinessException('用户已被停止使用,请联系代理',200)
+                throw exception.BusinessException('用户已被停止使用,请联系代理', 200)
             } else {
                 throw exception.ParamException('用户名或密码错误')
             }
@@ -133,20 +133,20 @@ class biz {
         return await dao.manageConnection(async (connection) => {
             console.log(params);
             let result = await businessDao.isExistUser(connection, params);
-            if(result && result.length > 0){
-                throw exception.BusinessException('用户已存在',199)
+            if (result && result.length > 0) {
+                throw exception.BusinessException('用户已存在', 199)
             }
             result = await businessDao.verification(connection, params);
-            if(!result || result.length <= 0){
-                throw exception.BusinessException('验证码错误或已过期',198)
+            if (!result || result.length <= 0) {
+                throw exception.BusinessException('验证码错误或已过期', 198)
             }
 
             //添加用户
             await businessDao.addUsers(connection, params);
 
             result = await businessDao.isExistUser(connection, params);
-            if(!result || result.length <= 0){
-                throw exception.BusinessException('注册用户失败',197)
+            if (!result || result.length <= 0) {
+                throw exception.BusinessException('注册用户失败', 197)
             }
 
             //设置默认参数
@@ -170,12 +170,12 @@ class biz {
     static async forgotPwd(params) {
         return await dao.manageConnection(async (connection) => {
             let result = await businessDao.isExistUser(connection, params);
-            if(!result || result.length <= 0){
-                throw exception.BusinessException('用户不存在',196)
+            if (!result || result.length <= 0) {
+                throw exception.BusinessException('用户不存在', 196)
             }
             result = await businessDao.verification(connection, params);
-            if(!result || result.length <= 0){
-                throw exception.BusinessException('验证码错误或已过期',198)
+            if (!result || result.length <= 0) {
+                throw exception.BusinessException('验证码错误或已过期', 198)
             }
             params["uuid"] = result[0].uuid;
             //更新密码
@@ -187,6 +187,20 @@ class biz {
                 account: result[0].account
             };
             return retUser
+        })
+    }
+
+
+    //上传头像
+    static async updateHead(params) {
+        return await dao.manageConnection(async (connection) => {
+            let result = await businessDao.isExistUser(connection, params);
+            if (!result || result.length <= 0) {
+                throw exception.BusinessException('用户不存在', 196)
+            }
+            //更新密码
+            await businessDao.updateHead(connection, params);
+            return params.headPortrait;
         })
     }
 

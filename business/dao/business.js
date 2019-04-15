@@ -29,6 +29,7 @@ class dao {
             });
         })
     }
+
     static async getUsersByAccount(connection, query) {
         var params = [];
 
@@ -48,6 +49,7 @@ class dao {
             });
         })
     }
+
     //添加用户
     static async addUsers(connection, query) {
         var params = [];
@@ -111,11 +113,11 @@ class dao {
         `;
         let params = [];
 
-        if(!str.isEmpty(query.pwd)){
+        if (!str.isEmpty(query.pwd)) {
             params.push(query.pwd);
         }
 
-        if(!str.isEmpty(query.account)){
+        if (!str.isEmpty(query.account)) {
             params.push(query.account);
         }
         return new Promise(async (resolve, reject) => {
@@ -126,6 +128,29 @@ class dao {
             });
         })
     }
+
+    //添加头像
+    static async updateHead(connection, query) {
+
+        let sql = () => `
+            update users set dead_portrait =? where uuid = ?
+        `;
+        let params = [];
+
+        if (str.isEmpty(query.headPortrait) || str.isEmpty(query.uuid)) {
+            return;
+        }
+        params.push(query.headPortrait);
+        params.push(query.uuid);
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                console.log(err);
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
     //写入用户默认bot配置数据
     static async insertUserBotSetting(connection, query) {
         let sql = () => `
@@ -173,6 +198,7 @@ class dao {
             });
         })
     }
+
     //添加token
     static async insertToken(connection, query) {
         let sql = () => `
@@ -193,6 +219,7 @@ class dao {
             });
         })
     }
+
     //添加购买记录
     static async insertPay(connection, query) {
         let sql = () => `
@@ -221,6 +248,7 @@ class dao {
             });
         })
     }
+
     //获取用户token
     static async getUserTokenFn(connection, query) {
         var params = [];
@@ -241,6 +269,7 @@ class dao {
             });
         })
     }
+
     //token验证
     static async generateToken(connection, query) {
         var params = [];
@@ -258,6 +287,7 @@ class dao {
             });
         })
     }
+
     //续费用户
     static async renewUsers(connection, query) {
         var params = [];
@@ -334,12 +364,17 @@ class dao {
             SELECT * FROM users WHERE ${where.join(' and ')}
             
         `;
-        if(!str.isEmpty(query.account)){
+        if (!str.isEmpty(query.account)) {
             where.push('account = ?')
             params.push(query.account);
         }
 
-        if(!str.isEmpty(query.invitcode)){
+        if (!str.isEmpty(query.uuid)) {
+            where.push('uuid = ?')
+            params.push(query.uuid);
+        }
+
+        if (!str.isEmpty(query.invitcode)) {
             where.push('Invitcode = ?')
             params.push(query.invitcode);
         }
@@ -405,7 +440,7 @@ class dao {
         `;
         if (!str.isEmpty(query.account)) {
             where.push('a.account LIKE ?');
-            params.push('%'+query.account+'%');
+            params.push('%' + query.account + '%');
         }
 
         if (!str.isEmpty(query.type)) {

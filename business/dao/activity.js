@@ -75,6 +75,10 @@ class dao {
             params.push(query.forbidden)
         }
 
+        if (!str.isEmpty(query.pv)) {
+            set.push('pv = pv + 1');
+        }
+
         where.push('activity_id = ?')
         params.push(query.id)
         if (set.length <= 0 || str.isEmpty(query.id)) {
@@ -87,6 +91,7 @@ class dao {
             });
         })
     }
+
 
 
     static async queryMain(connection, query) {
@@ -107,6 +112,8 @@ class dao {
         content.push(' activity_title ');
         content.push(' activity_code ');
         content.push(' creat_time ');
+        content.push(' pv ');
+        content.push(' type ');
         if (!str.isEmpty(query.content)) {
             content.push(' content ');
         }
@@ -135,7 +142,6 @@ class dao {
         }
 
         if (!str.isEmpty(query.type)) {
-            content.push(' type ');
             where.push(' type = ? ');
             params.push(query.type);
         }

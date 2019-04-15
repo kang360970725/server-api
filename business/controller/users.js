@@ -74,6 +74,22 @@ class ctrl {
         return await businessBiz.getUsersList(params)
     }
 
+    static async headPortrait(params) { //上传头像
+        if (params.adminUser) {
+            if (str.isEmpty(params.uuid)) {
+                throw exception.ParamException('用户uuid[uuid]不能为空')
+            }
+        }
+        if (params.currentUser) {
+            params.id = params.currentUser.uuid;
+        }
+
+        if (str.isEmpty(params.headPortrait)) {
+            throw exception.ParamException('头像[headPortrait]不能为空')
+        }
+        return await businessBiz.updateHead(params)
+    }
+
     static async setHotUsers(params) { //后台设置热门用户
         if (!params.adminUser) {
             throw exception.PowerException()
