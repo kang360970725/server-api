@@ -90,6 +90,13 @@ class ctrl {
         return await businessBiz.updateHead(params)
     }
 
+        static async myfriend(params) { //我的好友
+        if (params.adminUser) {
+            return;
+        }
+        return await businessBiz.myfriend(params)
+    }
+
     static async setHotUsers(params) { //后台设置热门用户
         if (!params.adminUser) {
             throw exception.PowerException()

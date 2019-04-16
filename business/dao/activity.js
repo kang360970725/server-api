@@ -125,6 +125,8 @@ class dao {
 
         if (!str.isEmpty(query.heads)) {
             content.push(' GROUP_CONCAT(us.head_portrait) as heads ');
+            content.push(' COUNT(DISTINCT us.uuid) as uv ');
+
         }else{
             group = '';
             letfJoin = '';
@@ -137,8 +139,8 @@ class dao {
         }
 
         if (!str.isEmpty(query.id)) {
-            where.push(' a.activity_id = ? ');
-            params.push(query.id);
+            let ids = query.id.split(',')
+            where.push(` a.activity_id in ( ${ids.join(',')} ) `);
         }
 
         if (!str.isEmpty(query.name)) {
@@ -200,8 +202,8 @@ class dao {
         }
 
         if (!str.isEmpty(query.id)) {
-            where.push(' activity_id = ? ');
-            params.push(query.id);
+            let ids = query.id.split(',')
+            where.push(` a.activity_id in ( ${ids.join(',')} ) `);
         }
 
         if (!str.isEmpty(query.name)) {

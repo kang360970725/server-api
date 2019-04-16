@@ -204,6 +204,13 @@ class biz {
         })
     }
 
+    //上传头像
+    static async myfriend(params) {
+        return await dao.manageConnection(async (connection) => {
+            return await businessDao.myfriend(connection, params);
+        })
+    }
+
     //管理获取用户列表
     static async getUsersList(params) {
         return await dao.manageConnection(async (connection) => {

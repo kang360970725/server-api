@@ -151,6 +151,51 @@ class dao {
         })
     }
 
+
+    //我的好友
+    static async myfriend(connection, query) {
+        var limit = "LIMIT ";
+        let sql = () => `
+            select nickname,uuid,account,head_portrait from users where Invitdcode =  ? or Invitcode = ?
+            ${limit};
+        `;
+        let params = [];
+
+        params.push(query.currentUser.Invitcode);
+        params.push(query.currentUser.Invitdcode);
+
+        if (str.isEmpty(query.pageIndex) || str.isEmpty(query.pageSize)) {
+            limit = "";
+        } else {
+            limit += `${(query.pageIndex) * query.pageSize}, ${query.pageSize}`;
+        }
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                console.log(err);
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+    //我的好友
+    static async myfriendCount(connection, query) {
+        let sql = () => `
+            select count(1) from users where Invitdcode =  ? or Invitcode = ?
+        `;
+        let params = [];
+
+        params.push(query.currentUser.Invitcode);
+        params.push(query.currentUser.Invitdcode);
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                console.log(err);
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
     //写入用户默认bot配置数据
     static async insertUserBotSetting(connection, query) {
         let sql = () => `

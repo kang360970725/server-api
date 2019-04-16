@@ -185,3 +185,21 @@
     }
  */
 
+
+/**
+ * @api {get} v1/users/myfriend 我的好友
+ * @apiName v1/users/myfriend
+ * @apiGroup users
+ * @apiVersion 1.0.0
+ *
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ *
+ * {
+    "status": 0,
+    "message": "successful",
+    "data": "http://192.168.0.33/source/2019-04-11/0.22082375855971814.jpg"
+    }
+ */
+
