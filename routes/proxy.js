@@ -47,7 +47,6 @@
 /**
  * @api {POST} v1/proxy/addproxy 申请成为代理
  * @apiName v1/proxy/addproxy
- * @apiDescription
  * @apiGroup proxy
  * @apiVersion 1.0.0
  *
@@ -88,7 +87,6 @@
 /**
  * @api {POST} v1/proxy/updateproxy 代理申请修改或审核
  * @apiName v1/proxy/updateproxy
- * @apiDescription
  * @apiGroup proxy
  * @apiVersion 1.0.0
  *
@@ -132,7 +130,6 @@
 /**
  * @api {POST} v1/proxy/delete 删除代理申请
  * @apiName v1/proxy/delete
- * @apiDescription
  * @apiGroup proxy
  * @apiVersion 1.0.0
  *

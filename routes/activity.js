@@ -511,7 +511,6 @@
 /**
  * @api {POST} v1/activity/delete 删除活动
  * @apiName v1/activity/delete
- * @apiDescription
  * @apiGroup activity
  * @apiVersion 1.0.0
  *

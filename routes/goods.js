@@ -135,7 +135,6 @@
 /**
  * @api {POST} v1/goods/delete 删除商品
  * @apiName v1/goods/delete
- * @apiDescription
  * @apiGroup goods
  * @apiVersion 1.0.0
  *

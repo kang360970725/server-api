@@ -46,7 +46,6 @@
 /**
  * @api {POST} v1/proposal/addproposal 添加投诉建议
  * @apiName v1/proposal/addproposal
- * @apiDescription
  * @apiGroup proposal
  * @apiVersion 1.0.0
  *
@@ -91,7 +90,6 @@
 /**
  * @api {POST} v1/proposal/updateproposal 修改建议投诉或回复
  * @apiName v1/proposal/updateproposal
- * @apiDescription
  * @apiGroup proposal
  * @apiVersion 1.0.0
  *
@@ -137,7 +135,6 @@
 /**
  * @api {POST} v1/proposal/delete 删除投诉建议
  * @apiName v1/proposal/delete
- * @apiDescription
  * @apiGroup proposal
  * @apiVersion 1.0.0
  *
