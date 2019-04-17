@@ -15,6 +15,11 @@ class ctrl {
         return await activityBiz.activitys(params)
     }
 
+    static async activityinfos(params) {
+        return await activityBiz.activityinfos(params)
+    }
+
+
     static async addorupdate(params) {
         if (params.adminUser) {
             return await activityBiz.addOrUpdateActivitys(params)

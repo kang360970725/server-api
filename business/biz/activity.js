@@ -40,6 +40,23 @@ class biz {
         })
     }
 
+    //获取活动信息
+    static async activityinfos(params) {
+        return await dao.manageConnection(async (connection) => {
+            //获取活动主信息
+            var result = await activityDao.queryInfo(connection, params);
+            var resultCount = await activityDao.queryInfoCount(connection, params);
+            let count = 0;
+            if (resultCount && resultCount.length > 0) {
+                count = resultCount[0].count;
+            }
+            return {
+                "list": result,
+                "count": count
+            };
+        })
+    }
+
 
     //添加活动详情
     static async addPv(params) {

@@ -203,7 +203,7 @@ class dao {
 
         if (!str.isEmpty(query.id)) {
             let ids = query.id.split(',')
-            where.push(` a.activity_id in ( ${ids.join(',')} ) `);
+            where.push(` activity_id in ( ${ids.join(',')} ) `);
         }
 
         if (!str.isEmpty(query.name)) {
@@ -369,9 +369,45 @@ class dao {
 
     static async queryInfo(connection, query) {
         let where = [];
+        var limit = "LIMIT ";
         let sql = () => `
         SELECT 
         *
+        FROM activity_info
+        WHERE ${where.join(' AND ')}
+        ${limit};
+        `;
+        let params = [];
+        where.push(' 1 = 1 ');
+        if (!str.isEmpty(query.id)) {
+            where.push(' activity_id = ? ');
+            params.push(query.id);
+        }
+
+        if (!str.isEmpty(query.types)) {
+            let types = query.types.split(',')
+            where.push(` info_type in ( ${types.join(',')} ) `);
+            // params.push(query.type);
+        }
+
+        if (str.isEmpty(query.pageIndex) || str.isEmpty(query.pageSize)) {
+            limit = "";
+        } else {
+            limit += `${(query.pageIndex) * query.pageSize}, ${query.pageSize}`;
+        }
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+    static async queryInfoCount(connection, query) {
+        let where = [];
+        let sql = () => `
+        SELECT 
+        count(1)
         FROM activity_info
         WHERE ${where.join(' AND ')}
         `;
