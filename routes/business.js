@@ -14,13 +14,13 @@
   "data": [
     {
       "id": 1332,
-      "uuid": "001332",
-      "account": "15828982828@139.com",
+      "uuid": "001332",用户编号
+      "account": "15828982828@139.com", 账号
       "password": "",
-      "nickname": "15828982828@139.com",
+      "nickname": "15828982828@139.com",昵称
       "email": "15828982828@139.com",
-      "Invitcode": "3qtGt2Cw",
-      "Invitdcode": "12345",
+      "Invitcode": "3qtGt2Cw",邀请码
+      "Invitdcode": "12345",被邀请码
       "phone": "",
       "wechat": null,
       "walletaddress": null,
@@ -29,20 +29,20 @@
       "endtime": 21667314031,
       "starttime": "2018-11-14T16:42:30.000Z",
       "level": "-1",
-      "disable": "",
-      "principal": "0",
-      "bot_update": "0",
-      "bot_type": "1",
-      "user_principal": "0.09921545",
-      "popular_user": "0",
-      "activation_state": "1",
-      "bonus_base": "0.40000",
-      "bot_lirun": "0.20000",
-      "globalpartners": "0",
-      "bonus_ratio": "0.04834725",
-      "group": "a",
-      "third_party": "0",
-      "reset_api": "1",
+      "disable": "",是否禁用用户
+      "principal": "0",用户本金
+      "bot_update": "0",是否是更新账户  0为否    1为更新账户(更新账户需重置密码)
+      "bot_type": "1",会员使用机器人的版本 1：蓝猫量化标准版  2：蓝猫量化专业版   3:蓝猫量化精英版
+      "user_principal": "0.09921545", 会员本金
+      "popular_user": "0",热门用户 0 普通 1热门用户
+      "activation_state": "1",0 需要激活   1 已激活
+      "bonus_base": "0.40000",用户分红记录基数
+      "bot_lirun": "0.20000",用户账户盈利统计
+      "globalpartners": "0",全球合伙人  0 否  1是
+      "bonus_ratio": "0.04834725",用户分红比例
+      "group": "a",会员分组
+      "third_party": "0",0 蓝石  1 许总
+      "reset_api": "1",修改了API需要重置盈利算法
       "head_portrait": "1",头像
       "token": "670fd140-a392-41a5-8ffe-095ab1283876"
     }
