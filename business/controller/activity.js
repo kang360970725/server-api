@@ -197,15 +197,16 @@ class ctrl {
         return await activityBiz.queryRenews(params)
     }
 
-    //矿池申请记录查询
-    static async pool(params) {
+    //删除活动
+    static async delete(params) {
         if (params.currentUser) {
-            params.uuid = params.currentUser.uuid;
-            params.account = params.currentUser.account;
+           throw exception.PowerException();
         }
-        return await activityBiz.queryPools(params)
+        if (str.isEmpty(params.id)) {
+            throw exception.ParamException('活动编号[id]不能为空')
+        }
+        return await activityBiz.delete(params)
     }
-
     //矿池申请记录查询
     static async pool(params) {
         if (params.currentUser) {

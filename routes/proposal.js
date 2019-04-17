@@ -1,9 +1,9 @@
 
 
 /**
- * @api {get} v1/proxy/proxys 代理申请查询
- * @apiName v1/proxy/proxys
- * @apiGroup proxy
+ * @api {get} v1/proposal/proposals 投诉建议查询
+ * @apiName v1/proposal/proposals
+ * @apiGroup proposal
  * @apiVersion 1.0.0
  *
  * @apiParam {String} id  申请id 可空
@@ -11,8 +11,7 @@
  * @apiParam {String} name 用户申请姓名 模糊查询 可空
  * @apiParam {String} phone  用户申请电话 模糊查询 可空
  * @apiParam {String} email  用户申请email 模糊查询 可空
- * @apiParam {String} status  申请状态 0申请 1成为代理 可空
- * @apiParam {String} level  代理等级 可空
+ * @apiParam {String} type  类型 0建议 1投诉 可空
  * @apiParam {String} startTime  申请开始时间 可空
  * @apiParam {String} endTime  申请结束时间 可空
  * @apiParam {String} pageSize 数据量 可空
@@ -34,9 +33,9 @@
                 "user_phone": "12345677",
                 "user_email": "123",
                 "creattime": "2019-04-16T09:07:46.000Z",
-                "status": 1,
-                "proxy_level": 1,
-                "updatetime": "2019-04-16T09:07:34.000Z"
+                "type": 1,
+                "content": "1",内容
+                "reply": "1111"  回复
             }
         ],
         "count": 1
@@ -45,23 +44,27 @@
  */
 
 /**
- * @api {POST} v1/proxy/addproxy 申请成为代理
- * @apiName v1/proxy/addproxy
+ * @api {POST} v1/proposal/addproposal 添加投诉建议
+ * @apiName v1/proposal/addproposal
  * @apiDescription
- * @apiGroup proxy
+ * @apiGroup proposal
  * @apiVersion 1.0.0
  *
  * @apiParam {String} uuid  用户id 后台用户使用 可空
- * @apiParam {String} name  申请用户名称 不可空
- * @apiParam {String} phone  申请用户电话 可空
- * @apiParam {String} email  申请用户email 可空
+ * @apiParam {String} name  用户名称 不可空
+ * @apiParam {String} phone  用户电话 可空
+ * @apiParam {String} email  用户email 可空
+ * @apiParam {String} content  投诉建议内容 不可空
+ * @apiParam {String} type  类型 0建议 1投诉 不可空
  *
  * @apiParamExample {json} 请求参数:
       {
        "uuid":"6",
        "name":"adminhy",
        "phone":"12345677",
-       "email":"123"
+       "email":"123",
+       "content:"123",
+       "type":1
     }
  *
  *
@@ -86,27 +89,29 @@
 
 
 /**
- * @api {POST} v1/proxy/updateproxy 代理申请修改或审核
- * @apiName v1/proxy/updateproxy
+ * @api {POST} v1/proposal/updateproposal 修改建议投诉或回复
+ * @apiName v1/proposal/updateproposal
  * @apiDescription
- * @apiGroup proxy
+ * @apiGroup proposal
  * @apiVersion 1.0.0
  *
  * @apiParam {String} id  申请id 不可空
- * @apiParam {String} name  申请用户名称 可空
- * @apiParam {String} phone  申请用户电话 可空
- * @apiParam {String} email  申请用户email 可空
- * @apiParam {String} status  申请状态 后台用户使用 0申请 1成为代理 可空
- * @apiParam {String} level  代理等级 后台用户使用 可空
+ * @apiParam {String} name  用户名称 可空
+ * @apiParam {String} phone  用户电话 可空
+ * @apiParam {String} email  用户email 可空
+ * @apiParam {String} content  投诉建议内容 可空
+ * @apiParam {String} type  类型 0建议 1投诉 可空
+ * @apiParam {String} reply  回复 后台用户不可空
  *
  * @apiParamExample {json} 请求参数:
  {
        "id":"1",
-       "name":"adminhy11",
+       "name":"adminhy",
        "phone":"12345677",
        "email":"123",
-       "status":1,
-       "level":1
+       "content:"123",
+       "type":1,
+       "reply":"123"
 }
  *
  *
@@ -130,10 +135,10 @@
  */
 
 /**
- * @api {POST} v1/proxy/delete 删除代理申请
- * @apiName v1/proxy/delete
+ * @api {POST} v1/proposal/delete 删除投诉建议
+ * @apiName v1/proposal/delete
  * @apiDescription
- * @apiGroup proxy
+ * @apiGroup proposal
  * @apiVersion 1.0.0
  *
  * @apiParam {String} id  申请id 不可空

@@ -3,6 +3,7 @@
 let dao = require("../../db_config/dao"),
     data = require('../../utils/data'),
     config = require('../../db_config/config'),
+    deleteDao = require('../../business/dao/delete.js'),
     goodsDao = require('../../business/dao/goods');
 var uuid = require('node-uuid');
 
@@ -39,6 +40,14 @@ class biz {
                 }
             }
             return
+        })
+    }
+
+    //删除商品
+    static async delete(params) {
+        return await dao.manageConnection(async (connection) => {
+            let param = {tableName: "goods", fieldName: "good_id", fieldValue: params.id}
+            return await deleteDao.delete(connection, param);
         })
     }
 

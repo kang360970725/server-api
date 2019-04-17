@@ -17,7 +17,7 @@
  * @apiParam {String} startTime  活动开始时间 可空
  * @apiParam {String} endTime  活动结束时间 可空
  * @apiParam {String} content 是否查询活动内容信息 非空查询 空不查询
- * @apiParam {String} type 类型 0活动 1产品 2矿池 3公告 空查询全部  查询多个用,号隔开
+ * @apiParam {String} type 类型 0活动 1产品 2矿池 3公告 4关于蓝猫 5新手帮助 空查询全部  查询多个用,号隔开
  * @apiParam {String} pageSize 数据量 非空
  * @apiParam {String} pageIndex 0开始 页数 非空
  *
@@ -70,7 +70,7 @@
  * @apiParam {String} startTime  活动开始时间 可空
  * @apiParam {String} endTime  活动结束时间 可空
  * @apiParam {String} content 询活动内容信息 不可空
- * @apiParam {String} type 类型 0活动 1产品 2矿池 3公告
+ * @apiParam {String} type 类型 0活动 1产品 2矿池 3公告 4关于蓝猫 5新手帮助
  * @apiParam {String} forbidden 活动是否有效 0有效 1无效 默认0 可空
  * @apiParam {Array} infos  活动info信息
  * @apiParam {String} infos.type info类型  1返现 2免费 3打折 4积分奖励 5 月卡价格 6季卡价格 7 年卡价格 200 轮播图片 201封面 202活动关联的产品
@@ -505,6 +505,30 @@
             "modified": "2019-04-11T10:34:19.663922+08:00"
         }
     }
+}
+ */
+
+/**
+ * @api {POST} v1/activity/delete 删除活动
+ * @apiName v1/activity/delete
+ * @apiDescription
+ * @apiGroup activity
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {String} id  活动id 不可空
+ *
+ * @apiParamExample {json} 请求参数:
+ {
+       "id":"1",
+}
+ *
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ *
+ {
+    "status": 0,
+    "message": "successful",
 }
  */
 

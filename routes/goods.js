@@ -131,3 +131,27 @@
     }
 }
  */
+
+/**
+ * @api {POST} v1/goods/delete 删除商品
+ * @apiName v1/goods/delete
+ * @apiDescription
+ * @apiGroup goods
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {String} id  活动id 不可空
+ *
+ * @apiParamExample {json} 请求参数:
+ {
+       "id":"1",
+}
+ *
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ *
+ {
+    "status": 0,
+    "message": "successful",
+}
+ */

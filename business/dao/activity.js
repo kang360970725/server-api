@@ -300,6 +300,29 @@ class dao {
         })
     }
 
+    //添加活动信息数据
+    static async deleteMain(connection, query) {
+        let params = [];
+        let where = [];
+        let sql = () => `
+        DELETE FROM activity_mian WHERE ${where.join(' and ')}
+        `;
+
+        if (!str.isEmpty(query.id)) {
+            where.push("activity_id = ?");
+            params.push(query.id);
+        }
+        if (where.length <= 0) {
+            return;
+        }
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
     static async updateInfo(connection, query) {
         let set = [];
         let where = [];

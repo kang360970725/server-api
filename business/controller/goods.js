@@ -55,6 +55,17 @@ class ctrl {
         }
         return await goodsBiz.queryGoods(params);
     }
+
+    //删除商品
+    static async delete(params) {
+        if (params.currentUser) {
+            throw exception.PowerException();
+        }
+        if (str.isEmpty(params.id)) {
+            throw exception.ParamException('商品编号[id]不能为空')
+        }
+        return await goodsBiz.delete(params)
+    }
 }
 
 module.exports = ctrl;

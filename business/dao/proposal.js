@@ -5,22 +5,31 @@ let
 
 class dao {
     //添加申请
-    static async addProxy(connection, query) {
+    static async addProposal(connection, query) {
         let sql = () => `
         INSERT INTO 
-        user_proxy_apply (
+        user_proposal (
         user_id, 
         user_name, 
         user_phone, 
-        user_email 
+        user_email,
+        content,
+        type 
         )
         VALUES 
-        (?, ?, ?, ?);
+        (?, ?, ?, ?, ? ,?);
         `;
         let params = [];
-        params.push(query.uuid);
-        params.push(query.name);
-
+        if(!str.isEmpty(query.uuid)){
+            params.push(query.uuid);
+        }else{
+            params.push('');
+        }
+        if(!str.isEmpty(query.name)){
+            params.push(query.name);
+        }else{
+            params.push('');
+        }
         if(!str.isEmpty(query.phone)){
             params.push(query.phone);
         }else{
@@ -32,6 +41,18 @@ class dao {
         }else{
             params.push('');
         }
+
+        if(!str.isEmpty(query.content)){
+            params.push(query.content);
+        }else{
+            params.push('');
+        }
+
+        if(!str.isEmpty(query.type)){
+            params.push(query.type);
+        }else{
+            params.push(0);
+        }
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
                 if (err) return reject("重复录入");
@@ -40,12 +61,12 @@ class dao {
         })
     }
 
-    static async updateProxy(connection, query) {
+    static async updateProposal(connection, query) {
         var set = [];
         var where = [];
         let params = [];
         let sql = () => `
-        UPDATE user_proxy_apply 
+        UPDATE user_proposal 
         SET
         ${set.join(' , ')}
         WHERE
@@ -63,19 +84,22 @@ class dao {
             set.push('user_email = ?');
             params.push(query.email)
         }
-        if (!str.isEmpty(query.status)) {
-            set.push('status = ?');
-            params.push(query.status)
+        if (!str.isEmpty(query.content)) {
+            set.push('content = ?');
+            params.push(query.content)
         }
-        if (!str.isEmpty(query.level)) {
-            set.push('proxy_level = ?');
-            params.push(query.level)
+        if (!str.isEmpty(query.type)) {
+            set.push('type = ?');
+            params.push(query.type)
         }
+        if (!str.isEmpty(query.reply)) {
+            set.push('reply = ?');
+            params.push(query.reply)
+        }
+
         if (set.length <= 0 || str.isEmpty(query.id)) {
             return 0;
         }
-        set.push('updatetime = ?');
-        params.push(new Date())
 
         where.push('id = ?')
         params.push(query.id)
@@ -88,38 +112,14 @@ class dao {
         })
     }
 
-    //添加活动信息数据
-    static async deleteMain(connection, query) {
-        let params = [];
+
+    static async queryProposal(connection, query) {
         let where = [];
-        let sql = () => `
-        DELETE FROM activity_mian WHERE ${where.join(' and ')}
-        `;
-
-        if (!str.isEmpty(query.id)) {
-            where.push("activity_id = ?");
-            params.push(query.id);
-        }
-        if (where.length <= 0) {
-            return;
-        }
-        return new Promise(async (resolve, reject) => {
-            connection.query(sql(), params, (err, result) => {
-                if (err) return reject(err);
-                resolve(result);
-            });
-        })
-    }
-
-
-    static async queryProxy(connection, query) {
-        let where = [];
-        let content = [];
         var limit = "LIMIT ";
         let sql = () => `
         SELECT 
         *
-        FROM user_proxy_apply a
+        FROM user_proposal a
         WHERE ${where.join(' and ')}
         order by a.creattime desc
         ${limit};
@@ -150,17 +150,10 @@ class dao {
             params.push("%" + query.email + "%");
         }
 
-        if (!str.isEmpty(query.status)) {
-            where.push(' a.status = ? ');
-            params.push(query.status);
+        if (!str.isEmpty(query.type)) {
+            where.push(' a.type = ? ');
+            params.push(query.type);
         }
-
-        if (!str.isEmpty(query.level)) {
-            where.push(' a.proxy_level = ? ');
-            params.push(query.level);
-        }
-
-
 
         if (query.startTime) {
             where.push(' a.creattime >= ? ');
@@ -187,12 +180,12 @@ class dao {
     }
 
 
-    static async queryProxyCount(connection, query) {
+    static async queryProposalCount(connection, query) {
         let where = [];
         let sql = () => `
         SELECT 
         count(1) as count
-        FROM user_proxy_apply a
+        FROM user_proposal a
         WHERE ${where.join(' and ')}
         `;
         let params = [];
@@ -221,14 +214,9 @@ class dao {
             params.push("%" + query.email + "%");
         }
 
-        if (!str.isEmpty(query.status)) {
-            where.push(' a.status = ? ');
-            params.push(query.status);
-        }
-
-        if (!str.isEmpty(query.level)) {
-            where.push(' a.proxy_level = ? ');
-            params.push(query.level);
+        if (!str.isEmpty(query.type)) {
+            where.push(' a.type = ? ');
+            params.push(query.type);
         }
 
         if (query.startTime) {
@@ -240,6 +228,7 @@ class dao {
             where.push(' a.creattime <= ? ');
             params.push(query.endTime);
         }
+
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
                 if (err) return reject(err);

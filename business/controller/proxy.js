@@ -53,6 +53,17 @@ class ctrl {
         }
         return await proxyBiz.update(params)
     }
+
+    //删除代理申请
+    static async delete(params) {
+        if (params.currentUser) {
+            throw exception.PowerException();
+        }
+        if (str.isEmpty(params.id)) {
+            throw exception.ParamException('申请编号[id]不能为空')
+        }
+        return await proxyBiz.delete(params)
+    }
 }
 
 module.exports = ctrl;

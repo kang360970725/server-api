@@ -8,6 +8,7 @@ let dao = require("../../db_config/dao"),
     exception = require('../../utils/exception.js'),
     str = require("../../utils/stringHelper"),
     activityDao = require('../../business/dao/activity.js'),
+    deleteDao = require('../../business/dao/delete.js'),
     sysDao = require('../../business/dao/sysConfig.js');
 
 var uuid = require('node-uuid');
@@ -47,6 +48,14 @@ class biz {
                 await activityDao.updateMain(connection, {id: params.id, pv: 1});
             }
             return;
+        })
+    }
+
+    //删除活动详情
+    static async delete(params) {
+        return await dao.manageConnection(async (connection) => {
+            let param = {tableName: "activity_mian", fieldName: "activity_id", fieldValue: params.id}
+            return await deleteDao.delete(connection, param);
         })
     }
 
