@@ -43,7 +43,13 @@ if (fs.existsSync(ctrlRoot)) {
         if(ctx.request.files && ctx.request.files.file){
             params.files = ctx.request.files.file;
         }
-
+        if (controller === 'users' && action === 'logout') {
+            if(ctx.session.user){
+                ctx.session.user = null;
+            }
+            ctx.status = 200;
+            return;
+        }
         if (!controller) {
             ctx.throw(404, 'Not Found', {code: 404});
         }
@@ -71,6 +77,8 @@ if (fs.existsSync(ctrlRoot)) {
                 throw exception.BusinessException("未登录", -2);
             }
         }
+
+
 
         let result = await asyncAction.call(instance, params);
         if (controller === 'users' && action === 'login') {

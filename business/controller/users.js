@@ -81,7 +81,7 @@ class ctrl {
             }
         }
         if (params.currentUser) {
-            params.id = params.currentUser.uuid;
+            params.uuid = params.currentUser.uuid;
         }
 
         if (str.isEmpty(params.headPortrait)) {

@@ -1,4 +1,4 @@
-
+const str = require("../../utils/stringHelper");
 
 class dao {
     //添加活动信息数据

@@ -203,3 +203,20 @@
     }
  */
 
+
+/**
+ * @api {get} v1/users/logout 登出
+ * @apiName v1/users/logout
+ * @apiGroup users
+ * @apiVersion 1.0.0
+ *
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ *
+ * {
+    "status": 0,
+    "message": "successful",
+    }
+ */
+

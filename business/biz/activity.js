@@ -54,7 +54,7 @@ class biz {
     //删除活动详情
     static async delete(params) {
         return await dao.manageConnection(async (connection) => {
-            let param = {tableName: "activity_mian", fieldName: "activity_id", fieldValue: params.id}
+            let param = {tableName: "activity_main", fieldName: "activity_id", fieldValue: params.id}
             return await deleteDao.delete(connection, param);
         })
     }

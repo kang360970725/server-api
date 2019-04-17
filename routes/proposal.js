@@ -63,7 +63,7 @@
        "name":"adminhy",
        "phone":"12345677",
        "email":"123",
-       "content:"123",
+       "content":"123",
        "type":1
     }
  *
