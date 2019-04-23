@@ -65,9 +65,7 @@ class dao {
             nickname,
             Invitcode,
             Invitdcode,
-            starttime,
             createtime,
-            endtime,
             bot_type,
             third_party,
             type,
@@ -75,14 +73,14 @@ class dao {
             ) 
             VALUES (
             LPAD((select max(a.id)+1 from users a), 7, 0),
-            ?,?,?,?,?,?,?,?,?,?,?,1,2,0)
+            ?,?,?,?,?,?,?,?,?,1,2,0)
             ;
         `;
         let timeNum = new Date().getTime();
         let time = moment(timeNum).format('YYYY-MM-DD HH:mm:ss');
 
-        let EndTime = timeNum + (86400000 * parseInt(query.openingtime));
-        let endTimes = moment(EndTime).format('YYYY-MM-DD HH:mm:ss');
+        // let EndTime = timeNum + (86400000 * parseInt(time));
+        // let endTimes = moment(EndTime).format('YYYY-MM-DD HH:mm:ss');
         params.push(query.account);
         params.push(query.pwd);
         params.push(query.email || '');
@@ -91,8 +89,6 @@ class dao {
         params.push(Invitdcode);
         params.push(query.Invitcode || '');
         params.push(time);
-        params.push(time);
-        params.push(endTimes);
         params.push(query.version);
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
