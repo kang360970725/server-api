@@ -63,7 +63,7 @@ class dao {
     static async getRankingUserList(connection, query) {
         let sql = () => `
         SELECT
-            c.*, a.uuid,
+            c.*, a.uuid,a.nickname,
             IFNULL(b.integral_current, 0) AS current,
             IFNULL(b.integral_total, 0) AS total
         FROM
