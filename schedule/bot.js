@@ -12,14 +12,31 @@ const redis = require('../utils/redisClient');
 const dbConfig = require('../db_config/config');
 
 const rediss = redis.redis(dbConfig.redis);
-// 每天14点 0分 2秒执行
-schedule.scheduleJob("2 0 14 * * *", function () {
-    ctrl.poollist(rediss);
-});
+// // 每天14点 0分 2秒执行
+// schedule.scheduleJob("2 0 14 * * *", function () {
+//     ctrl.poollist(rediss);
+// });
+//
+// schedule.scheduleJob("*/10 * * * * *", function () {
+//     ctrl.poollist(rediss);
+// });
 // 每 10秒执行
-schedule.scheduleJob("*/10 * * * * *", function () {
-    ctrl.BTCPrice(rediss);
+// schedule.scheduleJob("*/10 * * * * *", function () {
+//     ctrl.BTCPrice(rediss);
+// });
+//
+// schedule.scheduleJob("*/1 * * * *", function () {
+//     ctrl.botParam(rediss);
+// });
+//
+// schedule.scheduleJob("*/20 * * * *", function () {
+//     ctrl.botassets(rediss);
+// });
+
+schedule.scheduleJob(" */1 * * * *", function () {
+    ctrl.botassets(rediss);
 });
+
 
 class ctrl {
     static async poollist(redis) {
@@ -30,6 +47,7 @@ class ctrl {
                 let balance = await poolBiz.minepools({poolId: item.id, balance: 1})
                 let info = await poolBiz.minepools({poolId: item.id})
                 redis.set("poolinfo_"+item.id, JSON.stringify(info))
+                redis.set("poolbalance_"+item.id, JSON.stringify(balance))
                 item.balance = balance.daybalance_set;
                 item.users = info.users;
             }
@@ -44,6 +62,14 @@ class ctrl {
         let quotationBTCPrice = await activityBiz.quotationBTCPrice();
         redis.set("btcPrice", JSON.stringify({btcPrice: btcPrice, quotationBTCPrice: quotationBTCPrice}))
         console.log("获取BTC数据结束");
+    }
+
+    static async botParam(redis) {
+        poolBiz.usersBotParam({redis:redis});
+    }
+
+    static async botassets(redis) {
+        poolBiz.usersBotassets({redis:redis});
     }
 }
 

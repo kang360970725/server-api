@@ -167,6 +167,28 @@ class biz {
     }
 
     //用户找回密码
+    static async resetPwd(params) {
+        return await dao.manageConnection(async (connection) => {
+            let result = await businessDao.login(connection, params);
+            if (!result || result.length <= 0) {
+                throw exception.BusinessException('账号或密码错误', 196)
+            }
+            params["uuid"] = result[0].uuid;
+
+            params.pwd = params.newPwd;
+            //更新密码
+            await businessDao.updatePwd(connection, params);
+
+            var retUser = {
+                uuid: result[0].uuid,
+                token: params.token,
+                account: result[0].account
+            };
+            return retUser
+        })
+    }
+
+    //用户找回密码
     static async forgotPwd(params) {
         return await dao.manageConnection(async (connection) => {
             let result = await businessDao.isExistUser(connection, params);

@@ -166,6 +166,29 @@
  */
 
 /**
+ * @api {post} v1/users/resetPwd 重置密码
+ * @apiName v1/users/resetPwd
+ * @apiGroup users
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {String} account  用户账号
+ * @apiParam {String} pwd  密码
+ * @apiParam {String} newPwd  新密码
+ *
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ *
+ * {
+    "status": 0,
+    "message": "successful",
+    "data": {
+        "account": "adminhy"
+    }
+    }
+ */
+
+/**
  * @api {post} v1/users/headportrait 上传头像
  * @apiName v1/users/headportrait
  * @apiGroup users

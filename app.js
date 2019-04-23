@@ -49,7 +49,7 @@ const CONFIG = {
 const RedisClient = redis.RedisClient;
 const rediss  = redis.redis(dbConfig.redis);
 app.use(session(CONFIG, app));
-let whiteList = ["192.168.0.198:9527"];
+let whiteList = ["192.168.0.154:9527"];
 app.use(async (ctx, next) => {
     let origin;
     if(origin  = ctx.request.header.origin){

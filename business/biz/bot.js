@@ -16,12 +16,16 @@ class biz {
             };
             let queryBot = await botDao.getBots(connection, params);
             let queryPool = await botDao.getPoolList(connection, params);
-            queryPool = queryPool[0].pools.split(',');
             let pollList = []
-            for (var i in queryPool) {
-                let pool = await params.redis.get("poolinfo_" + queryPool[i])
-                pollList.push(JSON.parse(pool));
+            if(queryPool[0] && queryPool[0].length> 0){
+                queryPool = queryPool[0].pools.split(',');
+                for (var i in queryPool) {
+                    let pool = await params.redis.get("poolinfo_" + queryPool[i])
+                    pollList.push(JSON.parse(pool));
+                }
             }
+
+
             if (queryBot && queryBot.length > 0) {
                 resultData.bot = queryBot[0];
                 resultData.pool = pollList;

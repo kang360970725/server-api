@@ -6,7 +6,9 @@ const redis = require('ioredis'),
     options = {
         //max: 500,
         //length: function (n, key) { return n * 2 + key.length }, 
-        dispose: function (key, n) { console.log(key + '- 缓存过期'); },
+        dispose: function (key, n) {
+            console.log(key + '- 缓存过期');
+        },
         maxAge: 1000 * 60 * 60 * 24, //最大缓存时间1天
         stale: true
     },
@@ -14,7 +16,8 @@ const redis = require('ioredis'),
 
 let events = {
     connect: (err, msg) => {
-        console.log("redis connected .");;
+        console.log("redis connected .");
+        ;
     },
     ready: (err, msg) => {
         console.log("redis ready .");
@@ -84,6 +87,20 @@ exports.redis = function (options) {
                 return _client.setex(key, expire, value);
             }
             return _client.set(key, value);
+        },
+
+        ltrim: async (key, index, end) => {
+            return _client.ltrim(key, index, end);
+        },
+
+        lpush: async (key, value, expire) => {
+            if (!_.isString(value)) {
+                value = JSON.stringify(value)
+            }
+            return await _client.lpush(key, value);
+        },
+        lrange: async (key, index, end) => {
+            return await _client.lrange(key,index, end);
         },
 
         /**

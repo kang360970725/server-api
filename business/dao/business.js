@@ -493,7 +493,7 @@ class dao {
             params.push(query.type);
         }
         where.push('a.level < 5')
-        params.push((parseInt(query.index) - 1) * parseInt(query.pagesize));
+        params.push((parseInt(query.index)) * parseInt(query.pagesize));
         params.push(parseInt(query.pagesize));
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {

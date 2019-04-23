@@ -2,7 +2,7 @@
 
 /**
  * @api {get} v1/activity/activitys 活动查询
- * @apiName 活动查询
+ * @apiName v1/activity/activitys
  * @apiGroup activity
  * @apiVersion 1.0.0
  *
@@ -60,7 +60,7 @@
 
 /**
  * @api {get} v1/activity/activityinfos 活动信息查询
- * @apiName 信息查询
+ * @apiName v1/activity/activityinfos
  * @apiGroup activity
  * @apiVersion 1.0.0
  * @apiParam {String} id  活动id 可空 如需多id逗号隔开 如 1,2,3,4 空为全部

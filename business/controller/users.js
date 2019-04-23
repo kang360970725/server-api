@@ -64,6 +64,13 @@ class ctrl {
         return await businessBiz.forgotPwd(params)
     }
 
+    static async resetPwd(params) {
+        if (!params || str.isEmpty(params.account) || str.isEmpty(params.pwd) || str.isEmpty(params.newPwd)) {
+            throw exception.ParamException('账号和密码不能为空')
+        }
+        return await businessBiz.resetPwd(params)
+    }
+
     static async getUsersList(params) { //后台获取用户列表
         if (!params.adminUser) {
             throw exception.PowerException()

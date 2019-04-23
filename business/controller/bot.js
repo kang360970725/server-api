@@ -12,14 +12,45 @@ class ctrl {
         if (!params.currentUser) {
             throw exception.PowerException()
         }
-        return await botBiz.getBots(params)
+        let bot = await botBiz.getBots(params);
+        // params.currentUser.account = "Aperson";
+        let _userassets = await params.redis.get(params.currentUser.account + "_userassets")
+        let _userparam = await params.redis.get(params.currentUser.account + "_userparam")
+        let btcPrice = await params.redis.get("btcPrice");
+        if (_userassets && _userparam && btcPrice) {
+            _userassets = JSON.parse(_userassets);
+            _userparam = JSON.parse(_userparam);
+            bot.created = _userparam.now;
+            bot.level = _userparam.bot_version;//机器人版本
+            bot.new_position_qty = _userparam.entry;//头寸金额
+            bot.max_position_qty = _userparam.maxleverage;//最大持仓
+            bot.bot_mex_last = btcPrice.quotationBTCPrice.mex_last;//最新价
+            bot.bot_nanpin = _userparam.nanpin;
+            bot.nanpin_count = _userparam.nanpin_count;
+            bot.status = _userparam.status;
+            bot.bot_side = _userparam.bot_side;
+            bot.bot_size = _userparam.bot_size;
+            bot.bot_avgEntryPrice = _userparam.bot_avgEntryPrice;
+            bot.bot_liquidationPrice = _userparam.bot_liquidationPrice;
+            bot.marginLeverage = _userparam.marginLeverage;
+            bot.bot_balance = _userassets.bot_balance;
+            bot.bot_prevDeposited = _userassets.bot_prevDeposited;
+            bot.bot_prevWithdrawn = _userassets.bot_prevWithdrawn;
+            bot.bot_amount = _userassets.bot_amount;
+            bot.bot_lirun = _userassets.bot_lirun;
+            bot.shortrange = _userassets.shortrange;
+            bot.longrange = _userassets.longrange;
+        }
+        return bot
     }
+
     static async getParameters(params) {
         if (!params.currentUser) {
             throw exception.PowerException()
         }
         return await botBiz.getParameters(params)
     }
+
     static async exitBotParm(params) {
 
         if (!params.currentUser) {
@@ -27,6 +58,7 @@ class ctrl {
         }
         return await botBiz.exitBotParm(params)
     }
+
     static async getParametersRec(params) {
         return await botBiz.getParametersRec(params)
     }

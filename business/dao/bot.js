@@ -6,7 +6,6 @@ let
 class dao {
     static async getBots(connection, query) { // 查询机器人状态
         var params = [];
-
         let sql = () => `
             SELECT 
             b.*, 
@@ -18,6 +17,22 @@ class dao {
             ;
         `;
         params.push(query.currentUser.account);
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+    static async getBotParameter(connection, query) { // 查询机器人参数
+        var params = [];
+
+        let sql = () => `
+            SELECT shortrange, longrange , user_account FROM robot_parameter WHERE user_account = ?
+            ;
+        `;
+        params.push(query.account);
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
                 if (err) return reject(err);
@@ -108,6 +123,46 @@ class dao {
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
                 console.log(err);
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+    static async saveRecord(connection, query) { // 查询机器人状态
+        let params = [];
+        console.log("saveRecord tableName---" + query.tableName)
+        let sql = () => `
+            INSERT INTO ${query.tableName} (
+            user_account,
+            bot_balance,
+            bot_change_num,
+            bot_side,
+            bot_size,
+            bot_avgEntryPrice,
+            bot_liquidationPrice,
+            bot_mex_last,
+            bot_set_time,
+            bot_warn_state,
+            bot_warn_txt,
+            type,
+            bonus_base) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);
+        `;
+        params.push(query.account);
+        params.push(query._userassets.bot_balance);
+        params.push("")
+        params.push(query._userparam.bot_side);
+        params.push(query._userparam.bot_size);
+        params.push(query._userparam.bot_avgEntryPrice);
+        params.push(query._userparam.bot_liquidationPrice);
+        params.push(query.btcPrice.quotationBTCPrice.mex_last);
+        params.push(query._userparam.now);
+        params.push("");
+        params.push(query._userparam.status);
+        params.push("");
+        params.push(query._userassets.bot_lirun);
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
                 if (err) return reject(err);
                 resolve(result);
             });
