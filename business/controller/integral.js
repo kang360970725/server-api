@@ -18,6 +18,34 @@ class ctrl {
     static async recordIntegral(params) {
         return await integralBiz.recordIntegral(params)
     }
+
+    static async integralconfig(params) {
+        if (!params.adminUser) {
+            throw exception.PowerException();
+        }
+        let inviterIntegral = await params.redis.get("registerInviterIntegral");
+        let integral = await params.redis.get("registerIntegral");
+        let ratio = await params.redis.get("buyProductIntegraRatio");
+        return {
+            inviterIntegral: inviterIntegral,
+            integral: integral,
+            buyProductIntegraRatio: ratio
+        }
+    }
+
+    static async saveintegralconfig(params) {
+        if (!params.adminUser) {
+            throw exception.PowerException();
+        }
+        if (str.isEmpty(params.value)) {
+            params.value = 0;
+        }
+        if ("registerInviterIntegral" == params.key
+            || "registerIntegral" == params.key
+            || "buyProductIntegraRatio" == params.key) {
+            params.redis.set(params.key, params.value);
+        }
+    }
 }
 
 module.exports = ctrl;

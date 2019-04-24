@@ -169,6 +169,30 @@ class biz {
         return resultData2;
     }
 
+    //获取用户资金走势  绘制折线图
+    static async getAccRecordChart(params) {
+        return await dao.manageConnection(async (connection) => {
+            //获取会员bot信息
+           return await botDao.getAccRecordChart(connection, params);
+        })
+    }
+
+    // 获取用资金记录
+    static async getAccRecordList(params) {
+        return await dao.manageConnection(async (connection) => {
+            var result = await botDao.getAccRecordList(connection, params);
+            var resultCount = await botDao.getAccRecordListCount(connection, params);
+            let count = 0;
+            if (resultCount && resultCount.length > 0) {
+                count = resultCount[0].count;
+            }
+            return {
+                "list": result,
+                "count": count
+            };
+        })
+    }
+
 }
 
 module.exports = biz;

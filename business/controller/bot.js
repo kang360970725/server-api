@@ -12,7 +12,7 @@ class ctrl {
         if (!params.currentUser) {
             throw exception.PowerException()
         }
-        let bot = await botBiz.getBots(params);
+        let bot = {};
         // params.currentUser.account = "Aperson";
         let _userassets = await params.redis.get(params.currentUser.account + "_userassets")
         let _userparam = await params.redis.get(params.currentUser.account + "_userparam")
@@ -40,6 +40,8 @@ class ctrl {
             bot.bot_lirun = _userassets.bot_lirun;
             bot.shortrange = _userassets.shortrange;
             bot.longrange = _userassets.longrange;
+        } else {
+            bot = await botBiz.getBots(params);
         }
         return bot
     }
@@ -98,6 +100,30 @@ class ctrl {
         }
         params.balance = 1;
         return await poolBiz.one(params);
+    }
+
+    static async getAccRecordChart(params) {
+        if (params.currentUser) {
+            params.account = params.currentUser.account;
+        }
+        if (params.adminUser) {
+            if (str.isEmpty(params.account)) {
+                throw exception.ParamException('账号[account]不能为空')
+            }
+        }
+        return await botBiz.getAccRecordChart(params)
+    }
+
+    static async getAccRecordList(params) {
+        if (params.currentUser) {
+            params.account = params.currentUser.account;
+        }
+        if (params.adminUser) {
+            if (str.isEmpty(params.account)) {
+                throw exception.ParamException('账号[account]不能为空')
+            }
+        }
+        return await botBiz.getAccRecordList(params)
     }
 }
 

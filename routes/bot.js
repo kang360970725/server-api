@@ -197,6 +197,80 @@
 }
  */
 
+
+/**
+ * @api {get} v1/bot/getAccRecordChart 获取用户资金走势  绘制折线图
+ * @apiName v1/bot/getAccRecordChart
+ * @apiGroup bot
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {String} limit  多少个小时以内的数据
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ * {
+    "status": 0,
+    "message": "successful",
+    "data": [
+        {
+            "id": 17,
+            "user_account": "b5_bot", 用户账户
+            "bot_balance": "1.03053386",账户资产，余额
+            "bot_change_num": "",
+            "bot_side": "SHORT",  持仓方向
+            "bot_size": "-3026",  持仓数量
+            "bot_avgEntryPrice": "5482.4561",   持仓均价
+            "bot_liquidationPrice": "100000000",    爆仓价格
+            "bot_mex_last": "5574.5",      最新价
+            "bot_set_time": "2019-04-23T19:58:01.000Z",     写入数据时间
+            "type": "",             类型
+            "bot_warn_state": "",     状态
+            "bot_warn_txt": "空军正常持仓中",    机器人运行状态
+            "hour": 3      时间单位   小时
+        },
+        ...
+    ]
+}
+ */
+
+/**
+ * @api {get} v1/bot/getAccRecordList 获取用资金记录
+ * @apiName v1/bot/getAccRecordList
+ * @apiGroup bot
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {String} pageSize 数据量 可空
+ * @apiParam {String} pageIndex 0开始 页数 可空
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ * {
+    "status": 0,
+    "message": "successful",
+    "data": {
+        "list": [
+            {
+                "id": 101,
+                "user_account": "b5_bot", 用户账户
+                "bot_balance": "1.03053386",账户资产，余额
+                "bot_change_num": "",
+                "bot_side": "SHORT",  持仓方向
+                "bot_size": "-3026",  持仓数量
+                "bot_avgEntryPrice": "5482.4561",   持仓均价
+                "bot_liquidationPrice": "100000000",    爆仓价格
+                "bot_mex_last": "5574.5",      最新价
+                "bot_set_time": "2019-04-23T19:58:01.000Z",     写入数据时间
+                "type": "",             类型
+                "bot_warn_state": "",     状态
+                "bot_warn_txt": "空军正常持仓中",    机器人运行状态
+                "day": "2019-04-24" 日期
+            }
+        ],
+        "count": 1
+    }
+}
+ */
+
 /**
  * @api {get} V1/bot/parameters/:uuid 获取会员机器人参数
  */

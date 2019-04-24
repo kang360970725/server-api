@@ -415,9 +415,9 @@ class dao {
             params.push(query.uuid);
         }
 
-        if (!str.isEmpty(query.invitcode)) {
+        if (!str.isEmpty(query.Invitcode)) {
             where.push('Invitcode = ?')
-            params.push(query.invitcode);
+            params.push(query.Invitcode);
         }
 
         return new Promise(async (resolve, reject) => {

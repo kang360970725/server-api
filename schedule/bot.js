@@ -13,28 +13,46 @@ const dbConfig = require('../db_config/config');
 
 const rediss = redis.redis(dbConfig.redis);
 // // 每天14点 0分 2秒执行
-// schedule.scheduleJob("2 0 14 * * *", function () {
-//     ctrl.poollist(rediss);
-// });
-//
-// schedule.scheduleJob("*/10 * * * * *", function () {
-//     ctrl.poollist(rediss);
-// });
-// 每 10秒执行
-// schedule.scheduleJob("*/10 * * * * *", function () {
-//     ctrl.BTCPrice(rediss);
-// });
-//
-// schedule.scheduleJob("*/1 * * * *", function () {
-//     ctrl.botParam(rediss);
-// });
-//
-// schedule.scheduleJob("*/20 * * * *", function () {
-//     ctrl.botassets(rediss);
-// });
+schedule.scheduleJob("2 0 13 * * *", function () {
+    ctrl.poollist(rediss);
+});
 
-schedule.scheduleJob(" */1 * * * *", function () {
+// 每 10秒执行
+schedule.scheduleJob("*/10 * * * * *", function () {
+    ctrl.BTCPrice(rediss);
+});
+
+// 0
+schedule.scheduleJob("*/1 * * * *", function () {
+    ctrl.botParam(rediss,0);
+});
+
+// 1
+schedule.scheduleJob("*/1 * * * *", function () {
+    ctrl.botParam(rediss,1);
+});
+
+// 2
+schedule.scheduleJob("*/1 * * * *", function () {
+    ctrl.botParam(rediss,2);
+});
+
+// 3
+schedule.scheduleJob("*/1 * * * *", function () {
+    ctrl.botParam(rediss,3);
+});
+
+// 4
+schedule.scheduleJob("*/1 * * * *", function () {
+    ctrl.botParam(rediss,4);
+});
+
+schedule.scheduleJob("*/20 * * * *", function () {
     ctrl.botassets(rediss);
+});
+
+schedule.scheduleJob("*/60 * * * *", function () {
+    ctrl.saveBotParam(rediss);
 });
 
 
@@ -58,18 +76,21 @@ class ctrl {
 
     static async BTCPrice(redis) {
         console.log("开始获取BTC数据");
-        let btcPrice = await activityBiz.nowBTCPrice();
-        let quotationBTCPrice = await activityBiz.quotationBTCPrice();
+        let btcPrice = await activityBiz.nowBTCPrice(redis);
+        let quotationBTCPrice = await activityBiz.quotationBTCPrice(redis);
         redis.set("btcPrice", JSON.stringify({btcPrice: btcPrice, quotationBTCPrice: quotationBTCPrice}))
         console.log("获取BTC数据结束");
     }
 
-    static async botParam(redis) {
-        poolBiz.usersBotParam({redis:redis});
+    static async botParam(redis,index) {
+        poolBiz.usersBotParam({redis:redis,index:index});
     }
 
     static async botassets(redis) {
         poolBiz.usersBotassets({redis:redis});
+    }
+    static async saveBotParam(redis) {
+        poolBiz.saveBotParam({redis:redis});
     }
 }
 

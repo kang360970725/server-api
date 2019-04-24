@@ -3,7 +3,7 @@
 module.exports = Object.freeze({
     //  活动类型
     type: {
-         //活动
+        //活动
         activity: 0,
         //产品
         product: 1,
@@ -16,5 +16,12 @@ module.exports = Object.freeze({
         disable: 1,
         // 正常
         normal: 0
+    }
+    ,// 状态
+    redisKey: {
+        byRenewintegra: "byRenewintegra",
+        byRenewintegraUserId: "byRenewintegraUserId",
+        byRenewintegraName: "byRenewintegraName",
+        buyProductIntegraRatio:"buyProductIntegraRatio",
     }
 })

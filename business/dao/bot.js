@@ -131,7 +131,6 @@ class dao {
 
     static async saveRecord(connection, query) { // 查询机器人状态
         let params = [];
-        console.log("saveRecord tableName---" + query.tableName)
         let sql = () => `
             INSERT INTO ${query.tableName} (
             user_account,
@@ -161,6 +160,67 @@ class dao {
         params.push(query._userparam.status);
         params.push("");
         params.push(query._userassets.bot_lirun);
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+    static async getAccRecordChart(connection, query) { // 查询机器人状态
+        let params = [];
+        let limit = "LIMIT ";
+        let sql = () => `
+            SELECT * , HOUR(e.bot_set_time) as hour
+             FROM (
+            SELECT * FROM account_record WHERE user_account = ? AND type = 0 ORDER BY bot_set_time DESC
+            ) e  GROUP BY HOUR(e.bot_set_time) ORDER BY bot_set_time asc ${limit};
+        `;
+        params.push(query.account);
+        if (!str.isEmpty(query.limit)) {
+            limit += `${query.limit}`;
+        }else{
+            limit = "";
+        }
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+    static async getAccRecordList(connection, query) { // 查询机器人状态
+        let params = [];
+        let limit = "LIMIT ";
+        let sql = () => `
+            select * , DATE_FORMAT(e.bot_set_time,'%Y-%m-%d') as day from 
+            (SELECT * FROM account_record WHERE user_account = ? AND type = 0 ORDER BY bot_set_time DESC) e 
+            GROUP BY day desc ${limit};
+        `;
+        params.push(query.account);
+        if (str.isEmpty(query.pageIndex) || str.isEmpty(query.pageSize)) {
+            limit = "";
+        } else {
+            limit += `${(query.pageIndex) * query.pageSize}, ${query.pageSize}`;
+        }
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+    static async getAccRecordListCount(connection, query) { // 查询机器人状态
+        let params = [];
+        let sql = () => `
+            SELECT count(1) as count from 
+            (SELECT DATE_FORMAT(e.bot_set_time,'%Y-%m-%d') as day from 
+            (SELECT * FROM account_record WHERE user_account = ? AND type = 0) e GROUP BY day) a;;
+        `;
+        params.push(query.account);
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
                 if (err) return reject(err);

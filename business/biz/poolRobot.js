@@ -61,7 +61,12 @@ class biz {
                 if (response.statusCode != 200) return reject(response);
                 resolve(body);
             });
-        }).catch(error => console.log('caughterr', "caughterr"))
+        }).catch(async (error) => {
+            let errMessage = {param: requestparam, error: error};
+            await redis.lpush("poolerr", errMessage, -1);
+            await redis.ltrim("poolerr", 0, 500);
+            console.log(await redis.lrange("poolerr", 0, 10))
+        })
     }
 
 
@@ -86,11 +91,11 @@ class biz {
                 if (response.statusCode != 200) return reject(response);
                 resolve(body);
             });
-        }).catch(async (error) =>  {
+        }).catch(async (error) => {
             let errMessage = {param: requestparam, error: error};
             await redis.lpush("boterr", errMessage, -1);
             await redis.ltrim("boterr", 0, 500);
-            console.log(await redis.lrange("boterr",0,10))
+            console.log(await redis.lrange("boterr", 0, 10))
         })
     }
 
@@ -108,9 +113,9 @@ class biz {
                     for (let tableName of tables) {
                         botDao.saveRecord(connection, {
                             account: user.account,
-                            _userassets: _userassets,
-                            _userparam: _userparam,
-                            btcPrice: btcPrice,
+                            _userassets: JSON.parse(_userassets),
+                            _userparam: JSON.parse(_userparam),
+                            btcPrice: JSON.parse(btcPrice),
                             tableName: tableName
                         });
                     }
@@ -122,20 +127,20 @@ class biz {
 
 
     static async usersBotParam(params) {
-        console.log("开始usersBotParam")
-        let redisuserAccount = JSON.parse(await params.redis.get("users"));
+        console.log("开始usersBotParam" + params.index)
+        let redisuserAccount = JSON.parse(await params.redis.get("user" + params.index));
         if (redisuserAccount && redisuserAccount.length > 0) {
             for (let user of redisuserAccount) {
                 user.url = 1;
-                console.log("获取usersBotParam:" + user.account)
+                console.log(`获取usersBotParam:${params.index}` + user.account)
                 let param = await biz.userBotParam(user, params.redis)
                 param.now = new Date();
                 let paramStr = JSON.stringify(param)
-                console.log("获取usersBotParam:" + paramStr)
+                console.log(`获取usersBotParamresult:${params.index}` + paramStr)
                 params.redis.set(user.account + "_userparam", paramStr)
             }
         }
-        console.log("结束usersBotParam")
+        console.log("结束usersBotParam" + params.index)
     }
 
     static async usersBotassets(params) {
@@ -153,27 +158,47 @@ class biz {
                 users.push({account: "Yang666"});
                 users.push({account: "b5_bot"})
                 users.push({account: "flyboy1112"});
-                users.push({account: "flyboy1113"});
                 let userAccount = [];
                 if (users && users.length > 0) {
-                    for (let user of users) {
-                        userAccount.push(user);
-                        console.log("获取usersBotassets:" + user.account)
-                        let parameter = await biz.userBotParam(user, params.redis);
-                        if (parameter) {
-                            let botParameter = await botDao.getBotParameter(connection, user)
-                            parameter.shortrange = botParameter.shortrange;
-                            parameter.longrange = botParameter.longrange;
-                            let parameterStr = JSON.stringify(parameter);
-                            console.log("获取usersBotassets:" + parameterStr)
-                            params.redis.set(user.account + "_userassets", parameterStr)
+                    users = await biz.sliceArr(users, 5);
+                    let i = 0;
+                    for (let temp of users) {
+                        for (let user of temp) {
+                            userAccount.push(user);
+                            console.log("获取usersBotassets:" + user.account)
+                            let parameter = await biz.userBotParam(user, params.redis);
+                            if (parameter) {
+                                let botParameter = await botDao.getBotParameter(connection, user)
+                                parameter.shortrange = botParameter.shortrange;
+                                parameter.longrange = botParameter.longrange;
+                                let parameterStr = JSON.stringify(parameter);
+                                console.log("获取usersBotassets:" + parameterStr)
+                                params.redis.set(user.account + "_userassets", parameterStr)
+                            }
                         }
+                        params.redis.set("user" + i, JSON.stringify(temp))
+                        i++;
                     }
                     params.redis.set("users", JSON.stringify(userAccount))
                 }
             }
         })
         console.log("结束usersBotassets")
+    }
+
+    static async sliceArr(array, count) {
+        let result = [];
+        let size = parseInt(array.length / count);
+        let remaind = array.length % count;
+        for (let x = 1; x <= count; x++) {
+            let start = (x - 1) * size;
+            let end = start + size;
+            if (x == count) {
+                end += remaind;
+            }
+            result.push(array.slice(start, end));
+        }
+        return result;
     }
 }
 

@@ -4,7 +4,9 @@ let dao = require("../../db_config/dao"),
     data = require('../../utils/data'),
     config = require('../../db_config/config'),
     exception = require('../../utils/exception.js'),
+    str = require("../../utils/stringHelper"),
     businessDao = require('../../business/dao/business'),
+    integralUtil = require('../../utils/integralUtil.js'),
     activityDao = require('../../business/dao/activity');
 var uuid = require('node-uuid');
 
@@ -141,9 +143,17 @@ class biz {
                 throw exception.BusinessException('验证码错误或已过期', 198)
             }
 
+            let inviter;
+            if (!str.isEmpty(params.Invitcode)) {
+                inviter = await businessDao.isExistUser(connection, {Invitcode: params.Invitcode});
+                if (!inviter || inviter.length <= 0) {
+                    throw exception.BusinessException('邀请码错误', 197)
+                }
+            }
+
             //添加用户
             await businessDao.addUsers(connection, params);
-
+            params.Invitcode = "";
             result = await businessDao.isExistUser(connection, params);
             if (!result || result.length <= 0) {
                 throw exception.BusinessException('注册用户失败', 197)
@@ -156,6 +166,16 @@ class biz {
             await businessDao.insertToken(connection, params);
             //写入付费开通记录
             await businessDao.insertPay(connection, params);
+
+            let integral = await params.redis.get("registerIntegral");
+
+            //本人注册积分
+            integralUtil.recordIntegral(connection, result[0].uuid, parseInt(integral), `注册`);
+            if (inviter) {
+                let InviterIntegral = await params.redis.get("registerInviterIntegral");
+                //邀请者获取积分
+                integralUtil.recordIntegral(connection, inviter[0].uuid, parseInt(InviterIntegral), `邀请注册[${result[0].account}](${result[0].uuid})`);
+            }
 
             var retUser = {
                 uuid: result[0].uuid,

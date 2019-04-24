@@ -46,4 +46,6 @@ module.exports =
             token_type : "Token ",
             token_value : "eacf3b56a09148ef231c6cb8456794c665e221e2"
         }
+        ,
+        whiteList : ["192.168.0.154:9527","39.98.60.62"]
     };

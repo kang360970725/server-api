@@ -8,6 +8,7 @@ let dao = require("../../db_config/dao"),
     exception = require('../../utils/exception.js'),
     str = require("../../utils/stringHelper"),
     activityDao = require('../../business/dao/activity.js'),
+    integralUtil = require('../../utils/integralUtil.js'),
     deleteDao = require('../../business/dao/delete.js'),
     sysDao = require('../../business/dao/sysConfig.js');
 
@@ -173,6 +174,7 @@ class biz {
             let btcPriceResult = await params.redis.get("btcPrice");
             let btcPrice = JSON.parse(btcPriceResult).btcPrice;
             let unionResult
+            let integra = 0;
             try {
                 unionResult = await activityDao.addUserUnion(connection, params);
                 if (unionResult && unionResult.insertId) {
@@ -193,7 +195,22 @@ class biz {
                                     BTC = USD.div(new Decimal(btcPrice.huobi)).toNumber();
                                 }
                             }
+                            // 1返现
+                            if (item.info_type == 1) {
+                                price -= item.info_value;
+                                if (price < 0) {
+                                    price = 0;
+                                }
+                            }
+                            // 4积分奖励
+                            if (item.info_type == 4) {
+                                integra += parseInt(item.info_value);
+                            }
                         }
+
+                        let ratio = await params.redis.get("buyProductIntegraRatio");
+                        integra += parseInt(new Decimal(price).mul(new Decimal(ratio)).toNumber());
+
                         params.id = unionResult.insertId;
                         params.type = -1;
                         params.price = price;
@@ -204,6 +221,9 @@ class biz {
                             throw exception.BusinessException("提交失败", 200);
                         }
                         btcPrice.id = renewResult.insertId;
+                        params.redis.set("byRenewintegra" + btcPrice.id, integra);
+                        params.redis.set("byRenewintegraUserId" + btcPrice.id, params.id);
+                        params.redis.set("byRenewintegraName" + btcPrice.id, main[0].activity_name);
                         let sysconfig = await sysDao.query(connection, {type: "sys_img", pageIndex: 0, pageSize: 1})
                         if (sysconfig && sysconfig[0]) {
                             btcPrice.img = sysconfig[0].sys_value;
@@ -254,8 +274,14 @@ class biz {
             params.type = type;
             if (result && result.length > 0 && result[0].data_time) {
                 await activityDao.updateRenew(connection, params);
-                params.id = result[0].data_time;
                 if (params.adminUser) {
+                    if (params.isValid == 0) {
+                        let integra = await params.redis.get("byRenewintegra" + params.id);
+                        let userId = await params.redis.get("byRenewintegraUserId" + params.id);
+                        let name = await params.redis.get("byRenewintegraName" + params.id);
+                        integralUtil.recordIntegral(connection, userId, parseInt(integra), `购买产品审核通过[${name}](${result[0].data_time})`);
+                    }
+                    params.id = result[0].data_time;
                     await activityDao.updateUserUnion(connection, params);
                 }
             }
@@ -308,17 +334,18 @@ class biz {
     }
 
     //当前比特币价格
-    static async nowBTCPrice() {
+    static async nowBTCPrice(redis) {
+        let requestparam = {
+            url: "https://apioperate.btc123.com/api/market/index/noAuth/exchange/price",
+            method: "GET",
+            json: true,
+            headers: {
+                "content-type": "application/json",
+            },
+            body: JSON.stringify("")
+        }
         return await new Promise(async (resolve, reject) => {
-            request({
-                url: "https://apioperate.btc123.com/api/market/index/noAuth/exchange/price",
-                method: "GET",
-                json: true,
-                headers: {
-                    "content-type": "application/json",
-                },
-                body: JSON.stringify("")
-            }, function (error, response, body) {
+            request(requestparam, function (error, response, body) {
                 if (error) return reject(error);
                 if (response.statusCode != 200) return reject(response);
                 let result = {};
@@ -346,22 +373,28 @@ class biz {
                 }
                 resolve(result);
             });
+        }).catch(async (error) => {
+            let errMessage = {param: requestparam, error: error};
+            await redis.lpush("BTCerr", errMessage, -1);
+            await redis.ltrim("BTCerr", 0, 500);
+            console.log(await redis.lrange("BTCerr", 0, 10))
         })
     }
 
 
     //预测比特币价格
-    static async quotationBTCPrice() {
+    static async quotationBTCPrice(redis) {
+        let requestparam = {
+            url: "https://www.bluecatbot.com/api/quotation/?coin_type=0",
+            method: "GET",
+            json: true,
+            headers: {
+                "content-type": "application/json",
+            },
+            body: JSON.stringify("")
+        }
         return await new Promise(async (resolve, reject) => {
-            request({
-                url: "https://www.bluecatbot.com/api/quotation/?coin_type=0",
-                method: "GET",
-                json: true,
-                headers: {
-                    "content-type": "application/json",
-                },
-                body: JSON.stringify("")
-            }, function (error, response, body) {
+            request(requestparam, function (error, response, body) {
                 if (error) return reject(error);
                 if (response.statusCode != 200) return reject(response);
                 let result = {};
@@ -370,6 +403,11 @@ class biz {
                 }
                 resolve(result);
             });
+        }).catch(async (error) => {
+            let errMessage = {param: requestparam, error: error};
+            await redis.lpush("qBTCerr", errMessage, -1);
+            await redis.ltrim("qBTCerr", 0, 500);
+            console.log(await redis.lrange("qBTCerr", 0, 10))
         })
     }
 
