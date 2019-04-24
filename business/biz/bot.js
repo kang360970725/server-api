@@ -50,7 +50,7 @@ class biz {
 
             let queryPool = await botDao.getPoolList(connection, params);
             let pollList = []
-            if(queryPool[0] && queryPool[0].length> 0){
+            if(queryPool && queryPool.length> 0){
                 queryPool = queryPool[0].pools.split(',');
                 for (var i in queryPool) {
                     let pool = await params.redis.get("poolinfo_" + queryPool[i])

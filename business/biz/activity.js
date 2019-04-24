@@ -375,7 +375,7 @@ class biz {
             });
         }).catch(async (error) => {
             let errMessage = {param: requestparam, error: error};
-            await redis.lpush("BTCerr", errMessage, -1);
+            await redis.lpush("BTCerr", JSON.stringify(errMessage), -1);
             await redis.ltrim("BTCerr", 0, 500);
             console.log(await redis.lrange("BTCerr", 0, 10))
         })

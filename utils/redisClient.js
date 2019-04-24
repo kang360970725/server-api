@@ -102,6 +102,9 @@ exports.redis = function (options) {
         lrange: async (key, index, end) => {
             return await _client.lrange(key,index, end);
         },
+        llen: async (key) => {
+            return await _client.llen(key);
+        },
 
         /**
          * 更新过期时间

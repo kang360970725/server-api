@@ -63,7 +63,7 @@ class biz {
             });
         }).catch(async (error) => {
             let errMessage = {param: requestparam, error: error};
-            await redis.lpush("poolerr", errMessage, -1);
+            await redis.lpush("poolerr", JSON.stringify(errMessage), -1);
             await redis.ltrim("poolerr", 0, 500);
             console.log(await redis.lrange("poolerr", 0, 10))
         })
@@ -93,7 +93,7 @@ class biz {
             });
         }).catch(async (error) => {
             let errMessage = {param: requestparam, error: error};
-            await redis.lpush("boterr", errMessage, -1);
+            await redis.lpush("boterr", JSON.stringify(errMessage), -1);
             await redis.ltrim("boterr", 0, 500);
             console.log(await redis.lrange("boterr", 0, 10))
         })
