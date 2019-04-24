@@ -41,7 +41,7 @@
 
 
 /**
- * @api {post} v1/goods/updategoods 添加商品
+ * @api {post} v1/goods/updategoods 更新商品
  * @apiName v1/goods/updategoods
  * @apiGroup goods
  * @apiVersion 1.0.0

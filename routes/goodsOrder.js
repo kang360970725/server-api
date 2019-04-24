@@ -81,7 +81,7 @@
 
 
 /**
- * @api {get} v1/goodsorder/querygoodsorder 商品查询
+ * @api {get} v1/goodsorder/querygoodsorder 商品订单查询
  * @apiName v1/goodsorder/querygoodsorder
  * @apiGroup goodsorder
  * @apiVersion 1.0.0
