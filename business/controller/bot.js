@@ -4,6 +4,7 @@
 let str = require("../../utils/stringHelper"),
     expression = require("../../constant/expression"),
     data = require('../../utils/data'),
+    exception = require('../../utils/exception.js'),
     botBiz = require('../../business/biz/bot'),
     poolBiz = require('../../business/biz/poolRobot.js');
 

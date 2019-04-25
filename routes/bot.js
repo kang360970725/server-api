@@ -22,138 +22,6 @@
                 "balance_total": 15.147972359999999,
                 "users": [
                     {
-                        "user_id": "1365",
-                        "symbol": "",
-                        "data": {
-                            "status": "撒网布局中",
-                            "balance": 1.01417224,
-                            "side": "no",
-                            "size": "0",
-                            "avg_entry_price": 0,
-                            "liquidation_price": 0
-                        }
-                    },
-                    {
-                        "user_id": "1366",
-                        "symbol": "",
-                        "data": {
-                            "status": "空军正常持仓中",
-                            "balance": 0.79397741,
-                            "side": "SHORT",
-                            "size": "-322",
-                            "avg_entry_price": 5201.0194,
-                            "liquidation_price": 100000000
-                        }
-                    },
-                    {
-                        "user_id": "1369",
-                        "symbol": "",
-                        "data": {
-                            "status": "空军正常持仓中",
-                            "balance": 1.67698868,
-                            "side": "SHORT",
-                            "size": "-304",
-                            "avg_entry_price": 5206.7,
-                            "liquidation_price": 100000000
-                        }
-                    },
-                    {
-                        "user_id": "1370",
-                        "symbol": "",
-                        "data": {
-                            "status": "空军正常持仓中",
-                            "balance": 1.34772519,
-                            "side": "SHORT",
-                            "size": "-244",
-                            "avg_entry_price": 5206.7,
-                            "liquidation_price": 100000000
-                        }
-                    },
-                    {
-                        "user_id": "1371",
-                        "symbol": "",
-                        "data": {
-                            "status": "空军正常持仓中",
-                            "balance": 1.56368992,
-                            "side": "SHORT",
-                            "size": "-636",
-                            "avg_entry_price": 5208.8759,
-                            "liquidation_price": 100000000
-                        }
-                    },
-                    {
-                        "user_id": "1394",
-                        "symbol": "",
-                        "data": {
-                            "status": "空军正常持仓中",
-                            "balance": 1.42637662,
-                            "side": "SHORT",
-                            "size": "-258",
-                            "avg_entry_price": 5206.7,
-                            "liquidation_price": 100000000
-                        }
-                    },
-                    {
-                        "user_id": "1395",
-                        "symbol": "",
-                        "data": {
-                            "status": "空军正常持仓中",
-                            "balance": 1.48641987,
-                            "side": "SHORT",
-                            "size": "-604",
-                            "avg_entry_price": 5208.8759,
-                            "liquidation_price": 100000000
-                        }
-                    },
-                    {
-                        "user_id": "1396",
-                        "symbol": "",
-                        "data": {
-                            "status": "空军正常持仓中",
-                            "balance": 1.3675029300000001,
-                            "side": "SHORT",
-                            "size": "-248",
-                            "avg_entry_price": 5206.7,
-                            "liquidation_price": 100000000
-                        }
-                    },
-                    {
-                        "user_id": "1397",
-                        "symbol": "",
-                        "data": {
-                            "status": "空军正常持仓中",
-                            "balance": 1.6291742,
-                            "side": "SHORT",
-                            "size": "-662",
-                            "avg_entry_price": 5208.8759,
-                            "liquidation_price": 100000000
-                        }
-                    },
-                    {
-                        "user_id": "1407",
-                        "symbol": "",
-                        "data": {
-                            "status": "补仓满了,低速300+循环等待机会解套",
-                            "balance": 0.86373403,
-                            "side": "LONG",
-                            "size": "2581",
-                            "avg_entry_price": 5232.3148,
-                            "liquidation_price": 1904
-                        }
-                    },
-                    {
-                        "user_id": "1408",
-                        "symbol": "",
-                        "data": {
-                            "status": "空军正常持仓中",
-                            "balance": 0.89700231,
-                            "side": "SHORT",
-                            "size": "-362",
-                            "avg_entry_price": 5208.8759,
-                            "liquidation_price": 100000000
-                        }
-                    },
-                    {
                         "user_id": "1409",
                         "symbol": "",
                         "data": {
@@ -164,7 +32,15 @@
                             "avg_entry_price": 5257.3471,
                             "liquidation_price": 2773.5
                         }
-                    }
+                    },
+                    .....
+                ],
+                balance: [
+                    {
+                        "created": "2019-03-26T20:00:01.854388+08:00",
+                        "balance": 13.00242851
+                    },
+                    .....
                 ]
             },
             .....

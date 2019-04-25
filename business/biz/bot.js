@@ -50,11 +50,15 @@ class biz {
 
             let queryPool = await botDao.getPoolList(connection, params);
             let pollList = []
-            if(queryPool && queryPool.length> 0){
+            if (queryPool && queryPool.length > 0) {
                 queryPool = queryPool[0].pools.split(',');
                 for (var i in queryPool) {
                     let pool = await params.redis.get("poolinfo_" + queryPool[i])
-                    pollList.push(JSON.parse(pool));
+                    let balance = await params.redis.get("poolbalance_" + queryPool[i])
+                    pool = JSON.parse(pool);
+                    balance = JSON.parse(balance);
+                    pool.balance = balance.daybalance_set;
+                    pollList.push(pool);
                 }
             }
             if (queryBot && queryBot.length > 0) {
@@ -71,7 +75,8 @@ class biz {
                     "nanpin_count": "0",
                     "status": "未启动"
                 }
-            };
+            }
+            ;
             return resultData;
         })
     }
@@ -204,7 +209,7 @@ class biz {
     static async getAccRecordChart(params) {
         return await dao.manageConnection(async (connection) => {
             //获取会员bot信息
-           return await botDao.getAccRecordChart(connection, params);
+            return await botDao.getAccRecordChart(connection, params);
         })
     }
 
