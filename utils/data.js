@@ -5,7 +5,8 @@ const
         return {
             status: status,
             message: message,
-            data: data
+            data: data,
+            date: new Date()
         }
     },
     self = {

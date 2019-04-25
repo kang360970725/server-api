@@ -17,6 +17,14 @@ class ctrl {
         return bot
     }
 
+    static async getAssets(params) {
+        if (!params.currentUser) {
+            throw exception.PowerException()
+        }
+        let bot = await botBiz.getAssets(params);
+        return bot
+    }
+
     static async getParameters(params) {
         if (!params.currentUser) {
             throw exception.PowerException()

@@ -30,7 +30,7 @@ class biz {
                 for (let item of result) {
                     item.infos = []
                     params.id = item.activity_id;
-                    item.infos.push(await activityDao.queryInfo(connection, params));
+                    item.infos = await activityDao.queryInfo(connection, params);
                 }
             }
 

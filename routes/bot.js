@@ -102,6 +102,7 @@
             "type": "",             类型
             "bot_warn_state": "",     状态
             "bot_warn_txt": "空军正常持仓中",    机器人运行状态
+            "bonus_base":"-0.19899591999999977", 收益
             "hour": 3      时间单位   小时
         },
         ...
@@ -139,11 +140,36 @@
                 "type": "",             类型
                 "bot_warn_state": "",     状态
                 "bot_warn_txt": "空军正常持仓中",    机器人运行状态
+                "bonus_base":"-0.19899591999999977", 收益
                 "day": "2019-04-24" 日期
             }
         ],
         "count": 1
     }
+}
+ */
+
+
+/**
+ * @api {get} v1/bot/getAssets 获取用户资产
+ * @apiName v1/bot/getAssets
+ * @apiGroup bot
+ * @apiVersion 1.0.0
+ *
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ * {
+    "status": 0,
+    "message": "successful",
+    "data": {
+        "bot_balance": 1.04077617, 余额
+        "bot_lirun": -0.19899591999999977, 收益 历史收益 收益率 = 历史收益/历史充值本金
+        "bot_prevDeposited": 5.25065958, 充值本金
+        "yesterday": 0,昨日收益
+        "LastMonth": 0.8004299400000003 本月收益
+    },
+    "date": "2019-04-25T08:56:26.728Z"
 }
  */
 
