@@ -161,7 +161,67 @@ class dao {
         params.push(query._userparam.status);
         params.push("");
         params.push(query._userassets.bot_lirun);
-        params.push(query._userassets.bot_type);
+        params.push(query._userparam.bot_type);
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+    static async saveRotBot(connection, query) { // 查询机器人状态
+        let params = [];
+        let sql = () => `
+            INSERT INTO robot(
+            level,
+            new_position_qty,
+            bot_nanpin,
+            max_position_qty,
+            nanpin_count,
+            status,
+            bot_side,
+            bot_size,
+            bot_avgEntryPrice,
+            bot_liquidationPrice,
+            bot_mex_last,
+            bot_balance,
+            user_account,type) VALUES (
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?
+            )
+            ON
+            DUPLICATE KEY
+            UPDATE
+            level=VALUES(level),
+            new_position_qty=VALUES(new_position_qty),
+            max_position_qty=VALUES(max_position_qty),
+            bot_nanpin=VALUES(bot_nanpin),
+            nanpin_count=VALUES(nanpin_count),
+            status=VALUES(status),
+            bot_side=VALUES(bot_side),
+            bot_size=VALUES(bot_size),
+            bot_avgEntryPrice=VALUES(bot_avgEntryPrice),
+            bot_liquidationPrice=VALUES(bot_liquidationPrice),
+            bot_mex_last=VALUES(bot_mex_last),
+            bot_balance=VALUES(bot_balance),
+            user_account=VALUES(user_account),
+            type=VALUES(type);
+            ;
+        `;
+        params.push(query._userparam.bot_version);
+        params.push(query._userparam.entry);
+        params.push(query._userparam.nanpin)
+        params.push(query._userparam.maxleverage);
+        params.push(query._userparam.nanpin_count);
+        params.push(query._userparam.status);
+        params.push(query._userparam.bot_side);
+        params.push(query._userparam.bot_size);
+        params.push(query._userparam.bot_avgEntryPrice);
+        params.push(query._userparam.bot_liquidationPrice);
+        params.push(query.btcPrice.quotationBTCPrice.mex_last);
+        params.push(query._userassets.bot_lirun);
+        params.push(query.account);
+        params.push(query._userparam.bot_type);
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
                 if (err) return reject(err);
@@ -257,7 +317,7 @@ class dao {
     static async calcAccRecordByDay(connection, query) { // 查询机器人状态
         let params = [];
         let day = " day ";
-        if(query.date){
+        if (query.date) {
             day = query.date;
         }
         let sql = () => `

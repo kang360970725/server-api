@@ -21,14 +21,16 @@ class biz {
             let _userassets_futures = await params.redis.get(params.currentUser.account + "_userassets_futures")
             let _userparam_futures = await params.redis.get(params.currentUser.account + "_userparam_futures")
             let btcPrice = await params.redis.get("btcPrice");
-            if (_userassets && _userparam && btcPrice && _userassets_futures && _userparam_futures) {
+            if (_userassets && _userparam && btcPrice
+                // && _userassets_futures && _userparam_futures
+            ) {
                 _userassets = JSON.parse(_userassets);
                 _userparam = JSON.parse(_userparam);
                 _userparam_futures = JSON.parse(_userparam_futures);
                 _userassets_futures = JSON.parse(_userassets_futures);
                 btcPrice = JSON.parse(btcPrice);
                 queryBot.push(await biz.buildbot(_userparam, btcPrice, _userassets, 0));
-                queryBot.push(await biz.buildbot(_userparam_futures, btcPrice, _userassets_futures, 1));
+                // queryBot.push(await biz.buildbot(_userparam_futures, btcPrice, _userassets_futures, 1));
             } else {
                 queryBot = await botDao.getBots(connection, params);
             }

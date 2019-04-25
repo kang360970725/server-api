@@ -31,6 +31,9 @@ class biz {
                     item.infos = []
                     params.id = item.activity_id;
                     item.infos = await activityDao.queryInfo(connection, params);
+                    if (!str.isEmpty(item.heads)) {
+                        item.heads = item.heads.split(',');
+                    }
                 }
             }
 

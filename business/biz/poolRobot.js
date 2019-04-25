@@ -110,15 +110,18 @@ class biz {
                     let _userassets = await params.redis.get(user.account + "_userassets")
                     let _userparam = await params.redis.get(user.account + "_userparam")
                     let btcPrice = await params.redis.get("btcPrice");
-                    for (let tableName of tables) {
-                        botDao.saveRecord(connection, {
-                            account: user.account,
-                            _userassets: JSON.parse(_userassets),
-                            _userparam: JSON.parse(_userparam),
-                            btcPrice: JSON.parse(btcPrice),
-                            tableName: tableName
-                        });
+                    let saveParma = {
+                        account: user.account,
+                        _userassets: JSON.parse(_userassets),
+                        _userparam: JSON.parse(_userparam),
+                        btcPrice: JSON.parse(btcPrice),
                     }
+                    saveParma._userparam.bot_type = 0;
+                    for (let tableName of tables) {
+                        saveParma.tableName = tableName,
+                        botDao.saveRecord(connection, saveParma)
+                    }
+                    botDao.saveRotBot(connection, saveParma);
                 }
             }
         })

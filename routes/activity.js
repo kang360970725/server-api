@@ -1,5 +1,3 @@
-
-
 /**
  * @api {get} v1/activity/activitys 活动查询
  * @apiName v1/activity/activitys
@@ -11,6 +9,7 @@
  * @apiParam {String} types 查询info类型  0 价格 1返现 2免费 3打折 4积分奖励 5 月卡价格 6季卡价格 7 年卡价格 200 轮播图片 201封面 202活动关联的产品 如需多类型逗号隔开 如 1,2,3,4 空为全部类型
  *
  * @apiParam {String} forbidden  活动是否有效 0有效 1无效 app传0 空为全部
+ * @apiParam {String} heads  是否查询参与者头像
  * @apiParam {String} name  活动名称 模糊查询 可空
  * @apiParam {String} title  活动title 模糊查询 可空
  * @apiParam {String} code  活动code 精准查询 可空
@@ -32,6 +31,17 @@
                 "activity_name": "adminhy",
                 "activity_title": "12345677",
                 "activity_code": "jj8dFU2A",
+                "heads":[
+                "1231231"
+                ...
+                ],参与者头像
+                "uv": 0 ,参与人数
+                "pv": 1,浏览人数
+                "activity_content": "jj8dFU2A",内容
+                "creat_time":2019-03-21 15:43:00,
+                "start_time":2019-03-21 15:43:00,
+                "end_time":2019-03-21 15:43:00,
+                "type":1,
                 "infos": [
                     [
                         {
@@ -318,7 +328,6 @@
     }
 }
  */
-
 
 
 /**
