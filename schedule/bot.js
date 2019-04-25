@@ -24,27 +24,27 @@ schedule.scheduleJob("*/10 * * * * *", function () {
 
 // 0
 schedule.scheduleJob("*/1 * * * *", function () {
-    ctrl.botParam(rediss,0);
+    ctrl.botParam(rediss, 0);
 });
 
 // 1
 schedule.scheduleJob("*/1 * * * *", function () {
-    ctrl.botParam(rediss,1);
+    ctrl.botParam(rediss, 1);
 });
 
 // 2
 schedule.scheduleJob("*/1 * * * *", function () {
-    ctrl.botParam(rediss,2);
+    ctrl.botParam(rediss, 2);
 });
 
 // 3
 schedule.scheduleJob("*/1 * * * *", function () {
-    ctrl.botParam(rediss,3);
+    ctrl.botParam(rediss, 3);
 });
 
 // 4
 schedule.scheduleJob("*/1 * * * *", function () {
-    ctrl.botParam(rediss,4);
+    ctrl.botParam(rediss, 4);
 });
 
 schedule.scheduleJob("*/20 * * * *", function () {
@@ -64,11 +64,17 @@ class ctrl {
             for (let item of result) {
                 let balance = await poolBiz.minepools({poolId: item.id, balance: 1})
                 let info = await poolBiz.minepools({poolId: item.id})
-                redis.set("poolinfo_"+item.id, JSON.stringify(info))
-                redis.set("poolbalance_"+item.id, JSON.stringify(balance))
+                redis.set("poolinfo_" + item.id, JSON.stringify(info))
+                redis.set("poolbalance_" + item.id, JSON.stringify(balance))
                 item.balance = balance.daybalance_set;
                 item.users = info.users;
             }
+            result.sort(function (a, b) {
+                if (b.cost == 0 || a.cost == 0) {
+                    return 0;
+                }
+                return b.balance_total / b.cost - a.balance_total / a.cost;
+            });
             redis.set("poolInfo", JSON.stringify(result))
             console.log("获取矿池数据结束");
         }
@@ -82,15 +88,16 @@ class ctrl {
         console.log("获取BTC数据结束");
     }
 
-    static async botParam(redis,index) {
-        poolBiz.usersBotParam({redis:redis,index:index});
+    static async botParam(redis, index) {
+        poolBiz.usersBotParam({redis: redis, index: index});
     }
 
     static async botassets(redis) {
-        poolBiz.usersBotassets({redis:redis});
+        poolBiz.usersBotassets({redis: redis});
     }
+
     static async saveBotParam(redis) {
-        poolBiz.saveBotParam({redis:redis});
+        poolBiz.saveBotParam({redis: redis});
     }
 }
 

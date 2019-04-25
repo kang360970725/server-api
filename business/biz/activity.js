@@ -145,7 +145,7 @@ class biz {
             if (params.isValid == 3) {
                 type = "7";
             }
-            if (main && main[0] || main[0].type != 1) {
+            if (main && main[0] && main[0].type != 1) {
                 info = await activityDao.queryInfo(connection, {
                     "id": params.value,
                     "types": type
@@ -316,7 +316,15 @@ class biz {
     static async queryUserUnion(params) {
         return await dao.manageConnection(async (connection) => {
             let result = await activityDao.queryUserUnion(connection, params);
-            return result;
+            let resultCount = await activityDao.queryUserUnionCount(connection, params);
+            let count = 0;
+            if (resultCount && resultCount.length > 0) {
+                count = resultCount[0].count;
+            }
+            return {
+                "list": result,
+                "count": count
+            };
         })
     }
 
@@ -324,7 +332,15 @@ class biz {
     static async queryRenews(params) {
         return await dao.manageConnection(async (connection) => {
             let result = await activityDao.queryRenew(connection, params);
-            return result;
+            let resultCount = await activityDao.queryRenewCount(connection, params);
+            let count = 0;
+            if (resultCount && resultCount.length > 0) {
+                count = resultCount[0].count;
+            }
+            return {
+                "list": result,
+                "count": count
+            };
         })
     }
 
@@ -332,7 +348,15 @@ class biz {
     static async queryPools(params) {
         return await dao.manageConnection(async (connection) => {
             let result = await activityDao.queryPool(connection, params);
-            return result;
+            let resultCount = await activityDao.queryPoolCount(connection, params);
+            let count = 0;
+            if (resultCount && resultCount.length > 0) {
+                count = resultCount[0].count;
+            }
+            return {
+                "list": result,
+                "count": count
+            };
         })
     }
 

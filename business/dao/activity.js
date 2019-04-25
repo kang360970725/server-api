@@ -670,6 +670,44 @@ class dao {
         })
     }
 
+    static async queryRenewCount(connection, query) {
+        let params = [];
+        let where = [];
+        var limit = "LIMIT ";
+        let sql = () => `
+        SELECT count(1) FROM pay_record 
+        WHERE
+        ${where.join(" AND ")}
+        ;
+        `;
+        where.push(" 1 = 1 ")
+        if (!str.isEmpty(query.id)) {
+            where.push(" id = ? ")
+            params.push(query.id);
+        }
+        if (!str.isEmpty(query.account)) {
+            where.push(" account = ? ")
+            params.push(query.account);
+        }
+        if (!str.isEmpty(query.unionId)) {
+            where.push(" data_time = ? ")
+            params.push(query.unionId);
+        }
+        if (!str.isEmpty(query.type)) {
+            where.push(" type = ? ")
+            params.push(query.type);
+        } else if (str.isEmpty(query.id)) {
+            where.push(" type <> -1 ")
+        }
+
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
 
     //添加记录
     static async updatePool(connection, query) {
@@ -803,6 +841,70 @@ class dao {
         })
     }
 
+
+    static async queryPoolCount(connection, query) {
+        let params = [];
+        let where = [];
+        let sql = () => `
+        SELECT count(1) FROM user_pool_record 
+        WHERE
+        ${where.join(" AND ")}
+        ;
+        `;
+        where.push(" 1 = 1 ")
+        if (!str.isEmpty(query.id)) {
+            where.push(" id = ? ")
+            params.push(query.id);
+        }
+
+        if (!str.isEmpty(query.uuid)) {
+            where.push(" user_uuid = ? ")
+            params.push(query.uuid);
+        }
+
+        if (!str.isEmpty(query.relname)) {
+            where.push(" user_relname like ? ")
+            params.push("%" + query.relname + "%");
+        }
+
+        if (!str.isEmpty(query.nickname)) {
+            where.push(" user_nickname like ? ")
+            params.push("%" + query.nickname + "%");
+        }
+
+        if (!str.isEmpty(query.phone)) {
+            where.push(" user_phone like ? ")
+            params.push("%" + query.phone + "%");
+        }
+
+        if (!str.isEmpty(query.email)) {
+            where.push(" user_email like ? ")
+            params.push("%" + query.email + "%");
+        }
+
+        if (!str.isEmpty(query.poolId)) {
+            if (query.poolId == "ALL") {
+                where.push(` pool_id is not null `);
+            } else {
+                let poolIds = query.poolId.split(',')
+                where.push(` pool_id in ( ${poolIds.join(',')} ) `);
+            }
+        } else {
+            where.push(" pool_id is null ")
+        }
+
+        if (!str.isEmpty(query.unionId)) {
+            where.push(" union_id = ? ")
+            params.push(query.unionId);
+        }
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
     static async queryUserUnion(connection, query) {
         let where = [];
         var limit = "LIMIT ";
@@ -849,6 +951,54 @@ class dao {
             limit = "";
         } else {
             limit += `${(query.pageIndex) * query.pageSize}, ${query.pageSize}`;
+        }
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+    static async queryUserUnionCount(connection, query) {
+        let where = [];
+        var limit = "LIMIT ";
+        let sql = () => `
+        SELECT 
+        count(1)
+        FROM user_union_info
+        WHERE ${where.join(' AND ')}
+        `;
+        let params = [];
+        params.push(' 1 = 1 ');
+        if (!str.isEmpty(query.id)) {
+            where.push(' id = ? ');
+            params.push(query.id);
+        }
+
+        if (!str.isEmpty(query.uuid)) {
+            where.push(' user_id = ? ');
+            params.push(query.uuid);
+        }
+
+        if (!str.isEmpty(query.types)) {
+            let types = query.types.split(',')
+            where.push(` user_info_type in ( ${types.join(',')} ) `);
+        }
+
+        if (!str.isEmpty(query.endTime)) {
+            where.push(' end_time <= ? ');
+            params.push(query.endTime);
+        }
+
+        if (!str.isEmpty(query.isValid)) {
+            where.push(' is_valid = ? ');
+            params.push(query.isValid);
+        } else if (str.isEmpty(query.id)) {
+            where.push(' is_valid <> -1 ');
+        }
+        if (where.length <= 0) {
+            return
         }
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
