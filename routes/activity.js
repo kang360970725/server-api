@@ -6,10 +6,7 @@
  *
  * @apiParam {String} id  活动id 可空 如需多id逗号隔开 如 1,2,3,4 空为全部
  * @apiParam {String} info  是否查询活动info信息 非空查询 空不查询
- * @apiParam {
- *
- * } types 查询info类型  0 价格 1返现 2免费 3打折 4积分奖励 5 月卡价格 6季卡价格 7 年卡价格 200 轮播图片 201封面 202活动关联的产品 如需多类型逗号隔开 如 1,2,3,4 空为全部类型
- *
+ * @apiParam {String} types 查询info类型  0 价格 1返现 2免费 3打折 4积分奖励 5 月卡价格 6季卡价格 7 年卡价格 200 轮播图片 201封面 202活动关联的产品 如需多类型逗号隔开 如 1,2,3,4 空为全部类型
  * @apiParam {String} forbidden  活动是否有效 0有效 1无效 app传0 空为全部
  * @apiParam {String} heads  是否查询参与者头像
  * @apiParam {String} name  活动名称 模糊查询 可空
@@ -243,15 +240,16 @@
     "status": 0,
     "message": "successful",
     "data": {
-        "fieldCount": 0,
-        "affectedRows": 1,
-        "insertId": 4,
-        "serverStatus": 1,
-        "warningCount": 0,
-        "message": "",
-        "protocol41": true,
-        "changedRows": 0
-    }
+        "Binance": 5298.9,
+        "huobi": 5297.47, 火币价格
+        "OKEx": 5297.5,
+        "originalprice": "299",原价格
+        "nowPrice": "299",打折后价格 当前需支付价格 美元
+        "BTCPrice": 0.05657649747960219,当前需支付的比特币数量
+        "id": 77,
+        "img": "http://192.168.0.33/source/2019-04-11/0.39134458957795326.jpg" 支付二维码
+    },
+    "date": "2019-04-26T07:32:33.201Z"
 }
  */
 
@@ -458,6 +456,7 @@
             "id": 21,
             "account": "15828982828@139.com",
             "create_time": "2018-12-11T07:57:17.000Z",
+            "activity_name":产品名称
             "type": "3",
             "desc": "",
             "credential": "public/images/2018-12-10/15828982828@139.compay.png",

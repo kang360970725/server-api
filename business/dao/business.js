@@ -563,6 +563,24 @@ class dao {
             });
         })
     }
+
+    //管理禁启用用户
+    static async uopdateuserEndtime(connection, query) {
+        var params = [];
+        let sql = () => `
+            UPDATE users set 
+            starttime = IFNULL(starttime,now()),
+            endtime = DATE_add(IFNULL(endtime,now()),INTERVAL ${query.time} month) 
+            where uuid =  ?
+        `;
+        params.push(query.uuid);
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
 }
 
 module.exports = dao

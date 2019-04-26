@@ -9,9 +9,9 @@ class dao {
         let sql = () => `
         INSERT INTO 
         user_integral (
-        user_uuid)
+        user_uuid,integral_total,integral_current)
         VALUES 
-        (?)
+        (?,?,?)
         ON
 		DUPLICATE KEY
 		UPDATE
@@ -21,6 +21,8 @@ class dao {
         let params = [];
         let set = [];
         params.push(query.id);
+        params.push(query.integral);
+        params.push(query.integral);
         set.push('id=VALUES(id)')
         if (!str.isEmpty(query.integral) && query.integral > 0) {
             set.push(`integral_total = integral_total  + ${query.integral}`)

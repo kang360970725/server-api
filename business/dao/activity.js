@@ -625,37 +625,39 @@ class dao {
         })
     }
 
-//添加记录
+    //添加记录
     static async queryRenew(connection, query) {
         let params = [];
         let where = [];
         var limit = "LIMIT ";
         let sql = () => `
-        SELECT * FROM pay_record 
+        SELECT a.*,c.activity_name FROM pay_record a
+        LEFT JOIN user_union_info b on b.id = a.data_time
+        LEFT JOIN activity_main c on b.user_info_union = c.activity_id
         WHERE
         ${where.join(" AND ")}
-        order by create_time DESC
+        order by a.create_time DESC
         ${limit}
         ;
         `;
         where.push(" 1 = 1 ")
         if (!str.isEmpty(query.id)) {
-            where.push(" id = ? ")
+            where.push(" a.id = ? ")
             params.push(query.id);
         }
         if (!str.isEmpty(query.account)) {
-            where.push(" account = ? ")
+            where.push(" a.account = ? ")
             params.push(query.account);
         }
         if (!str.isEmpty(query.unionId)) {
-            where.push(" data_time = ? ")
+            where.push(" a.data_time = ? ")
             params.push(query.unionId);
         }
         if (!str.isEmpty(query.type)) {
-            where.push(" type = ? ")
+            where.push(" a.type = ? ")
             params.push(query.type);
         } else if (str.isEmpty(query.id)) {
-            where.push(" type <> -1 ")
+            where.push(" a.type <> -1 ")
         }
         if (str.isEmpty(query.pageIndex) || str.isEmpty(query.pageSize)) {
             limit = "";

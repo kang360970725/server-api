@@ -10,6 +10,7 @@ let dao = require("../../db_config/dao"),
     activityDao = require('../../business/dao/activity.js'),
     integralUtil = require('../../utils/integralUtil.js'),
     deleteDao = require('../../business/dao/delete.js'),
+    userDao = require('../../business/dao/business.js'),
     sysDao = require('../../business/dao/sysConfig.js');
 
 var uuid = require('node-uuid');
@@ -145,7 +146,7 @@ class biz {
             if (params.isValid == 3) {
                 type = "7";
             }
-            if (main && main[0] && main[0].type != 1) {
+            if (main && main[0] && main[0].type == 1) {
                 info = await activityDao.queryInfo(connection, {
                     "id": params.value,
                     "types": type
@@ -180,6 +181,7 @@ class biz {
             let integra = 0;
             try {
                 unionResult = await activityDao.addUserUnion(connection, params);
+
                 if (unionResult && unionResult.insertId) {
                     let price = info[0].info_value;
                     if (activityInfo && activityInfo.length > 0 && btcPrice) {
@@ -195,7 +197,7 @@ class biz {
                                 if (!str.isEmpty(item.info_value) && item.info_value != 0) {
                                     let USD = new Decimal(price).mul(new Decimal(item.info_value)).div(new Decimal(10));
                                     price = USD.toNumber();
-                                    BTC = USD.div(new Decimal(btcPrice.huobi)).toNumber();
+
                                 }
                             }
                             // 1返现
@@ -211,8 +213,19 @@ class biz {
                             }
                         }
 
+                        BTC = new Decimal(price).div(new Decimal(btcPrice.huobi)).toNumber();
                         let ratio = await params.redis.get("buyProductIntegraRatio");
                         integra += parseInt(new Decimal(price).mul(new Decimal(ratio)).toNumber());
+
+
+                        params.type = 0;
+                        params.value = params.activityId;
+                        params.isValid = 0;
+                        //添加用户活动关联信息
+                        let activityResult = await activityDao.addUserUnion(connection, params);
+                        if (!activityResult || !activityResult.insertId) {
+                            throw exception.BusinessException("提交失败", 200);
+                        }
 
                         params.id = unionResult.insertId;
                         params.type = -1;
@@ -223,10 +236,12 @@ class biz {
                         if (!renewResult || !renewResult.insertId) {
                             throw exception.BusinessException("提交失败", 200);
                         }
+
                         btcPrice.id = renewResult.insertId;
                         params.redis.set("byRenewintegra" + btcPrice.id, integra);
-                        params.redis.set("byRenewintegraUserId" + btcPrice.id, params.id);
+                        params.redis.set("byRenewintegraUserId" + btcPrice.id, params.currentUser.uuid);
                         params.redis.set("byRenewintegraName" + btcPrice.id, main[0].activity_name);
+                        params.redis.set("byRenewTime" + btcPrice.id, type);
                         let sysconfig = await sysDao.query(connection, {type: "sys_img", pageIndex: 0, pageSize: 1})
                         if (sysconfig && sysconfig[0]) {
                             btcPrice.img = sysconfig[0].sys_value;
@@ -282,7 +297,24 @@ class biz {
                         let integra = await params.redis.get("byRenewintegra" + params.id);
                         let userId = await params.redis.get("byRenewintegraUserId" + params.id);
                         let name = await params.redis.get("byRenewintegraName" + params.id);
-                        integralUtil.recordIntegral(connection, userId, parseInt(integra), `购买产品审核通过[${name}](${result[0].data_time})`);
+                        let time = await params.redis.get("byRenewTime" + params.id);
+
+                        if (time == "5") {//月卡
+                            time = "1"
+                        } else if (time == "6") {//季卡
+                            time = "3"
+                        } else if (time == "7") {//年卡
+                            time = "12"
+                        } else {
+                            return;
+                        }
+                        userDao.uopdateuserEndtime(connection,{uuid:userId,time:time});
+                        integralUtil.recordIntegral(connection, userId, parseInt(integra), `购买产品审核通过[${name} ${time}个月](${result[0].data_time})`);
+
+                        params.redis.delete("byRenewintegra");
+                        params.redis.delete("byRenewintegraUserId");
+                        params.redis.delete("byRenewintegraName");
+                        params.redis.delete("byRenewTime");
                     }
                     params.id = result[0].data_time;
                     await activityDao.updateUserUnion(connection, params);
