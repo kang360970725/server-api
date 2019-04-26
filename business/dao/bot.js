@@ -186,8 +186,13 @@ class dao {
             bot_liquidationPrice,
             bot_mex_last,
             bot_balance,
-            user_account,type) VALUES (
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?
+            user_account,
+            type,
+            bot_prevDeposited,
+            bot_prevWithdrawn,
+            bot_amount,
+            bot_lirun) VALUES (
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?,?
             )
             ON
             DUPLICATE KEY
@@ -205,7 +210,15 @@ class dao {
             bot_mex_last=VALUES(bot_mex_last),
             bot_balance=VALUES(bot_balance),
             user_account=VALUES(user_account),
-            type=VALUES(type);
+            type=VALUES(type)
+            ,
+            bot_prevDeposited=VALUES(bot_prevDeposited)
+            ,
+            bot_prevWithdrawn=VALUES(bot_prevWithdrawn)
+            ,
+            bot_amount=VALUES(bot_amount)
+            ,
+            bot_lirun=VALUES(bot_lirun);
             ;
         `;
         params.push(query._userparam.bot_version);
@@ -219,9 +232,14 @@ class dao {
         params.push(query._userparam.bot_avgEntryPrice);
         params.push(query._userparam.bot_liquidationPrice);
         params.push(query.btcPrice.quotationBTCPrice.mex_last);
-        params.push(query._userassets.bot_lirun);
+        params.push(query._userassets.bot_balance);
         params.push(query.account);
         params.push(query._userparam.bot_type);
+        params.push(query._userassets.bot_prevDeposited);
+        params.push(query._userassets.bot_prevWithdrawn);
+        params.push(query._userassets.bot_amount);
+        params.push(query._userassets.bot_lirun);
+
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
                 if (err) return reject(err);
