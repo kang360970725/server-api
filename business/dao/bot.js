@@ -68,15 +68,57 @@ class dao {
 
     static async getBotPram(connection, query) {
         var params = [];
-
         let sql = () => `
         SELECT 
         * 
         FROM 
         robot_parameter 
         WHERE 
-        user_account = \'${query.account}\';
+        user_account = \'${query.account}\'
+        AND bot_type = \'${query.bot_type}\'
+        ;
         `;
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+    static async getExchange(connection, query) {
+        var params = [];
+        let sql = () => `
+        SELECT 
+        api,secret,bot_type
+        FROM 
+        robot_parameter 
+        WHERE 
+        user_account = \'${query.account}\'
+        ;
+        `;
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+    //编辑交易所参数
+    static async exitExchange(connection, param) {
+        let sql = () => `
+        UPDATE 
+        robot_parameter 
+        SET 
+        api=\'${param.api}\',
+        secret=\'${param.secret}\' 
+        WHERE user_account = ? 
+        AND bot_type = ?
+        `;
+        var params = [];
+        params.push(param.currentUser.account);
+        params.push(param.bot_type);
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
                 if (err) return reject(err);
@@ -91,8 +133,6 @@ class dao {
         UPDATE 
         robot_parameter 
         SET 
-        api=\'${param.api}\',
-        secret=\'${param.secret}\',
         open=\'${param.open}\',
         entry=\'${param.entry}\',
         trendfollow=\'${param.trendfollow}\',
@@ -117,13 +157,61 @@ class dao {
         nanpin_cancel=\'${param.nanpin_cancel}\',
         nanpin_order=\'${param.nanpin_order}\',
         doten=\'${param.doten}\' 
-        WHERE user_account = ?
+        WHERE user_account = ? 
+        AND bot_type = ?
         `;
         var params = [];
-        params.push(param.account);
+        params.push(param.currentUser.account);
+        params.push(param.bot_type);
+        console.log(params);
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
-                console.log(err);
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+
+
+    //系统推荐的bot配置数据
+    static async setBotPramRec(connection, param) {
+        let sql = () => `
+        UPDATE 
+        robot_parameter 
+        SET 
+        api=\'${param.api}\',
+        open=\'${param.open}\',
+        entry=\'${param.entry}\',
+        trendfollow=\'${param.trendfollow}\',
+        mm=\'${param.mm}\',
+        mmpercent=\'${param.mmpercent}\',
+        nanpin=\'${param.nanpin}\',
+        maxnanpin=\'${param.maxnanpin}\',
+        mmnanpin=\'${param.mmnanpin}\',
+        maxleverage=\'${param.maxleverage}\',
+        leverage=\'${param.leverage}\',
+        sleep=\'${param.sleep}\',
+        longrange=\'${param.longrange}\',
+        longstop=\'${param.longstop}\',
+        shortrange=\'${param.shortrange}\',
+        shortstop=\'${param.shortstop}\',
+        losscut=\'${param.losscut}\',
+        time=\'${param.time}\',
+        longstopx=\'${param.longstopx}\',
+        shortstopx=\'${param.shortstopx}\',
+        longorder=\'${param.longorder}\',
+        shortorder=\'${param.shortorder}\',
+        nanpin_cancel=\'${param.nanpin_cancel}\',
+        nanpin_order=\'${param.nanpin_order}\',
+        doten=\'${param.doten}\' 
+        WHERE user_account = ? 
+        AND bot_type = ?
+        `;
+        var params = [];
+        params.push(param.currentUser.account);
+        params.push(param.bot_type);
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
                 if (err) return reject(err);
                 resolve(result);
             });

@@ -6,7 +6,7 @@ let dao = require("../../db_config/dao"),
     goodsDao = require('../../business/dao/goods'),
     exception = require('../../utils/exception.js'),
     integralUtil = require('../../utils/integralUtil.js'),
-    goodsOrderDao = require('../../business/dao/goodsOrder.js');
+    goodsOrderDao = require('../../business/dao/goodsorder.js');
 
 var uuid = require('node-uuid');
 

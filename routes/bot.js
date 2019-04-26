@@ -160,7 +160,6 @@
  * @apiGroup bot
  * @apiVersion 1.0.0
  *
- *
  * @apiSuccessExample 成功返回结果:
  *  HTTP/1.1 200 OK
  * {
@@ -185,13 +184,186 @@
  */
 
 /**
- * @api {get} V1/bot/parameters/:uuid 获取会员机器人参数
+ * @api {get} V1/bot/getParameters 获取会员设置的机器人参数
+ * @apiName v1/bot/getParameters
+ * @apiGroup bot
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {String} bot_type 机器人类型   0 期货机器人  1 现货机器人  (不可空)
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ *
+ * {
+    "status": 0,
+    "message": "successful",
+    "data": [
+        {
+            "open": "0",                    //开关机器人  0是关闭，1是启动
+            "entry": 250,                   //---自定义头寸
+            "trendfollow": "1",             //---趋势交易
+            "mm": "1",                      //---自动管理MM   0是关闭，1是启动
+            "mmpercent": 0.0007,            // ---MM头寸比例
+            "nanpin": "250",                //---自定义补仓
+            "maxnanpin": "28",              //---最大补仓次数
+            "mmnanpin": "1.25",             //MM每次补仓的比例
+            "maxleverage": "50",            //----最大持仓
+            "leverage": "0",                //---最大杠杆
+            "sleep": "40",                  //循环时间推荐40或70，单位秒
+            "longrange": "80",              //---多军止盈间距
+            "longstop": "28",               //---多军补仓间距
+            "shortrange": "80",             //---空军止盈间距
+            "shortstop": "28",              //---空军补仓间距
+            "losscut": "1",                 //根据钱包余额实时计算止损金额。(1表示不止损)
+            "time": "5",                    //k线指标:1表示1分钟线，5表示5分钟线
+            "longstopx": "1999",            //---多军点位止损
+            "shortstopx": "1999",           //---空军点位止损
+            "longorder": "2",               //多军的单边交易    0关闭多军交易  1打开(市价建仓交易)  2打开(限价建仓交易)
+            "shortorder": "2",              //空军的单边交易    0关闭空军交易  1打开(市价建仓交易)  2打开(限价建仓交易)
+            "nanpin_cancel": "0",           //0无效,0.5空手道,1全仓认输,2.0乾坤大挪移
+            "nanpin_order": "0",            //2=急速手续费,1=高速补,0=低速补                ---补仓模式
+            "doten": "1"                    //反手光环    0 关闭  1 开启
+            "bot_type": "0"                 //参数关联的机器人类型
+        }
+    ],
+    "date": "2019-04-26T11:10:28.197Z"
+}
+ */
+
+
+
+/**
+ * @api {get} V1/bot/getExchange 获取会员交易所设置数据
+ * @apiName v1/bot/getExchange
+ * @apiGroup bot
+ * @apiVersion 1.0.0
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ *
+ * {
+    "status": 0,
+    "message": "successful",
+    "data": [
+        {
+            "api": "",                      //api
+            "secret": "",                   //secret
+            "bot_type": "0"                 //交易所(和机器人类型) 0  bitmex(期货)   1 huobi(现货，注:交易所暂定为火币)
+        }
+    ],
+    "date": "2019-04-26T11:10:28.197Z"
+}
+ */
+/**
+ * @api {get} V1/bot/exitExchange 修改会员交易所数据
+ * @apiName v1/bot/exitExchange
+ * @apiGroup bot
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {String} api 交易所API
+ * @apiParam {String} secret 交易所secret
+ * @apiParam {String} bot_type  交易所类别   0 期货机器人  1 现货机器人  (不可空)
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ *
+ * {
+    "status": 0,
+    "message": "successful",
+    "data": {
+        "desc": "修改成功"
+    },
+    "date": "2019-04-26T12:44:00.445Z"
+}
  */
 
 /**
- * @api {post} v1/bot/set/parameters/:uuid 修改会员机器人参数
+ * @api {post} V1/bot/setParameters 修改会员机器人参数
+ * @apiName v1/bot/setParameters
+ * @apiGroup bot
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {String} open                     //开关机器人  0是关闭，1是启动
+ * @apiParam {String} entry                    //---自定义头寸
+ * @apiParam {String} trendfollow              //---趋势交易
+ * @apiParam {String} mm                       //---自动管理MM   0是关闭，1是启动
+ * @apiParam {String} mmpercent                // ---MM头寸比例
+ * @apiParam {String} nanpin                   //---自定义补仓
+ * @apiParam {String} maxnanpin               //---最大补仓次数
+ * @apiParam {String} mmnanpin                //MM每次补仓的比例
+ * @apiParam {String} maxleverage             //----最大持仓
+ * @apiParam {String} leverage                 //---最大杠杆
+ * @apiParam {String} sleep                   //循环时间推荐40或70，单位秒
+ * @apiParam {String} longrange               //---多军止盈间距
+ * @apiParam {String} longstop                //---多军补仓间距
+ * @apiParam {String} shortrange              //---空军止盈间距
+ * @apiParam {String} shortstop               //---空军补仓间距
+ * @apiParam {String} losscut                  //根据钱包余额实时计算止损金额。(1表示不止损)
+ * @apiParam {String} time                     //k线指标:1表示1分钟线，5表示5分钟线
+ * @apiParam {String} longstopx                 //---多军点位止损
+ * @apiParam {String} shortstopx                //---空军点位止损
+ * @apiParam {String} longorder                //多军的单边交易    0关闭多军交易  1打开(市价建仓交易)  2打开(限价建仓交易)
+ * @apiParam {String} shortorder              //空军的单边交易    0关闭空军交易  1打开(市价建仓交易)  2打开(限价建仓交易)
+ * @apiParam {String} nanpin_cancel           //0无效,0.5空手道,1全仓认输,2.0乾坤大挪移
+ * @apiParam {String} nanpin_order            //2=急速手续费,1=高速补,0=低速补                ---补仓模式
+ * @apiParam {String} doten                   //反手光环    0 关闭  1 开启
+ * @apiParam {String} bot_type                //机器人类型   0 期货机器人  1 现货机器人  (不可空)
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ *
+ * {
+    "status": 0,
+    "message": "successful",
+    "data": {
+        "desc": "修改成功"
+    },
+    "date": "2019-04-26T11:53:52.719Z"
+}
  */
 
 /**
- * @api {get} v1/bot/parameters 获取官方推荐参数
+ * @api {get} v1/bot/getParametersRec 获取官方推荐参数
+ * @apiName v1/bot/getParametersRec
+ * @apiGroup bot
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {String} bot_type 机器人类型   0 期货机器人  1 现货机器人  (不可空)
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ *
+ * {
+    "status": 0,
+    "message": "successful",
+    "data": [
+        {
+            "entry": 250,                   //---自定义头寸
+            "trendfollow": "1",             //---趋势交易
+            "mm": "1",                      //---自动管理MM   0是关闭，1是启动
+            "mmpercent": 0.0007,            // ---MM头寸比例
+            "nanpin": "250",                //---自定义补仓
+            "maxnanpin": "28",              //---最大补仓次数
+            "mmnanpin": "1.25",             //MM每次补仓的比例
+            "maxleverage": "50",            //----最大持仓
+            "leverage": "0",                //---最大杠杆
+            "sleep": "40",                  //循环时间推荐40或70，单位秒
+            "longrange": "80",              //---多军止盈间距
+            "longstop": "28",               //---多军补仓间距
+            "shortrange": "80",             //---空军止盈间距
+            "shortstop": "28",              //---空军补仓间距
+            "losscut": "1",                 //根据钱包余额实时计算止损金额。(1表示不止损)
+            "time": "5",                    //k线指标:1表示1分钟线，5表示5分钟线
+            "longstopx": "1999",            //---多军点位止损
+            "shortstopx": "1999",           //---空军点位止损
+            "longorder": "2",               //多军的单边交易    0关闭多军交易  1打开(市价建仓交易)  2打开(限价建仓交易)
+            "shortorder": "2",              //空军的单边交易    0关闭空军交易  1打开(市价建仓交易)  2打开(限价建仓交易)
+            "nanpin_cancel": "0",           //0无效,0.5空手道,1全仓认输,2.0乾坤大挪移
+            "nanpin_order": "0",            //2=急速手续费,1=高速补,0=低速补                ---补仓模式
+            "doten": "1"                    //反手光环    0 关闭  1 开启
+            "bot_type": "0"                 //参数关联的机器人类型
+        }
+    ],
+    "date": "2019-04-26T11:10:28.197Z"
+}
  */

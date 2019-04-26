@@ -25,14 +25,36 @@ class ctrl {
         return bot
     }
 
-    static async getParameters(params) {
+    static async getParameters(params) {  //获取机器人参数
         if (!params.currentUser) {
             throw exception.PowerException()
         }
+        if(!params.bot_type){
+            throw exception.ParamException('机器人类型[bot_type]不能为空')
+        }
+        params.account = params.currentUser.account;
         return await botBiz.getParameters(params)
     }
 
-    static async exitBotParm(params) {
+    static async getExchange(params) {  //获取交易所参数
+        if (!params.currentUser) {
+            throw exception.PowerException()
+        }
+        params.account = params.currentUser.account;
+        return await botBiz.getExchange(params)
+    }
+
+    static async exitExchange(params) {  //提交交易所参数
+        if (!params.currentUser) {
+            throw exception.PowerException()
+        }
+        if(!params.bot_type){
+            throw exception.ParamException('机器人类型[bot_type]不能为空')
+        }
+        return await botBiz.exitExchange(params)
+    }
+
+    static async exitBotParm(params) {  //修改机器人参数
 
         if (!params.currentUser) {
             throw exception.PowerException()
@@ -40,8 +62,19 @@ class ctrl {
         return await botBiz.exitBotParm(params)
     }
 
-    static async getParametersRec(params) {
+    static async getParametersRec(params) {  //获取官方推荐参数
+        if(!params.bot_type){
+            throw exception.ParamException('机器人类型[bot_type]不能为空')
+        }
+        params.account = 'admin';
         return await botBiz.getParametersRec(params)
+    }
+
+    static async editParametersRec(params) {  //编辑官方推荐参数
+        if (!params.adminUser) {
+            throw exception.PowerException()
+        }
+        return await botBiz.exitBotParmRec(params)
     }
 
 

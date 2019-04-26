@@ -47,7 +47,8 @@ class biz {
             }
             var newSql = await businessDao.addUsers(connection, params);
             var newUsers = await businessDao.getUsersByAccount(connection, params);
-            var setBotSetting = await businessDao.insertUserBotSetting(connection, params);//设置默认参数
+            var setBotSetting = await businessDao.insertUserBotSettingBt(connection, params);//设置默认参数
+            var setBotSetting = await businessDao.insertUserBotSettingHb(connection, params);//设置默认参数
             params['token'] = uuid.v4();
             var setToken = await businessDao.insertToken(connection, params);//设置token关系
             var setPay = await businessDao.insertPay(connection, params);//写入付费开通记录
@@ -130,7 +131,7 @@ class biz {
     }
 
 
-    //用户登录
+    //用户注册
     static async register(params) {
         return await dao.manageConnection(async (connection) => {
             console.log(params);
@@ -160,7 +161,8 @@ class biz {
             }
 
             //设置默认参数
-            await businessDao.insertUserBotSetting(connection, params);
+            await businessDao.insertUserBotSettingBt(connection, params);
+            await businessDao.insertUserBotSettingHb(connection, params);
             params['token'] = uuid.v4();
             //设置token关系
             await businessDao.insertToken(connection, params);

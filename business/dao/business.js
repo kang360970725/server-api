@@ -192,8 +192,8 @@ class dao {
         })
     }
 
-    //写入用户默认bot配置数据
-    static async insertUserBotSetting(connection, query) {
+    //写入用户默认bot配置数据(期货机器人数据)
+    static async insertUserBotSettingBt(connection, query) {
         let sql = () => `
         INSERT INTO robot_parameter
          (
@@ -223,10 +223,59 @@ class dao {
          shortorder, 
          nanpin_cancel, 
          nanpin_order, 
-         doten
+         doten,
+         bot_type
          ) VALUES (
          ?, 
-         '', '', '0', '250', '1', '1', '0.0007', '250', '28', '1.25', '50', '0', '40', '80', '28', '80', '28', '1', '5', '1999', '1999', '2', '2', '0', '0', '1'
+         '', '', '0', '250', '1', '1', '0.0007', '250', '28', '1.25', '50', '0', '40', '80', '28', '80', '28', '1', '5', '1999', '1999', '2', '2', '0', '0', '1','0'
+         )        
+        `;
+        var params = [];
+        params.push(query.account);
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                console.log(err);
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
+    //写入用户默认bot配置数据(现货机器人数据)
+    static async insertUserBotSettingHb(connection, query) {
+        let sql = () => `
+        INSERT INTO robot_parameter
+         (
+         user_account, 
+         \`api\`, 
+         \`secret\`,
+         \`open\`, 
+         entry, 
+         trendfollow, 
+         mm, 
+         mmpercent, 
+         nanpin, 
+         maxnanpin, 
+         mmnanpin, 
+         maxleverage, 
+         leverage, 
+         sleep, 
+         longrange, 
+         longstop, 
+         shortrange, 
+         shortstop, 
+         losscut, 
+         \`time\`, 
+         longstopx, 
+         shortstopx, 
+         longorder, 
+         shortorder, 
+         nanpin_cancel, 
+         nanpin_order, 
+         doten,
+         bot_type
+         ) VALUES (
+         ?, 
+         '', '', '0', '250', '1', '1', '0.0007', '250', '28', '1.25', '50', '0', '40', '80', '28', '80', '28', '1', '5', '1999', '1999', '2', '2', '0', '0', '1', '1'
          )        
         `;
         var params = [];
