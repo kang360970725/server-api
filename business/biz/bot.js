@@ -3,6 +3,7 @@
 let dao = require("../../db_config/dao"),
     data = require('../../utils/data'),
     botDao = require('../../business/dao/bot'),
+    integralDao = require('../../business/dao/integral'),
     businessDao = require('../../business/dao/business');
 
 class biz {
@@ -22,7 +23,7 @@ class biz {
             let _userparam_futures = await params.redis.get(params.currentUser.account + "_userparam_futures")
             let btcPrice = await params.redis.get("btcPrice");
             if (_userassets && _userparam && btcPrice
-                // && _userassets_futures && _userparam_futures
+            // && _userassets_futures && _userparam_futures
             ) {
                 _userassets = JSON.parse(_userassets);
                 _userparam = JSON.parse(_userparam);
@@ -104,16 +105,16 @@ class biz {
             if (_userassets && _userassets_futures) {
                 _userassets = JSON.parse(_userassets);
                 _userassets_futures = JSON.parse(_userassets_futures);
-                bot.bot_balance = _userassets.bot_balance + _userassets_futures.bot_balance;
-                bot.bot_lirun = _userassets.bot_lirun + _userassets_futures.bot_lirun;
-                bot.bot_prevDeposited = _userassets.bot_prevDeposited + _userassets_futures.bot_prevDeposited;
+                bot.bot_balance = _userassets.bot_balance ? _userassets.bot_balance : 0 + _userassets_futures.bot_balance ? _userassets_futures.bot_balance : 0;
+                bot.bot_lirun = _userassets.bot_lirun ? _userassets.bot_lirun : 0 + _userassets_futures.bot_lirun ? _userassets_futures.bot_lirun : 0
+                bot.bot_prevDeposited = _userassets.bot_prevDeposited ? _userassets.bot_prevDeposited : 0 + _userassets_futures.bot_prevDeposited ? _userassets_futures.bot_prevDeposited : 0
             } else {
                 let queryBot = await botDao.getBots(connection, params);
                 if (queryBot && queryBot.length > 0) {
                     for (let item of queryBot) {
-                        bot.bot_balance += item.bot_balance;
-                        bot.bot_lirun += item.bot_lirun;
-                        bot.bot_prevDeposited += item.bot_prevDeposited;
+                        bot.bot_balance = bot.bot_balance ? bot.bot_balance : 0 + item.bot_balance ? item.bot_balance : 0;
+                        bot.bot_lirun = bot.bot_lirun ? bot.bot_lirun : 0 + item.bot_lirun ? item.bot_lirun : 0;
+                        bot.bot_prevDeposited = bot.bot_prevDeposited ? bot.bot_prevDeposited : 0 + item.bot_prevDeposited ? item.bot_prevDeposited : 0;
                     }
                 } else {
                     bot.bot_balance = 0;
@@ -136,6 +137,17 @@ class biz {
             bot.LastMonth = 0;
             if (lastMonth[0] && lastMonth[0].bonus_base) {
                 bot.LastMonth = lastMonth[0].bonus_base;
+            }
+
+            let Integral = integralDao.queryIntegral(connection, params);
+
+            bot.Integral = {
+                integral_current: 0,
+                integral_level: 0,
+                integral_total: 0
+            };
+            if (Integral && Integral[0]) {
+                bot.Integral = Integral[0];
             }
             return bot;
         })

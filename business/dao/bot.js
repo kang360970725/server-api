@@ -337,7 +337,7 @@ class dao {
                 ) e
             
             GROUP BY
-                DAY ,bot_type) c where c.DAY = DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d'),INTERVAL ? ${day}) ) a ,
+                DAY ) c where c.DAY = DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d'),INTERVAL ? ${day}) ) a ,
             (select * from (SELECT
                 sum(bonus_base) as bonus_base,
                 DATE_FORMAT(e.bot_set_time, '%Y-%m-%d') AS DAY
@@ -354,7 +354,7 @@ class dao {
                 ) e
             
             GROUP BY
-                DAY ,bot_type) c where c.DAY = DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d'),INTERVAL ? ${day}) ) b ;
+                DAY ) c where c.DAY = DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d'),INTERVAL ? ${day}) ) b ;
         `;
         params.push(query.day1);
         params.push(query.day2);

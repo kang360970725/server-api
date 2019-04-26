@@ -172,6 +172,13 @@
         "bot_prevDeposited": 5.25065958, 充值本金
         "yesterday": 0,昨日收益
         "LastMonth": 0.8004299400000003 本月收益
+        "Integral":{
+            "id": 17,
+            "user_uuid": "001332", 用户编号
+            "integral_total": 240, 历史总积分
+            "integral_current": 0, 当前余额积分
+            "integral_level": 0 积分等级
+        }
     },
     "date": "2019-04-25T08:56:26.728Z"
 }

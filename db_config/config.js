@@ -1,5 +1,14 @@
 module.exports =
     {
+        // mysql: {
+        //     host: '39.98.60.62',
+        //     // host: '127.0.0.1',
+        //     user: 'root',
+        //     password: 'MyNewPass4!',
+        //     database:'dev_platform', // 前面建的user表位于这个数据库中
+        //     // database:'member_platform', // 前面建的user表位于这个数据库中
+        //     port: 3306
+        // }
         mysql: {
             host: '47.52.29.161',
             // host: '127.0.0.1',
