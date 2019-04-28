@@ -42,7 +42,8 @@ class ctrl {
         }
         if ("registerInviterIntegral" == params.key
             || "registerIntegral" == params.key
-            || "buyProductIntegraRatio" == params.key) {
+            || "buyProductIntegraRatio" == params.key
+            || "btcurl" == params.key) {
             params.redis.set(params.key, params.value);
         }
     }

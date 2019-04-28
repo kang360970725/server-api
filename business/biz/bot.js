@@ -38,7 +38,7 @@ class biz {
 
             let queryPool = await botDao.getPoolList(connection, params);
             let pollList = []
-            if (queryPool && queryPool.length > 0) {
+            if (queryPool && queryPool.length > 0 && queryPool[0].pools) {
                 queryPool = queryPool[0].pools.split(',');
                 for (var i in queryPool) {
                     let pool = await params.redis.get("poolinfo_" + queryPool[i])
@@ -213,7 +213,7 @@ class biz {
         return await dao.manageConnection(async (connection) => {
             //获取官方推荐参数
             let result = await botDao.getBotPram(connection, params);
-            for(let i in result){
+            for (let i in result) {
                 delete result[i].secret;
             }
             return result;

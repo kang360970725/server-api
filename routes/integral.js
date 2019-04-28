@@ -85,7 +85,7 @@
  * @apiVersion 1.0.0
  *
  *
- * @apiParam {String} key  配置key值 不可空 inviterIntegral 邀请注册积分 integral 注册积分 buyProductIntegraRatio 购买产品价格与积分比例
+ * @apiParam {String} key  配置key值 不可空 inviterIntegral 邀请注册积分 integral 注册积分 buyProductIntegraRatio 购买产品价格与积分比例  btcurl 比特币支付地址
  * @apiParam {String} value  活动名称 不可空
  *
  * @apiParamExample {json} 请求参数:

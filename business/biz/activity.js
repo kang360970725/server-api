@@ -181,12 +181,13 @@ class biz {
             let integra = 0;
             try {
                 unionResult = await activityDao.addUserUnion(connection, params);
-
+                let BTC = 0;
                 if (unionResult && unionResult.insertId) {
                     let price = info[0].info_value;
+
                     if (activityInfo && activityInfo.length > 0 && btcPrice) {
                         btcPrice.originalprice = price;
-                        let BTC = 0;
+
                         for (let item of activityInfo) {
                             //免费
                             if (item.info_type == 2) {
@@ -212,12 +213,6 @@ class biz {
                                 integra += parseInt(item.info_value);
                             }
                         }
-
-                        BTC = new Decimal(price).div(new Decimal(btcPrice.huobi)).toNumber();
-                        let ratio = await params.redis.get("buyProductIntegraRatio");
-                        integra += parseInt(new Decimal(price).mul(new Decimal(ratio)).toNumber());
-
-
                         params.type = 0;
                         params.value = params.activityId;
                         params.isValid = 0;
@@ -226,32 +221,37 @@ class biz {
                         if (!activityResult || !activityResult.insertId) {
                             throw exception.BusinessException("提交失败", 200);
                         }
-
-                        params.id = unionResult.insertId;
-                        params.type = -1;
-                        params.price = price;
-                        btcPrice.nowPrice = price;
-                        btcPrice.BTCPrice = BTC;
-                        let renewResult = await activityDao.addRenew(connection, params);
-                        if (!renewResult || !renewResult.insertId) {
-                            throw exception.BusinessException("提交失败", 200);
-                        }
-
-                        btcPrice.id = renewResult.insertId;
-                        params.redis.set("byRenewintegra" + btcPrice.id, integra);
-                        params.redis.set("byRenewintegraUserId" + btcPrice.id, params.currentUser.uuid);
-                        params.redis.set("byRenewintegraName" + btcPrice.id, main[0].activity_name);
-                        params.redis.set("byRenewTime" + btcPrice.id, type);
-                        let sysconfig = await sysDao.query(connection, {type: "sys_img", pageIndex: 0, pageSize: 1})
-                        if (sysconfig && sysconfig[0]) {
-                            btcPrice.img = sysconfig[0].sys_value;
-                        } else {
-                            btcPrice.img = "";
-                        }
-
-                    } else {
-                        throw exception.BusinessException("提交失败", 200)
                     }
+
+                    BTC = new Decimal(price).div(new Decimal(btcPrice.huobi)).toNumber();
+                    let ratio = await params.redis.get("buyProductIntegraRatio");
+                    integra += parseInt(new Decimal(price).mul(new Decimal(ratio)).toNumber());
+
+                    params.id = unionResult.insertId;
+                    params.type = -1;
+                    params.price = price;
+                    btcPrice.nowPrice = price;
+                    btcPrice.BTCPrice = BTC;
+                    let renewResult = await activityDao.addRenew(connection, params);
+                    if (!renewResult || !renewResult.insertId) {
+                        throw exception.BusinessException("提交失败", 200);
+                    }
+
+                    btcPrice.id = renewResult.insertId;
+                    params.redis.set("byRenewintegra" + btcPrice.id, integra);
+                    params.redis.set("byRenewintegraUserId" + btcPrice.id, params.currentUser.uuid);
+                    params.redis.set("byRenewintegraName" + btcPrice.id, main[0].activity_name);
+                    params.redis.set("byRenewTime" + btcPrice.id, type);
+
+
+                    let sysconfig = await sysDao.query(connection, {type: "sys_img", pageIndex: 0, pageSize: 1})
+                    if (sysconfig && sysconfig[0]) {
+                        btcPrice.img = sysconfig[0].sys_value;
+                    } else {
+                        btcPrice.img = "";
+                    }
+                    btcPrice.url = await params.redis.get("btcurl");
+
                 } else {
                     throw exception.BusinessException("提交失败", 200)
                 }
@@ -308,7 +308,7 @@ class biz {
                         } else {
                             return;
                         }
-                        userDao.uopdateuserEndtime(connection,{uuid:userId,time:time});
+                        userDao.uopdateuserEndtime(connection, {uuid: userId, time: time});
                         integralUtil.recordIntegral(connection, userId, parseInt(integra), `购买产品审核通过[${name} ${time}个月](${result[0].data_time})`);
 
                         params.redis.delete("byRenewintegra");

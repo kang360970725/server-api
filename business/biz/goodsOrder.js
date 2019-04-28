@@ -6,7 +6,7 @@ let dao = require("../../db_config/dao"),
     goodsDao = require('../../business/dao/goods'),
     exception = require('../../utils/exception.js'),
     integralUtil = require('../../utils/integralUtil.js'),
-    goodsOrderDao = require('../../business/dao/goodsorder.js');
+    goodsOrderDao = require('../../business/dao/goodsOrder.js');
 
 var uuid = require('node-uuid');
 
@@ -21,7 +21,7 @@ class biz {
             }
             params.goodPrice = goods[0].price
             params.payPrice = goods[0].price
-            await integralUtil.recordIntegral(connection,params.userId,-params.payPrice,`购买商品[${goods[0].name}](${goods[0].good_id})`);
+            await integralUtil.recordIntegral(connection, params.userId, -params.payPrice, `购买商品[${goods[0].name}](${goods[0].good_id})`);
             return await goodsOrderDao.addGoodsOrder(connection, params);
         })
     }
