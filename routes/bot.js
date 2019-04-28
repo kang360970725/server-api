@@ -85,6 +85,7 @@
  * @apiVersion 1.0.0
  *
  * @apiParam {String} limit  多少个小时以内的数据
+ * @apiParam {String} botType  机器人类型 0现货 1期货
  *
  * @apiSuccessExample 成功返回结果:
  *  HTTP/1.1 200 OK

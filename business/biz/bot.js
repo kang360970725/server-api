@@ -30,8 +30,8 @@ class biz {
                 _userparam_futures = JSON.parse(_userparam_futures);
                 _userassets_futures = JSON.parse(_userassets_futures);
                 btcPrice = JSON.parse(btcPrice);
-                queryBot.push(await biz.buildbot(_userparam, btcPrice, _userassets, 0));
-                // queryBot.push(await biz.buildbot(_userparam_futures, btcPrice, _userassets_futures, 1));
+                queryBot.push(await biz.buildbot(_userparam, btcPrice, _userassets, 1));
+                // queryBot.push(await biz.buildbot(_userparam_futures, btcPrice, _userassets_futures, 0));
             } else {
                 queryBot = await botDao.getBots(connection, params);
             }
@@ -149,6 +149,8 @@ class biz {
             if (Integral && Integral[0]) {
                 bot.Integral = Integral[0];
             }
+            //积分换算等级
+            bot.Integral.integral_level = parseInt(bot.Integral.integral_total / 100);
             return bot;
         })
     }

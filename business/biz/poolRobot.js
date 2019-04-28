@@ -116,7 +116,7 @@ class biz {
                         _userparam: JSON.parse(_userparam),
                         btcPrice: JSON.parse(btcPrice),
                     }
-                    saveParma._userparam.bot_type = 0;
+                    saveParma._userparam.bot_type = 1;
                     for (let tableName of tables) {
                         saveParma.tableName = tableName,
                         botDao.saveRecord(connection, saveParma)
