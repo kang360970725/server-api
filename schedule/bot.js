@@ -8,10 +8,10 @@ let str = require("../utils/stringHelper"),
     activityBiz = require('../business/biz/activity'),
     schedule = require("node-schedule"),
     poolBiz = require('../business/biz/poolRobot.js');
-const redis = require('../utils/redisClient');
+const redis = require('../utils/redisClientCluster');
 const dbConfig = require('../db_config/config');
 
-const rediss = redis.redis(dbConfig.redis);
+const rediss = redis.redis(dbConfig.redis_cluster);
 // // 每天14点 0分 2秒执行
 schedule.scheduleJob("2 0 13 * * *", function () {
     ctrl.poollist(rediss);
@@ -45,6 +45,11 @@ schedule.scheduleJob("*/1 * * * *", function () {
 // 4
 schedule.scheduleJob("*/1 * * * *", function () {
     ctrl.botParam(rediss, 4);
+});
+
+// 期货现货
+schedule.scheduleJob("*/1 * * * *", function () {
+    ctrl.cryptocurrencies(rediss);
 });
 
 schedule.scheduleJob("*/20 * * * *", function () {
@@ -98,6 +103,10 @@ class ctrl {
 
     static async saveBotParam(redis) {
         poolBiz.saveBotParam({redis: redis});
+    }
+
+    static async cryptocurrencies(redis) {
+        poolBiz.saveCryptocurrencies({redis: redis});
     }
 }
 

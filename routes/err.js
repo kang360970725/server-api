@@ -4,7 +4,7 @@
  * @apiGroup err
  * @apiVersion 1.0.0
  *
- * @apiParam {String} key  错误key  boterr 机器人参数接口错误 poolerr 机器人矿池接口错误 BTCerr BTC接口错误
+ * @apiParam {String} key  错误key  boterr 机器人参数接口错误 poolerr 机器人矿池接口错误 BTCerr BTC接口错误 cryptocurrencieserr 行情错误
  * @apiParam {String} pageSize 数据量 可空
  * @apiParam {String} pageIndex 0开始 页数 可空
  *

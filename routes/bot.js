@@ -279,8 +279,8 @@
  */
 
 /**
- * @api {post} V1/bot/setParameters 修改会员机器人参数
- * @apiName v1/bot/setParameters
+ * @api {post} V1/bot/exitBotParm 修改会员机器人参数
+ * @apiName v1/bot/exitBotParm
  * @apiGroup bot
  * @apiVersion 1.0.0
  *

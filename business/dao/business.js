@@ -572,7 +572,6 @@ class dao {
         })
     }
 
-
     //后台设置热门用户
     static async setHotUsers(connection, query) {
         var params = [];

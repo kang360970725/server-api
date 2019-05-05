@@ -2,7 +2,7 @@ const Koa = require('koa')
 const app = new Koa()
 const views = require('koa-views')
 const session = require('koa-session');
-const redis = require('./utils/redisClient');
+const redis = require('./utils/redisClientCluster');
 const dbConfig = require('./db_config/config');
 const json = require('koa-json')
 const onerror = require('koa-onerror')
@@ -47,7 +47,7 @@ const CONFIG = {
     renew: false,  //(boolean) renew session when session is nearly expired,
 };
 const RedisClient = redis.RedisClient;
-const rediss  = redis.redis(dbConfig.redis);
+const rediss  = redis.redis(dbConfig.redis_cluster);
 app.use(session(CONFIG, app));
 let whiteList = dbConfig.whiteList;
 app.use(async (ctx, next) => {

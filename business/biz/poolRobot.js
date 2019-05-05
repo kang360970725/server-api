@@ -99,6 +99,29 @@ class biz {
         })
     }
 
+    static async cryptocurrencies(params, redis) {
+        let paramsUrl = params.url == 2 ? "" : "?column_id=2";
+        let url = `https://api.worldbtc.net/markets/cryptocurrencies/info/${paramsUrl}`;
+        let requestparam = {
+            url: url,
+            method: "GET",
+            json: true,
+            body: JSON.stringify("")
+        }
+        return await new Promise(async (resolve, reject) => {
+            request(requestparam, function (error, response, body) {
+                if (error) return reject(error);
+                if (response.statusCode != 200) return reject(response);
+                resolve(body);
+            });
+        }).catch(async (error) => {
+            let errMessage = {param: requestparam, error: error};
+            await redis.lpush("cryptocurrencieserr", JSON.stringify(errMessage), -1);
+            await redis.ltrim("cryptocurrencieserr", 0, 500);
+            console.log(await redis.lrange("cryptocurrencieserr", 0, 10))
+        })
+    }
+
 
     static async saveBotParam(params) {
         console.log("开始saveBotParam")
@@ -119,7 +142,7 @@ class biz {
                     saveParma._userparam.bot_type = 1;
                     for (let tableName of tables) {
                         saveParma.tableName = tableName,
-                        botDao.saveRecord(connection, saveParma)
+                            botDao.saveRecord(connection, saveParma)
                     }
                     botDao.saveRotBot(connection, saveParma);
                 }
@@ -187,6 +210,20 @@ class biz {
             }
         })
         console.log("结束usersBotassets")
+    }
+
+
+    static async saveCryptocurrencies(params) {
+        console.log("开始cryptocurrencies")
+        //期货
+        let parameter = await biz.cryptocurrencies(params, params.redis);
+        params.redis.set("cryptocurrencies0", JSON.stringify(parameter));
+
+        //现货
+        params.url = 2;
+        parameter = await biz.cryptocurrencies(params, params.redis);
+        params.redis.set("cryptocurrencies1", JSON.stringify(parameter));
+        console.log("结束cryptocurrencies")
     }
 
     static async sliceArr(array, count) {
