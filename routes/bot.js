@@ -85,7 +85,7 @@
  * @apiVersion 1.0.0
  *
  * @apiParam {String} limit  多少个小时以内的数据
- * @apiParam {String} botType  机器人类型 0现货 1期货
+ * @apiParam {String} botType  机器人类型 0  期货   1 现货
  *
  * @apiSuccessExample 成功返回结果:
  *  HTTP/1.1 200 OK
@@ -232,7 +232,6 @@
  */
 
 
-
 /**
  * @api {get} V1/bot/getExchange 获取会员交易所设置数据
  * @apiName v1/bot/getExchange
@@ -365,6 +364,72 @@
             "bot_type": "0"                 //参数关联的机器人类型
         }
     ],
+    "date": "2019-04-26T11:10:28.197Z"
+}
+ */
+
+
+/**
+ * @api {get} v1/bot/getcryptocurrencies 获取行情数据
+ * @apiName v1/bot/getcryptocurrencies
+ * @apiGroup bot
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {String} type 行情类型   0 期货  1 现货  (不可空)
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ *
+ * {
+    "status": 0,
+    "message": "successful",
+    "data": [
+    {
+        "id": 974051,
+        "created": "2019-05-05T11:03:44.279592+08:00",
+        "market_cap": "9999.00000000",
+        "price": "5729.50000000",
+        "volume_24h": "3197002054.00000000", 24小时交易量
+        "circulating_supply": "9999.00000000",
+        "change_24_absolute": "-31.00000000", 24小时变化量
+        "change_24h": -0.0053814775, 24小时变化率
+        "high_price_24": "5850.00000000", 24小时高点
+        "low_price_24": "5502.00000000",24小时低点
+        "utc_timestamp": 1557025419,
+        "pair_currency": "USD",
+        "pair_currency_fk": 1,
+        "coin_type": null,
+        "creator": null,
+        "cryptocurrency": {
+            "id": 1,
+            "en_name": "BTC",名称
+            "zh_name": "比特币",
+            "logo": "https://api.worldbtc.net/media/cryptocurrency/logos/BTC.png",
+            "logo_thumbnail_url": "https://api.worldbtc.net/media/CACHE/images/cryptocurrency/logos/BTC/803d42f3ee8c24b5f63438b3c6ddd50f.png",
+            "internal_no": "000001",
+            "creator": 5
+        },
+        "exchange": {
+            "id": 1,
+            "en_name": "BitMEX", 交易所
+            "zh_name": "期货交易所",
+            "logo": "https://api.worldbtc.net/media/exchange/logos/WechatIMG248.jpeg",
+            "logo_thumbnail_url": "https://api.worldbtc.net/media/CACHE/images/exchange/logos/WechatIMG248/c053b4860c2f8108b7b4f29d24664f96.png",
+            "official_website": "https://www.bitmex.com/register/DBUO2E",
+            "zone": "",
+            "internal_no": "000001",
+            "creator": 5
+        },
+        "price_direction": -1,
+        "row_key": "1-1-USD",
+        "watch_info": {
+            "in_watch_list": false,
+            "watch_id": null,
+            "watch_count": 2
+        }
+    }
+    ......
+],
     "date": "2019-04-26T11:10:28.197Z"
 }
  */

@@ -29,7 +29,7 @@ class ctrl {
         if (!params.currentUser) {
             throw exception.PowerException()
         }
-        if(!params.bot_type){
+        if (!params.bot_type) {
             throw exception.ParamException('机器人类型[bot_type]不能为空')
         }
         params.account = params.currentUser.account;
@@ -48,7 +48,7 @@ class ctrl {
         if (!params.currentUser) {
             throw exception.PowerException()
         }
-        if(!params.bot_type){
+        if (!params.bot_type) {
             throw exception.ParamException('机器人类型[bot_type]不能为空')
         }
         return await botBiz.exitExchange(params)
@@ -63,7 +63,7 @@ class ctrl {
     }
 
     static async getParametersRec(params) {  //获取官方推荐参数
-        if(!params.bot_type){
+        if (!params.bot_type) {
             throw exception.ParamException('机器人类型[bot_type]不能为空')
         }
         params.account = 'admin';
@@ -137,6 +137,16 @@ class ctrl {
         }
         return await botBiz.getAccRecordList(params)
     }
+
+    static async getcryptocurrencies(params) {
+        if (str.isEmpty(params.type)) {
+            throw exception.ParamException('类型[type]不能为空')
+        }
+        let result = await params.redis.get("cryptocurrencies" + params.type)
+        return JSON.parse(result)
+    }
+
+
 }
 
 module.exports = ctrl;
