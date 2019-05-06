@@ -42,67 +42,37 @@ module.exports =
             host: '47.244.142.147',   // Redis host
             prefix: 'sam:', //存诸前缀
             password:"mypwd!54321",
-            ttl: 60 * 60 * 24 * 1000 * 1.5,  //过期时间
             db: 0,
-            family: 4, // ip地址族
-            keepAlive: 0.1 * (1000 * 60 * 60), //保持连接24h
-            connectTimeout: 1000 * 5, //连接超时
-            readOnly: false
         },{
             port: 7006,          // Redis port
             host: '47.244.142.147',   // Redis host
             prefix: 'sam:', //存诸前缀
             password:"mypwd!54321",
-            ttl: 60 * 60 * 24 * 1000 * 1.5,  //过期时间
             db: 0,
-            family: 4, // ip地址族
-            keepAlive: 0.1 * (1000 * 60 * 60), //保持连接24h
-            connectTimeout: 1000 * 5, //连接超时
-            readOnly: false
         },{
             port: 7001,          // Redis port
             host: '47.52.16.255',   // Redis host
             prefix: 'sam:', //存诸前缀
             password:"mypwd!54321",
-            ttl: 60 * 60 * 24 * 1000 * 1.5,  //过期时间
             db: 0,
-            family: 4, // ip地址族
-            keepAlive: 0.1 * (1000 * 60 * 60), //保持连接24h
-            connectTimeout: 1000 * 5, //连接超时
-            readOnly: false
         },{
             port: 7002,          // Redis port
             host: '47.52.16.255',   // Redis host
             prefix: 'sam:', //存诸前缀
             password:"mypwd!54321",
-            ttl: 60 * 60 * 24 * 1000 * 1.5,  //过期时间
             db: 0,
-            family: 4, // ip地址族
-            keepAlive: 0.1 * (1000 * 60 * 60), //保持连接24h
-            connectTimeout: 1000 * 5, //连接超时
-            readOnly: false
         },{
             port: 7003,          // Redis port
             host: '47.52.16.255',   // Redis host
             prefix: 'sam:', //存诸前缀
             password:"mypwd!54321",
-            ttl: 60 * 60 * 24 * 1000 * 1.5,  //过期时间
             db: 0,
-            family: 4, // ip地址族
-            keepAlive: 0.1 * (1000 * 60 * 60), //保持连接24h
-            connectTimeout: 1000 * 5, //连接超时
-            readOnly: false
         },{
             port: 7004,          // Redis port
             host: '47.52.16.255',   // Redis host
             prefix: 'sam:', //存诸前缀
             password:"mypwd!54321",
-            ttl: 60 * 60 * 24 * 1000 * 1.5,  //过期时间
             db: 0,
-            family: 4, // ip地址族
-            keepAlive: 0.1 * (1000 * 60 * 60), //保持连接24h
-            connectTimeout: 1000 * 5, //连接超时
-            readOnly: false
         }],
 
         port:{

@@ -176,7 +176,7 @@ class biz {
             }
             params.isValid = -1;
             let btcPriceResult = await params.redis.get("btcPrice");
-            let btcPrice = JSON.parse(btcPriceResult).btcPrice;
+            let btcPrice = JSON.parse(btcPriceResult).btcPrice.BTC;
             let unionResult
             let integra = 0;
             try {
@@ -410,23 +410,20 @@ class biz {
                 let result = {};
                 if (body.success) {
                     for (let item of body.data) {
-                        if (item.currency == "BTC") {
+                        if (item.currency == "BTC" || item.currency == "ETH") {
+                            result[item.currency] = {};
                             let list = item.exchangeList;
                             for (let i of list) {
-                                if (i.chartKey == 'HUOBIPROBTCUSDT') {
-                                    result["huobi"] = i.usdPrice;
-
+                                if (i.market == 'huobipro') {
+                                    result[item.currency]["huobi"] = i.usdPrice;
                                 }
-                                if (i.chartKey == 'OKEXBTCUSDT') {
-                                    result["OKEx"] = i.usdPrice;
-
+                                if (i.market == 'okex') {
+                                    result[item.currency]["OKEx"] = i.usdPrice;
                                 }
-                                if (i.chartKey == 'BINANCEBTCUSDT') {
-                                    result["Binance"] = i.usdPrice;
-
+                                if (i.market == 'binance') {
+                                    result[item.currency]["Binance"] = i.usdPrice;
                                 }
                             }
-                            break;
                         }
                     }
                 }

@@ -100,8 +100,7 @@ class biz {
     }
 
     static async cryptocurrencies(params, redis) {
-        let paramsUrl = params.url == 2 ? "" : "?column_id=2";
-        let url = `https://api.worldbtc.net/markets/cryptocurrencies/info/${paramsUrl}`;
+        let url = `https://api.worldbtc.net/markets/cryptocurrencies/info/?column_id=${params.url}`;
         let requestparam = {
             url: url,
             method: "GET",
@@ -160,10 +159,12 @@ class biz {
                 user.url = 1;
                 console.log(`获取usersBotParam:${params.index}` + user.account)
                 let param = await biz.userBotParam(user, params.redis)
-                param.now = new Date();
-                let paramStr = JSON.stringify(param)
-                console.log(`获取usersBotParamresult:${params.index}` + paramStr)
-                params.redis.set(user.account + "_userparam", paramStr)
+                if (param) {
+                    param.now = new Date();
+                    let paramStr = JSON.stringify(param)
+                    console.log(`获取usersBotParamresult:${params.index}` + paramStr)
+                    params.redis.set(user.account + "_userparam", paramStr)
+                }
             }
         }
         console.log("结束usersBotParam" + params.index)
@@ -216,14 +217,28 @@ class biz {
     static async saveCryptocurrencies(params) {
         console.log("开始cryptocurrencies")
         //期货
-        let parameter = await biz.cryptocurrencies(params, params.redis);
-        params.redis.set("cryptocurrencies0", JSON.stringify(parameter));
-
+        params.url = 1;
+        await this.buildcry(params);
         //现货
         params.url = 2;
-        parameter = await biz.cryptocurrencies(params, params.redis);
-        params.redis.set("cryptocurrencies1", JSON.stringify(parameter));
+        await this.buildcry(params);
         console.log("结束cryptocurrencies")
+    }
+
+    static async buildcry(params) {
+        let parameters = await biz.cryptocurrencies(params, params.redis);
+        let type = params.url == 2 ? 0 : 1;
+        let tocurrencie = {};
+        if (parameters || parameters.length > 0) {
+            for (let temp of parameters) {
+                if (tocurrencie[temp.exchange.en_name]) {
+                    tocurrencie[temp.exchange.en_name].push(temp);
+                } else {
+                    tocurrencie[temp.exchange.en_name] = [temp];
+                }
+            }
+        }
+        params.redis.set(`cryptocurrencies${type}`, JSON.stringify(tocurrencie));
     }
 
     static async sliceArr(array, count) {

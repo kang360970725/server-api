@@ -527,9 +527,16 @@
     "message": "successful",
     "data": {
         "btcPrice": {
-            "Binance": 5255.87, 币安
-            "huobi": 5256.98,火币
-            "OKEx": 5257.2 OK
+            "BTC": {
+                "Binance": 5798.21,
+                "huobi": 5799.55,
+                "OKEx": 5798.9
+            },
+            "ETH": {
+                "OKEx": 164.22,
+                "huobi": 164.23,
+                "Binance": 164.19
+            }
         },
         "quotationBTCPrice": {
             "id": 816115,
