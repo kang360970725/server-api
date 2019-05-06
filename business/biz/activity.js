@@ -12,8 +12,16 @@ let dao = require("../../db_config/dao"),
     deleteDao = require('../../business/dao/delete.js'),
     userDao = require('../../business/dao/business.js'),
     sysDao = require('../../business/dao/sysConfig.js');
+const redis = require('../../utils/redisClientCluster').redis(require('../../db_config/config').redis_cluster);
 
 var uuid = require('node-uuid');
+
+async function builderrMessage(errKey, requestparam, error) {
+    let errMessage = {param: requestparam, error: error};
+    await redis.lpush(errKey, JSON.stringify(errMessage), -1);
+    await redis.ltrim(errKey, 0, 500);
+    console.log(await redis.lrange(errKey, 0, 10))
+}
 
 class biz {
     //获取活动信息
@@ -429,11 +437,8 @@ class biz {
                 }
                 resolve(result);
             });
-        }).catch(async (error) => {
-            let errMessage = {param: requestparam, error: error};
-            await redis.lpush("BTCerr", JSON.stringify(errMessage), -1);
-            await redis.ltrim("BTCerr", 0, 500);
-            console.log(await redis.lrange("BTCerr", 0, 10))
+        }).catch((error) => {
+            builderrMessage("BTCerr", requestparam, error);
         })
     }
 
@@ -460,10 +465,7 @@ class biz {
                 resolve(result);
             });
         }).catch(async (error) => {
-            let errMessage = {param: requestparam, error: error};
-            await redis.lpush("qBTCerr", errMessage, -1);
-            await redis.ltrim("qBTCerr", 0, 500);
-            console.log(await redis.lrange("qBTCerr", 0, 10))
+            builderrMessage("qBTCerr", requestparam, error);
         })
     }
 

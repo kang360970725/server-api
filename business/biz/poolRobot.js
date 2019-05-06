@@ -62,10 +62,7 @@ class biz {
                 resolve(body);
             });
         }).catch(async (error) => {
-            let errMessage = {param: requestparam, error: error};
-            await redis.lpush("poolerr", JSON.stringify(errMessage), -1);
-            await redis.ltrim("poolerr", 0, 500);
-            console.log(await redis.lrange("poolerr", 0, 10))
+            builderrMessage("poolerr", requestparam, error);
         })
     }
 
@@ -92,10 +89,7 @@ class biz {
                 resolve(body);
             });
         }).catch(async (error) => {
-            let errMessage = {param: requestparam, error: error};
-            await redis.lpush("boterr", JSON.stringify(errMessage), -1);
-            await redis.ltrim("boterr", 0, 500);
-            console.log(await redis.lrange("boterr", 0, 10))
+            builderrMessage("boterr", requestparam, error);
         })
     }
 
@@ -114,10 +108,7 @@ class biz {
                 resolve(body);
             });
         }).catch(async (error) => {
-            let errMessage = {param: requestparam, error: error};
-            await redis.lpush("cryptocurrencieserr", JSON.stringify(errMessage), -1);
-            await redis.ltrim("cryptocurrencieserr", 0, 500);
-            console.log(await redis.lrange("cryptocurrencieserr", 0, 10))
+            builderrMessage("cryptocurrencieserr", requestparam, error);
         })
     }
 

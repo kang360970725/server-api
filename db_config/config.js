@@ -38,18 +38,6 @@ module.exports =
             readOnly: false
         },
         redis_cluster : [{
-            port: 7005,          // Redis port
-            host: '47.244.142.147',   // Redis host
-            prefix: 'sam:', //存诸前缀
-            password:"mypwd!54321",
-            db: 0,
-        },{
-            port: 7006,          // Redis port
-            host: '47.244.142.147',   // Redis host
-            prefix: 'sam:', //存诸前缀
-            password:"mypwd!54321",
-            db: 0,
-        },{
             port: 7001,          // Redis port
             host: '47.52.16.255',   // Redis host
             prefix: 'sam:', //存诸前缀
@@ -70,6 +58,18 @@ module.exports =
         },{
             port: 7004,          // Redis port
             host: '47.52.16.255',   // Redis host
+            prefix: 'sam:', //存诸前缀
+            password:"mypwd!54321",
+            db: 0,
+        },{
+            port: 7005,          // Redis port
+            host: '47.244.142.147',   // Redis host
+            prefix: 'sam:', //存诸前缀
+            password:"mypwd!54321",
+            db: 0,
+        },{
+            port: 7006,          // Redis port
+            host: '47.244.142.147',   // Redis host
             prefix: 'sam:', //存诸前缀
             password:"mypwd!54321",
             db: 0,

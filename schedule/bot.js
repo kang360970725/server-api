@@ -8,56 +8,55 @@ let str = require("../utils/stringHelper"),
     activityBiz = require('../business/biz/activity'),
     schedule = require("node-schedule"),
     poolBiz = require('../business/biz/poolRobot.js');
-const redis = require('../utils/redisClientCluster');
+const redis = require('../utils/redisClientCluster').redis(require('../db_config/config').redis_cluster);
 const dbConfig = require('../db_config/config');
 
-const rediss = redis.redis(dbConfig.redis_cluster);
 // // 每天14点 0分 2秒执行
 schedule.scheduleJob("2 0 13 * * *", function () {
-    ctrl.poollist(rediss);
+    ctrl.poollist(redis);
 });
 
 // 每 10秒执行
 schedule.scheduleJob("*/10 * * * * *", function () {
-    ctrl.BTCPrice(rediss);
+    ctrl.BTCPrice(redis);
 });
 
 // 0
 schedule.scheduleJob("*/1 * * * *", function () {
-    ctrl.botParam(rediss, 0);
+    ctrl.botParam(redis, 0);
 });
 
 // 1
 schedule.scheduleJob("*/1 * * * *", function () {
-    ctrl.botParam(rediss, 1);
+    ctrl.botParam(redis, 1);
 });
 
 // 2
 schedule.scheduleJob("*/1 * * * *", function () {
-    ctrl.botParam(rediss, 2);
+    ctrl.botParam(redis, 2);
 });
 
 // 3
 schedule.scheduleJob("*/1 * * * *", function () {
-    ctrl.botParam(rediss, 3);
+    ctrl.botParam(redis, 3);
 });
 
 // 4
 schedule.scheduleJob("*/1 * * * *", function () {
-    ctrl.botParam(rediss, 4);
+    ctrl.botParam(redis, 4);
 });
 
 // 期货现货
 schedule.scheduleJob("*/1 * * * *", function () {
-    ctrl.cryptocurrencies(rediss);
+    ctrl.cryptocurrencies(redis);
 });
 
 schedule.scheduleJob("*/20 * * * *", function () {
-    ctrl.botassets(rediss);
+    ctrl.botassets(redis);
 });
 
 schedule.scheduleJob("*/60 * * * *", function () {
-    ctrl.saveBotParam(rediss);
+    ctrl.saveBotParam(redis);
 });
 
 

@@ -2,7 +2,7 @@ const Koa = require('koa')
 const app = new Koa()
 const views = require('koa-views')
 const session = require('koa-session');
-const redis = require('./utils/redisClientCluster');
+const redis = require('./utils/redisClientCluster').redis(require('./db_config/config').redis_cluster);
 const dbConfig = require('./db_config/config');
 const json = require('koa-json')
 const onerror = require('koa-onerror')
@@ -46,13 +46,11 @@ const CONFIG = {
     rolling: false,  //在每次请求时强行设置cookie，这将重置cookie过期时间（默认：false）
     renew: false,  //(boolean) renew session when session is nearly expired,
 };
-const RedisClient = redis.RedisClient;
-const rediss  = redis.redis(dbConfig.redis_cluster);
 app.use(session(CONFIG, app));
 let whiteList = dbConfig.whiteList;
 app.use(async (ctx, next) => {
     let origin;
-    if(origin  = ctx.request.header.origin){
+    if (origin = ctx.request.header.origin) {
         origin = origin.toString();
     }
     if (origin && ctx.request.header.origin !== ctx.origin && whiteList.includes(origin.indexOf(":") != -1 ? origin.split("//")[1] : origin)) {
@@ -75,7 +73,7 @@ app.use(async (ctx, next) => {
     const defaultMessage = 'Internal Server Error';
     try {
         ctx.set('X-Powered-By', 'koa@2');
-        ctx.redis = rediss;
+        ctx.redis = redis;
         let result = await next();
         if (ctx.status === 404 && !ctx.response.body) {
             ctx.throw(404, 'Not Found', {code: 404});
