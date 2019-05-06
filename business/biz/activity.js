@@ -404,7 +404,7 @@ class biz {
             body: JSON.stringify("")
         }
         return await new Promise(async (resolve, reject) => {
-            request(requestparam, function (error, response, body) {
+            request(requestparam, async function (error, response, body) {
                 if (error) return reject(error);
                 if (response.statusCode != 200) return reject(response);
                 let result = {};
@@ -439,9 +439,9 @@ class biz {
 
 
     //预测比特币价格
-    static async quotationBTCPrice(redis) {
+    static async quotationPrice(param, redis) {
         let requestparam = {
-            url: "https://www.bluecatbot.com/api/quotation/?coin_type=0",
+            url: "https://www.bluecatbot.com/api/quotation/?coin_type=" + param,
             method: "GET",
             json: true,
             headers: {

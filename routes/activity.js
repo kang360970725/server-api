@@ -538,7 +538,7 @@
                 "Binance": 164.19
             }
         },
-        "quotationBTCPrice": {
+        "quotationBTCPrice": { BTC预测价格
             "id": 816115,
             "mex_high": 5333,压力位
             "mex_low": 5283.5,支撑位
@@ -551,6 +551,20 @@
             "volume_24h": null,
             "created": "2019-04-11T10:34:19.663751+08:00",
             "modified": "2019-04-11T10:34:19.663922+08:00"
+        },
+        "quotationETHPrice": { ETH预测价格
+            "id": 1162674,
+            "mex_high": 159.5,
+            "mex_low": 157.8,
+            "mex_last": 158.5,
+            "coin_type": 1,
+            "exchange": "",
+            "pair_currency": "",
+            "change_24_absolute": null,
+            "change_rate": null,
+            "volume_24h": null,
+            "created": "2019-05-06T17:09:30.877249+08:00",
+            "modified": "2019-05-06T17:09:30.877418+08:00"
         }
     }
 }

@@ -88,8 +88,13 @@ class ctrl {
     static async BTCPrice(redis) {
         console.log("开始获取BTC数据");
         let btcPrice = await activityBiz.nowBTCPrice(redis);
-        let quotationBTCPrice = await activityBiz.quotationBTCPrice(redis);
-        redis.set("btcPrice", JSON.stringify({btcPrice: btcPrice, quotationBTCPrice: quotationBTCPrice}))
+        let quotationBTCPrice = await activityBiz.quotationPrice(0, redis);
+        let quotationETHPrice = await activityBiz.quotationPrice(1, redis);
+        redis.set("btcPrice", JSON.stringify({
+            btcPrice: btcPrice,
+            quotationBTCPrice: quotationBTCPrice,
+            quotationETHPrice: quotationETHPrice
+        }))
         console.log("获取BTC数据结束");
     }
 
