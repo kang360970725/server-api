@@ -153,7 +153,10 @@ class biz {
         if (redisuserAccount && redisuserAccount.length > 0) {
             for (let user of redisuserAccount) {
                 console.log(`获取usersBotParam:${params.index}` + user.account)
-                let param = await biz.userBotParam({account:user.old_account,url:1}, params.redis)
+                let param = await biz.userBotParam({
+                    account: str.isEmpty(user.old_account) ? user.account : user.old_account,
+                    url: 1
+                }, params.redis)
                 if (param) {
                     param.now = new Date();
                     let paramStr = JSON.stringify(param)
@@ -188,7 +191,9 @@ class biz {
                         for (let user of temp) {
                             userAccount.push(user);
                             console.log("获取usersBotassets:" + user.account)
-                            let parameter = await biz.userBotParam({account: user.old_account}, params.redis);
+                            let parameter = await biz.userBotParam(
+                                {account: str.isEmpty(user.old_account) ? user.account : user.old_account},
+                                params.redis);
                             if (parameter) {
                                 let botParameter = await botDao.getBotParameter(connection, user)
                                 parameter.shortrange = botParameter.shortrange;
