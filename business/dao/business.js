@@ -629,6 +629,24 @@ class dao {
             });
         })
     }
+
+    //设置老账号
+    static async updateOldAccount(connection, query) {
+        var params = [];
+        let sql = () => `
+            UPDATE users set 
+            old_account = ?
+            where uuid =  ?
+        `;
+        params.push(query.account);
+        params.push(query.uuid);
+        return new Promise(async (resolve, reject) => {
+            connection.query(sql(), params, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            });
+        })
+    }
 }
 
 module.exports = dao

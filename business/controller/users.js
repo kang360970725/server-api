@@ -97,7 +97,7 @@ class ctrl {
         return await businessBiz.updateHead(params)
     }
 
-        static async myfriend(params) { //我的好友
+    static async myfriend(params) { //我的好友
         if (params.adminUser) {
             return;
         }
@@ -123,6 +123,22 @@ class ctrl {
         }
         return await businessBiz.setUserState(params)
     }
+
+    //设置老账号
+    static async setoldaccount(params) {
+        if (params.adminUser) {
+            if (str.isEmpty(params.uuid)) {
+                throw exception.ParamException('用户id[uuid]不能为空')
+            }
+        } else {
+            params.uuid = params.currentUser.uuid;
+        }
+        if (str.isEmpty(params.account)) {
+            throw exception.ParamException('老账号[account]不能为空')
+        }
+        return await businessBiz.updateOldAccount(params)
+    }
+
 }
 
 module.exports = ctrl;

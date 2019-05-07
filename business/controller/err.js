@@ -19,17 +19,12 @@ class ctrl {
             [params.key]: [],
             count: 0
         }
-        if ("boterr" == params.key
-            || "poolerr" == params.key
-            || "BTCerr" == params.key) {
-            let body = await params.redis.lrange(params.key, start, end);
-            let count = await params.redis.llen(params.key);
-            for (let temp of body) {
-                result[params.key].push(JSON.parse(temp));
-            }
-            result.count = count;
-            return result
+        let body = await params.redis.lrange(params.key, start, end);
+        let count = await params.redis.llen(params.key);
+        for (let temp of body) {
+            result[params.key].push(JSON.parse(temp));
         }
+        result.count = count;
         return result
     }
 }

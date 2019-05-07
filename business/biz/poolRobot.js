@@ -7,10 +7,15 @@ let dao = require("../../db_config/dao"),
     str = require("../../utils/stringHelper"),
     userDao = require('../../business/dao/business'),
     botDao = require('../../business/dao/bot.js'),
-
+    redis = require('../../utils/redisClientCluster').redis(require('../../db_config/config').redis_cluster),
     activityDao = require('../../business/dao/activity.js');
-const fs = require('fs');
-const path = require('path');
+
+async function buildErrMessage(errKey, requestParam, error) {
+    let errMessage = {param: requestParam, error: error};
+    await redis.lpush(errKey, JSON.stringify(errMessage), -1);
+    await redis.ltrim(errKey, 0, 500);
+    console.log(await redis.lrange(errKey, 0, 10))
+}
 
 class biz {
 
@@ -62,7 +67,7 @@ class biz {
                 resolve(body);
             });
         }).catch(async (error) => {
-            builderrMessage("poolerr", requestparam, error);
+            buildErrMessage("poolerr", requestparam, error);
         })
     }
 
@@ -89,7 +94,7 @@ class biz {
                 resolve(body);
             });
         }).catch(async (error) => {
-            builderrMessage("boterr", requestparam, error);
+            buildErrMessage("boterr", requestparam, error);
         })
     }
 
@@ -108,7 +113,7 @@ class biz {
                 resolve(body);
             });
         }).catch(async (error) => {
-            builderrMessage("cryptocurrencieserr", requestparam, error);
+            buildErrMessage("cryptocurrencieserr", requestparam, error);
         })
     }
 
@@ -147,9 +152,8 @@ class biz {
         let redisuserAccount = JSON.parse(await params.redis.get("user" + params.index));
         if (redisuserAccount && redisuserAccount.length > 0) {
             for (let user of redisuserAccount) {
-                user.url = 1;
                 console.log(`获取usersBotParam:${params.index}` + user.account)
-                let param = await biz.userBotParam(user, params.redis)
+                let param = await biz.userBotParam({account:user.old_account,url:1}, params.redis)
                 if (param) {
                     param.now = new Date();
                     let paramStr = JSON.stringify(param)
@@ -169,13 +173,13 @@ class biz {
                 params.pagesize = count;
                 params.index = 0;
                 let users = await userDao.getUsersList(connection, params);
-                users = [];
-                users.push({account: "Aperson"});
-                users.push({account: "DD"});
-                users.push({account: "Shulamith"});
-                users.push({account: "Yang666"});
-                users.push({account: "b5_bot"})
-                users.push({account: "flyboy1112"});
+                // users = [];
+                // users.push({account: "Aperson"});
+                // users.push({account: "DD"});
+                // users.push({account: "Shulamith"});
+                // users.push({account: "Yang666"});
+                // users.push({account: "b5_bot"})
+                // users.push({account: "flyboy1112"});
                 let userAccount = [];
                 if (users && users.length > 0) {
                     users = await biz.sliceArr(users, 5);
@@ -184,7 +188,7 @@ class biz {
                         for (let user of temp) {
                             userAccount.push(user);
                             console.log("获取usersBotassets:" + user.account)
-                            let parameter = await biz.userBotParam(user, params.redis);
+                            let parameter = await biz.userBotParam({account: user.old_account}, params.redis);
                             if (parameter) {
                                 let botParameter = await botDao.getBotParameter(connection, user)
                                 parameter.shortrange = botParameter.shortrange;
@@ -245,6 +249,112 @@ class biz {
             result.push(array.slice(start, end));
         }
         return result;
+    }
+
+    //当前比特币价格
+    static async nowBTCPrice(redis) {
+        let requestparam = {
+            url: "https://apioperate.btc123.com/api/market/index/noAuth/exchange/price",
+            method: "GET",
+            json: true,
+            headers: {
+                "content-type": "application/json",
+            },
+            body: JSON.stringify("")
+        }
+        return await new Promise(async (resolve, reject) => {
+            request(requestparam, async function (error, response, body) {
+                if (error) return reject(error);
+                if (response.statusCode != 200) return reject(response);
+                let result = {};
+                if (body.success) {
+                    for (let item of body.data) {
+                        if (item.currency == "BTC" || item.currency == "ETH") {
+                            result[item.currency] = {};
+                            let list = item.exchangeList;
+                            for (let i of list) {
+                                if (i.market == 'huobipro') {
+                                    result[item.currency]["huobi"] = i.usdPrice;
+                                }
+                                if (i.market == 'okex') {
+                                    result[item.currency]["OKEx"] = i.usdPrice;
+                                }
+                                if (i.market == 'binance') {
+                                    result[item.currency]["Binance"] = i.usdPrice;
+                                }
+                            }
+                        }
+                    }
+                }
+                resolve(result);
+            });
+        }).catch((error) => {
+            buildErrMessage("BTCerr", requestparam, error);
+        })
+    }
+
+
+    //预测比特币价格
+    static async quotationPrice(param, redis) {
+        let requestparam = {
+            url: "https://www.bluecatbot.com/api/quotation/?coin_type=" + param,
+            method: "GET",
+            json: true,
+            headers: {
+                "content-type": "application/json",
+            },
+            body: JSON.stringify("")
+        }
+        return await new Promise(async (resolve, reject) => {
+            request(requestparam, function (error, response, body) {
+                if (error) return reject(error);
+                if (response.statusCode != 200) return reject(response);
+                let result = {};
+                if (body && body.length > 0) {
+                    result = body[0];
+                }
+                resolve(result);
+            });
+        }).catch(async (error) => {
+            buildErrMessage("qBTCerr", requestparam, error);
+        })
+    }
+
+    //当前比特币价格老版本接口
+    static async nowBTCPrice_apibtc() {
+        return await new Promise(async (resolve, reject) => {
+            request({
+                url: "https://apibtc.btc123.com/v1/index/getNewIndexMarket?sign=BTC&type=1",
+                method: "GET",
+                json: true,
+                headers: {
+                    "content-type": "application/json",
+                },
+                body: JSON.stringify("")
+            }, function (error, response, body) {
+                if (error) return reject(error);
+                if (response.statusCode != 200) return reject(response);
+                let result = {};
+                if (body.code == 1) {
+                    let list = body.data[0].ticker;
+                    for (let i in list) {
+                        if (list[i].platFromSign == 'HUOBIPRO') {
+                            result["huobi"] = list[i].last;
+                            continue;
+                        }
+                        if (list[i].platFromSign == 'OKEX') {
+                            result["OKEX"] = list[i].last;
+                            continue;
+                        }
+                        if (list[i].platFromSign == 'BINANCE') {
+                            result["bian"] = list[i].last;
+                            continue;
+                        }
+                    }
+                }
+                resolve(result);
+            });
+        })
     }
 }
 

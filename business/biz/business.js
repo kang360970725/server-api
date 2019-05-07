@@ -305,6 +305,12 @@ class biz {
         })
     }
 
+    //设置老账号
+    static async updateOldAccount(params) {
+        return await dao.manageConnection(async (connection) => {
+            await businessDao.updateOldAccount(connection, params);
+        })
+    }
 }
 
 module.exports = biz;

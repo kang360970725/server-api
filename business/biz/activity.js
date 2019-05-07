@@ -1,10 +1,6 @@
 'use strict';
-
 let dao = require("../../db_config/dao"),
-    request = require("request"),
     Decimal = require("decimal.js"),
-    data = require('../../utils/data'),
-    config = require('../../db_config/config'),
     exception = require('../../utils/exception.js'),
     str = require("../../utils/stringHelper"),
     activityDao = require('../../business/dao/activity.js'),
@@ -12,17 +8,6 @@ let dao = require("../../db_config/dao"),
     deleteDao = require('../../business/dao/delete.js'),
     userDao = require('../../business/dao/business.js'),
     sysDao = require('../../business/dao/sysConfig.js');
-const redis = require('../../utils/redisClientCluster').redis(require('../../db_config/config').redis_cluster);
-
-var uuid = require('node-uuid');
-
-async function builderrMessage(errKey, requestparam, error) {
-    let errMessage = {param: requestparam, error: error};
-    await redis.lpush(errKey, JSON.stringify(errMessage), -1);
-    await redis.ltrim(errKey, 0, 500);
-    console.log(await redis.lrange(errKey, 0, 10))
-}
-
 class biz {
     //获取活动信息
     static async activitys(params) {
@@ -383,7 +368,6 @@ class biz {
             };
         })
     }
-
     //查询矿池申请
     static async queryPools(params) {
         return await dao.manageConnection(async (connection) => {
@@ -397,112 +381,6 @@ class biz {
                 "list": result,
                 "count": count
             };
-        })
-    }
-
-    //当前比特币价格
-    static async nowBTCPrice(redis) {
-        let requestparam = {
-            url: "https://apioperate.btc123.com/api/market/index/noAuth/exchange/price",
-            method: "GET",
-            json: true,
-            headers: {
-                "content-type": "application/json",
-            },
-            body: JSON.stringify("")
-        }
-        return await new Promise(async (resolve, reject) => {
-            request(requestparam, async function (error, response, body) {
-                if (error) return reject(error);
-                if (response.statusCode != 200) return reject(response);
-                let result = {};
-                if (body.success) {
-                    for (let item of body.data) {
-                        if (item.currency == "BTC" || item.currency == "ETH") {
-                            result[item.currency] = {};
-                            let list = item.exchangeList;
-                            for (let i of list) {
-                                if (i.market == 'huobipro') {
-                                    result[item.currency]["huobi"] = i.usdPrice;
-                                }
-                                if (i.market == 'okex') {
-                                    result[item.currency]["OKEx"] = i.usdPrice;
-                                }
-                                if (i.market == 'binance') {
-                                    result[item.currency]["Binance"] = i.usdPrice;
-                                }
-                            }
-                        }
-                    }
-                }
-                resolve(result);
-            });
-        }).catch((error) => {
-            builderrMessage("BTCerr", requestparam, error);
-        })
-    }
-
-
-    //预测比特币价格
-    static async quotationPrice(param, redis) {
-        let requestparam = {
-            url: "https://www.bluecatbot.com/api/quotation/?coin_type=" + param,
-            method: "GET",
-            json: true,
-            headers: {
-                "content-type": "application/json",
-            },
-            body: JSON.stringify("")
-        }
-        return await new Promise(async (resolve, reject) => {
-            request(requestparam, function (error, response, body) {
-                if (error) return reject(error);
-                if (response.statusCode != 200) return reject(response);
-                let result = {};
-                if (body && body.length > 0) {
-                    result = body[0];
-                }
-                resolve(result);
-            });
-        }).catch(async (error) => {
-            builderrMessage("qBTCerr", requestparam, error);
-        })
-    }
-
-    //当前比特币价格老版本接口
-    static async nowBTCPrice_apibtc() {
-        return await new Promise(async (resolve, reject) => {
-            request({
-                url: "https://apibtc.btc123.com/v1/index/getNewIndexMarket?sign=BTC&type=1",
-                method: "GET",
-                json: true,
-                headers: {
-                    "content-type": "application/json",
-                },
-                body: JSON.stringify("")
-            }, function (error, response, body) {
-                if (error) return reject(error);
-                if (response.statusCode != 200) return reject(response);
-                let result = {};
-                if (body.code == 1) {
-                    let list = body.data[0].ticker;
-                    for (let i in list) {
-                        if (list[i].platFromSign == 'HUOBIPRO') {
-                            result["huobi"] = list[i].last;
-                            continue;
-                        }
-                        if (list[i].platFromSign == 'OKEX') {
-                            result["OKEX"] = list[i].last;
-                            continue;
-                        }
-                        if (list[i].platFromSign == 'BINANCE') {
-                            result["bian"] = list[i].last;
-                            continue;
-                        }
-                    }
-                }
-                resolve(result);
-            });
         })
     }
 }

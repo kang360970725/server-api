@@ -421,7 +421,7 @@
                     "internal_no": "000001",
                     "creator": 5
                 },
-                "price_direction": -1,
+                "price_direction": -1, 涨跌情况 -1跌 1涨
                 "row_key": "1-1-USD",
                 "watch_info": {
                     "in_watch_list": false,
