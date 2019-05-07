@@ -1,4 +1,3 @@
-
 /**
  * @api {get} v1/users/getuser 获取会员信息
  * @apiName v1/users/getuser
@@ -241,5 +240,30 @@
     "status": 0,
     "message": "successful",
     }
+ */
+
+/**
+ * @api {get} v1/users/setoldaccount 绑定老账号
+ * @apiName v1/users/setoldaccount
+ * @apiGroup users
+ * @apiVersion 1.0.0
+ * @apiParam {String} account  老账号 不可空
+ * @apiParam {String} uuid 用户编号 可空 后台用户不可空
+ *
+ * @apiParamExample {json} 请求参数:
+ {
+       "account":"Aperson"
+}
+ *
+ *
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ *
+ {
+   {
+    "status": 0,
+    "message": "successful",
+    "date": "2019-05-07T04:42:43.748Z"
+}
  */
 
