@@ -339,15 +339,17 @@ class dao {
     static async getAccRecordChart(connection, query) { // 查询机器人状态
         let params = [];
         let limit = "LIMIT ";
+        let time = query.timeType == 1 ?"day":"hour";
+
         let where = [];
         let sql = () => `
-            SELECT * , HOUR(e.bot_set_time) as hour
+            SELECT * , ${time}(e.bot_set_time) as ${time}
              FROM (
             SELECT * FROM account_record 
             WHERE 
             ${where.join(' AND ')}
             ORDER BY bot_set_time DESC
-            ) e  GROUP BY HOUR(e.bot_set_time),bot_type ORDER BY bot_set_time asc ${limit};
+            ) e  GROUP BY ${time}(e.bot_set_time),bot_type ORDER BY bot_set_time DESC ${limit};
         `;
 
         params.push(query.account);

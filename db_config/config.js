@@ -16,7 +16,8 @@ module.exports =
             password: '123456',
             database:'dev_platform', // 前面建的user表位于这个数据库中
             // database:'member_platform', // 前面建的user表位于这个数据库中
-            port: 13306
+            port: 13306,
+            timezone:"08:00"
         }
         // mysql: {
         //     host: '45.195.143.40',
