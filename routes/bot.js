@@ -84,8 +84,9 @@
  * @apiGroup bot
  * @apiVersion 1.0.0
  *
- * @apiParam {String} limit  多少个小时以内的数据
- * @apiParam {String} botType  机器人类型 0  期货   1 现货
+ * @apiParam {String} limit  多少条数据
+ * @apiParam {String} timeType  1天 其他小时 默认小时
+ * @apiParam {String} botType  机器人类型 0期货 1现货
  *
  * @apiSuccessExample 成功返回结果:
  *  HTTP/1.1 200 OK
