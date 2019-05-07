@@ -535,7 +535,7 @@ class dao {
             params.push(query.unionId)
         }
         if (!str.isEmpty(query.desc)) {
-            fields.push("desc")
+            fields.push("`desc`")
             values.push("?")
             params.push(query.desc)
         }
@@ -816,13 +816,13 @@ class dao {
 
         if (!str.isEmpty(query.poolId)) {
             if (query.poolId == "ALL") {
-                where.push(` pool_id is not null `);
+                where.push(` (pool_id is not null and pool_id != '') `);
             } else {
                 let poolIds = query.poolId.split(',')
                 where.push(` pool_id in ( ${poolIds.join(',')} ) `);
             }
         } else {
-            where.push(" pool_id is null ")
+            where.push(" (pool_id is null or pool_id = '') ")
         }
 
         if (!str.isEmpty(query.unionId)) {

@@ -349,7 +349,7 @@ class dao {
             WHERE 
             ${where.join(' AND ')}
             ORDER BY bot_set_time DESC
-            ) e  GROUP BY ${time}(e.bot_set_time),bot_type ORDER BY bot_set_time DESC ${limit};
+            ) e  GROUP BY ${time}(e.bot_set_time),bot_type ORDER BY bot_set_time ASC ${limit};
         `;
 
         params.push(query.account);

@@ -1,12 +1,14 @@
 const
     exception = require('./exception'),
+        moment = require('moment');
+        moment.locale('zh-cn');
     baseData = (status, message, data) => {
         // 基本返回的数据格式
         return {
             status: status,
             message: message,
             data: data,
-            date: new Date()
+            date: moment().format('YYYY-MM-DD HH:mm:ss:SSS')
         }
     },
     self = {
