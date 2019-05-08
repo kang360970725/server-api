@@ -7,7 +7,7 @@ let dao = require("../../db_config/dao"),
     str = require("../../utils/stringHelper"),
     userDao = require('../../business/dao/business'),
     botDao = require('../../business/dao/bot.js'),
-    redis = require('../../utils/redisClientCluster').redis(require('../../db_config/config').redis_cluster),
+    redis = config.redisCli,
     activityDao = require('../../business/dao/activity.js');
 
 async function buildErrMessage(errKey, requestParam, error) {

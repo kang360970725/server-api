@@ -2,8 +2,8 @@ const Koa = require('koa')
 const app = new Koa()
 const views = require('koa-views')
 const session = require('koa-session');
-const redis = require('./utils/redisClientCluster').redis(require('./db_config/config').redis_cluster);
 const dbConfig = require('./db_config/config');
+const redis = dbConfig.redisCli;
 const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
@@ -48,6 +48,15 @@ const CONFIG = {
 };
 app.use(session(CONFIG, app));
 let whiteList = dbConfig.whiteList;
+
+async function sleep(time = 0) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve();
+        }, time);
+    })
+};
+
 app.use(async (ctx, next) => {
     let origin;
     if (origin = ctx.request.header.origin) {

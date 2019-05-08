@@ -1,7 +1,7 @@
 'use strict';
 let
     poolBiz = require('../business/biz/poolRobot.js'),
-    redis = require('../utils/redisClientCluster').redis(require('../db_config/config').redis_cluster)
+    redis = require('../db_config/config').redisCli;
 
 
 class ctrl {
