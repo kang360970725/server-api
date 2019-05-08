@@ -29,58 +29,10 @@ module.exports =
         //     port: 13338
         // }
         ,
-        redis: {
-            port: 6379,          // Redis port
-            host: '192.168.0.214',   // Redis host
-            prefix: 'sam:', //存诸前缀
-            ttl: 60 * 60 * 24 * 1000 * 1.5,  //过期时间
-            db: 0,
-            family: 4, // ip地址族
-            keepAlive: 0.1 * (1000 * 60 * 60), //保持连接24h
-            connectTimeout: 1000 * 5, //连接超时
-            readOnly: false
-        },
-        redis_cluster: [{
-            port: 7001,          // Redis port
-            host: '172.31.189.213',   // Redis host
-            prefix: 'sam:', //存诸前缀
-            // password:"mypwd!54321",
-            db: 0,
-        }, {
-            port: 7002,          // Redis port
-            host: '172.31.189.213',   // Redis host
-            prefix: 'sam:', //存诸前缀
-            // password:"mypwd!54321",
-            db: 0,
-        }, {
-            port: 7003,          // Redis port
-            host: '172.31.189.213',   // Redis host
-            prefix: 'sam:', //存诸前缀
-            // password:"mypwd!54321",
-            db: 0,
-        }, {
-            port: 7004,          // Redis port
-            host: '172.31.189.212',   // Redis host
-            prefix: 'sam:', //存诸前缀
-            // password:"mypwd!54321",
-            db: 0,
-        }, {
-            port: 7005,          // Redis port
-            host: '172.31.189.212',   // Redis host
-            prefix: 'sam:', //存诸前缀
-            // password:"mypwd!54321",
-            db: 0,
-        }, {
-            port: 7006,          // Redis port
-            host: '172.31.189.212',   // Redis host
-            prefix: 'sam:', //存诸前缀
-            // password:"mypwd!54321",
-            db: 0,
-        }],
-
         port: {
             doc: 3302,
             api: 3300
+            // api: 7088
         }
         ,
         url: {
@@ -89,7 +41,8 @@ module.exports =
         }
         ,
         host:
-            "http://47.244.142.147/source/"
+            "http://192.168.0.33/source/"
+        // "www.bluecat.pro/source/"
         ,
         pool: {
             token_name: "Authorization",
