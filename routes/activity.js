@@ -15,7 +15,7 @@
  * @apiParam {String} startTime  活动开始时间 可空
  * @apiParam {String} endTime  活动结束时间 可空
  * @apiParam {String} content 是否查询活动内容信息 非空查询 空不查询
- * @apiParam {String} type 类型 0活动 1产品 2矿池 3公告 4关于蓝猫 5新手帮助 空查询全部  查询多个用,号隔开
+ * @apiParam {String} type 类型 0活动 1产品 2矿池 3公告 4关于蓝猫 5新手帮助 6注册协议 空查询全部  查询多个用,号隔开
  * @apiParam {String} pageSize 数据量 非空
  * @apiParam {String} pageIndex 0开始 页数 非空
  *
@@ -505,7 +505,8 @@
             "createtime": "2019-03-29T03:17:44.000Z",
             "updatetime": "0000-00-00 00:00:00",
             "pool_id": "1",
-            "union_id": 6
+            "union_id": 6,
+            "account":"account" //账号
         }
     ]
 }

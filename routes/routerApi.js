@@ -36,6 +36,9 @@ if (fs.existsSync(ctrlRoot)) {
         } else {
             params = ctx.request.body;
         }
+
+        console.log(params)
+
         if(ctx.redis){
             params.redis = ctx.redis;
         }
@@ -78,13 +81,12 @@ if (fs.existsSync(ctrlRoot)) {
             }
         }
 
-
-
         let result = await asyncAction.call(instance, params);
         if (controller === 'users' && action === 'login') {
             ctx.session.user = result.data;
         }
         ctx.status = 200;
+        console.log(result)
         return result;
     })
 }

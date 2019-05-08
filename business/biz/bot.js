@@ -141,8 +141,8 @@ class biz {
             if (lastMonth[0] && lastMonth[0].bonus_base) {
                 bot.LastMonth = lastMonth[0].bonus_base;
             }
-
-            let Integral = integralDao.queryIntegral(connection, params);
+            params.id = params.currentUser.uuid
+            let Integral = await integralDao.queryIntegral(connection, params);
 
             bot.Integral = {
                 integral_current: 0,

@@ -6,9 +6,9 @@
  *
  * @apiParam {String} userId  用户id 可空 管理员必填
  * @apiParam {String} goodId  商品id 不可空
- * @apiParam {String} phone  收件人电话 不可空
- * @apiParam {String} name  收件人姓名 不可空
- * @apiParam {String} address  收件地址 不可空
+ * @apiParam {String} phone  收件人电话 可空
+ * @apiParam {String} name  收件人姓名 可空
+ * @apiParam {String} address  收件地址 可空
  * @apiParam {String} desc  描述 可空
  *
  * @apiParamExample {json} 请求参数:

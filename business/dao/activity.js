@@ -776,57 +776,57 @@ class dao {
         let where = [];
         var limit = "LIMIT ";
         let sql = () => `
-        SELECT * FROM user_pool_record 
+        SELECT up.*,u.account FROM user_pool_record up left join users u on u.uuid = up.user_uuid
         WHERE
         ${where.join(" AND ")}
-        order by updatetime DESC,createtime DESC
+        order by up.updatetime DESC,up.createtime DESC
         ${limit}
         ;
         `;
         where.push(" 1 = 1 ")
         if (!str.isEmpty(query.id)) {
-            where.push(" id = ? ")
+            where.push(" up.id = ? ")
             params.push(query.id);
         }
 
         if (!str.isEmpty(query.uuid)) {
-            where.push(" user_uuid = ? ")
+            where.push(" up.user_uuid = ? ")
             params.push(query.uuid);
         }
 
         if (!str.isEmpty(query.relname)) {
-            where.push(" user_relname like ? ")
+            where.push(" up.user_relname like ? ")
             params.push("%" + query.relname + "%");
         }
 
         if (!str.isEmpty(query.nickname)) {
-            where.push(" user_nickname like ? ")
+            where.push(" up.user_nickname like ? ")
             params.push("%" + query.nickname + "%");
         }
 
         if (!str.isEmpty(query.phone)) {
-            where.push(" user_phone like ? ")
+            where.push(" up.user_phone like ? ")
             params.push("%" + query.phone + "%");
         }
 
         if (!str.isEmpty(query.email)) {
-            where.push(" user_email like ? ")
+            where.push(" up.user_email like ? ")
             params.push("%" + query.email + "%");
         }
 
         if (!str.isEmpty(query.poolId)) {
             if (query.poolId == "ALL") {
-                where.push(` (pool_id is not null and pool_id != '') `);
+                where.push(` (up.pool_id is not null and up.pool_id != '') `);
             } else {
                 let poolIds = query.poolId.split(',')
-                where.push(` pool_id in ( ${poolIds.join(',')} ) `);
+                where.push(` up.pool_id in ( ${poolIds.join(',')} ) `);
             }
         } else {
-            where.push(" (pool_id is null or pool_id = '') ")
+            where.push(" (up.pool_id is null or up.pool_id = '') ")
         }
 
         if (!str.isEmpty(query.unionId)) {
-            where.push(" union_id = ? ")
+            where.push(" up.union_id = ? ")
             params.push(query.unionId);
         }
 
