@@ -46,7 +46,7 @@ class ctrl {
             throw exception.ParamException('类型[key]不能为空')
         }
         params.redis.set(params.key, params.value);
-        sysConfigBiz.add({type: params.type, value: params.value})
+        sysConfigBiz.add({type: params.key, value: params.value})
     }
 
     static async queryintegralconfig(params) {

@@ -115,7 +115,7 @@
  * @apiParamExample {json} 请求参数:
  {
        "key":"buyProductIntegraRatio",
-}
+  }
 
  * @apiSuccessExample 成功返回结果:
  *  HTTP/1.1 200 OK
