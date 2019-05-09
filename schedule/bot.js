@@ -52,3 +52,7 @@ schedule.scheduleJob("*/20 * * * *", function () {
 schedule.scheduleJob("*/60 * * * *", function () {
     botBiz.saveBotParam();
 });
+
+schedule.scheduleJob("*/30 * * * *", function () {
+    botBiz.config()
+});

@@ -4,7 +4,9 @@
 let str = require("../../utils/stringHelper"),
     data = require('../../utils/data'),
     exception = require('../../utils/exception.js'),
-    integralBiz = require('../../business/biz/integral');
+    integralBiz = require('../../business/biz/integral'),
+    sysConfigBiz = require('../../business/biz/sysConfig')
+;
 
 class ctrl {
     static async integrals(params) {
@@ -38,14 +40,21 @@ class ctrl {
             throw exception.PowerException();
         }
         if (str.isEmpty(params.value)) {
-            params.value = 0;
+            throw exception.ParamException('内容[value]不能为空')
         }
-        if ("registerInviterIntegral" == params.key
-            || "registerIntegral" == params.key
-            || "buyProductIntegraRatio" == params.key
-            || "btcurl" == params.key) {
-            params.redis.set(params.key, params.value);
+        if (str.isEmpty(params.key)) {
+            throw exception.ParamException('类型[key]不能为空')
         }
+        params.redis.set(params.key, params.value);
+        sysConfigBiz.add({type: params.type, value: params.value})
+    }
+
+    static async queryintegralconfig(params) {
+        if (!params.adminUser) {
+            throw exception.PowerException();
+        }
+        let configs = sysConfigBiz.query({type: params.key})
+        return configs;
     }
 }
 

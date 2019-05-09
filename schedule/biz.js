@@ -1,6 +1,8 @@
 'use strict';
 let
     poolBiz = require('../business/biz/poolRobot.js'),
+    sysConfigBiz = require('../business/biz/sysConfig.js'),
+    str = require('../utils/stringHelper'),
     redis = require('../db_config/config').redisCli;
 
 
@@ -55,6 +57,18 @@ class ctrl {
 
     static async cryptocurrencies() {
         poolBiz.saveCryptocurrencies({redis: redis});
+    }
+
+    static async config() {
+        let configs = await sysConfigBiz.query({});
+        if (configs && configs.length > 0) {
+            for (let config of configs) {
+                let value = await redis.get(config.sys_type);
+                if (str.isEmpty(value)) {
+                    redis.set(config.sys_type, config.sys_value);
+                }
+            }
+        }
     }
 }
 

@@ -15,6 +15,12 @@ class biz {
             return await sysDao.add(connection, params);
         })
     }
+
+    static async query(params) {
+        return await dao.manageConnection(async (connection) => {
+            return await sysDao.query(connection, params);
+        })
+    }
     static async uploadfiles(params) {
         try {
             const files = params.files; // 获取上传文件

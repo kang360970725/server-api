@@ -55,11 +55,13 @@ class dao {
         let where = [];
         var limit = "LIMIT ";
         let sql = () => `
-        SELECT * FROM sys_config 
+        SELECT * FROM  ( SELECT * FROM sys_config 
         WHERE
         ${where.join(" AND ")}
         order by createtime DESC
         ${limit}
+        ) A
+	    GROUP BY sys_type
         ;
         `;
         where.push(" 1 = 1 ")

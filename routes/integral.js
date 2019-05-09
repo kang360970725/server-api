@@ -79,7 +79,7 @@
 
 
 /**
- * @api {get} v1/integral/saveintegralconfig 积分配置
+ * @api {get} v1/integral/saveintegralconfig 系统配置
  * @apiName v1/integral/saveintegralconfig
  * @apiGroup integral
  * @apiVersion 1.0.0
@@ -99,6 +99,37 @@
  *
  {
     "status": 0,
+    "message": "successful"
+}
+ */
+
+/**
+ * @api {get} v1/integral/queryintegralconfig 系统配置查询
+ * @apiName v1/integral/queryintegralconfig
+ * @apiGroup integral
+ * @apiVersion 1.0.0
+ *
+ *
+ * @apiParam {String} key  配置key值 不可空 inviterIntegral 邀请注册积分 integral 注册积分 buyProductIntegraRatio 购买产品价格与积分比例  btcurl 比特币支付地址 sys_img 比特币支付二位码图片地址
+ *
+ * @apiParamExample {json} 请求参数:
+ {
+       "key":"buyProductIntegraRatio",
+}
+
+ * @apiSuccessExample 成功返回结果:
+ *  HTTP/1.1 200 OK
+ *
+ {
+    "status": 0,
+    "data": [
+        {
+            "id": 132,
+            "sys_type": "sys_img", 配置类型
+            "sys_value": "http://192.168.0.33/source/2019-05-09/0.12750279240594753.png", 配置内容
+            "createtime": "2019-05-09 16:24:48"
+        }
+    ],
     "message": "successful"
 }
  */
