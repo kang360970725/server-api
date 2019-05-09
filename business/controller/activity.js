@@ -183,6 +183,13 @@ class ctrl {
                 if (str.isEmpty(params.token)) {
                     throw exception.ParamException('矿池token[token]不能为空')
                 }
+            } else if (params.isValid == 0) {
+                if (str.isEmpty(params.poolId)) {
+                    throw exception.ParamException('矿池id[poolId]不能为空')
+                }
+                if (str.isEmpty(params.token)) {
+                    throw exception.ParamException('矿池token[token]不能为空')
+                }
             }
         } else if (params.currentUser) {
             params.isValid = "";//审核中
@@ -205,13 +212,14 @@ class ctrl {
     //删除活动
     static async delete(params) {
         if (params.currentUser) {
-           throw exception.PowerException();
+            throw exception.PowerException();
         }
         if (str.isEmpty(params.id)) {
             throw exception.ParamException('活动编号[id]不能为空')
         }
         return await activityBiz.delete(params)
     }
+
     //矿池申请记录查询
     static async pool(params) {
         if (params.currentUser) {

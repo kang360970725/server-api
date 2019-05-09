@@ -393,7 +393,7 @@
  *
  * @apiParam {String} id  申请加入矿池记录id 不可空
  * @apiParam {String} value  活动id 可空
- * @apiParam {String} isValid  是否有效 可空 管理员需传 0有效 1无效
+ * @apiParam {String} isValid  是否有效 可空 管理员需传 0有效 -1无效
  * @apiParam {String} nickname  昵称 可空
  * @apiParam {String} relname  真名 可空
  * @apiParam {String} phone  电话 可空 邮件和电话必须有一个

@@ -99,7 +99,7 @@ class dao {
         var limit = "LIMIT ";
         var group = "GROUP BY activity_id ";
         var letfJoin = "LEFT JOIN user_union_info u on u.user_info_union = a.activity_id and u.user_info_type = a.type and u.is_valid = 0 " +
-                       "LEFT JOIN users us on u.user_id = us.uuid ";
+            "LEFT JOIN users us on u.user_id = us.uuid ";
         let sql = () => `
         SELECT 
         ${content.join(' , ')}
@@ -127,7 +127,7 @@ class dao {
             content.push(' GROUP_CONCAT(us.head_portrait) as heads ');
             content.push(' COUNT(DISTINCT us.uuid) as uv ');
 
-        }else{
+        } else {
             group = '';
             letfJoin = '';
         }
@@ -519,11 +519,6 @@ class dao {
             values.push("?")
             params.push(query.amount)
         }
-        if (!str.isEmpty(query.updatetime)) {
-            fields.push("updatetime")
-            values.push("?")
-            params.push(query.updatetime)
-        }
         if (!str.isEmpty(query.poolId)) {
             fields.push("pool_id")
             values.push("?")
@@ -753,6 +748,7 @@ class dao {
             sets.push(" pool_id = ? ")
             params.push(query.poolId);
         }
+
         if (!str.isEmpty(query.token)) {
             sets.push(" token = ? ")
             params.push(query.token);
@@ -762,6 +758,9 @@ class dao {
         if (sets.length <= 0) {
             return
         }
+
+        sets.push(" updatetime = now() ")
+
         return new Promise(async (resolve, reject) => {
             connection.query(sql(), params, (err, result) => {
                 if (err) return reject(err);
@@ -776,7 +775,9 @@ class dao {
         let where = [];
         var limit = "LIMIT ";
         let sql = () => `
-        SELECT up.*,u.account FROM user_pool_record up left join users u on u.uuid = up.user_uuid
+        SELECT up.*,u.account FROM user_pool_record up 
+        left join users u on u.uuid = up.user_uuid
+        left join user_union_info uu on uu.id = up.union_id
         WHERE
         ${where.join(" AND ")}
         order by up.updatetime DESC,up.createtime DESC
@@ -816,7 +817,7 @@ class dao {
 
         if (!str.isEmpty(query.poolId)) {
             if (query.poolId == "ALL") {
-                where.push(` (up.pool_id is not null and up.pool_id != '') `);
+                where.push(` (up.pool_id is not null and up.pool_id != '' and uu.is_valid != -1) `);
             } else {
                 let poolIds = query.poolId.split(',')
                 where.push(` up.pool_id in ( ${poolIds.join(',')} ) `);
@@ -848,55 +849,57 @@ class dao {
         let params = [];
         let where = [];
         let sql = () => `
-        SELECT count(1) FROM user_pool_record 
+        SELECT count(up.id) as count FROM user_pool_record up 
+        left join users u on u.uuid = up.user_uuid
+        left join user_union_info uu on uu.id = up.union_id
         WHERE
         ${where.join(" AND ")}
         ;
         `;
         where.push(" 1 = 1 ")
         if (!str.isEmpty(query.id)) {
-            where.push(" id = ? ")
+            where.push(" up.id = ? ")
             params.push(query.id);
         }
 
         if (!str.isEmpty(query.uuid)) {
-            where.push(" user_uuid = ? ")
+            where.push(" up.user_uuid = ? ")
             params.push(query.uuid);
         }
 
         if (!str.isEmpty(query.relname)) {
-            where.push(" user_relname like ? ")
+            where.push(" up.user_relname like ? ")
             params.push("%" + query.relname + "%");
         }
 
         if (!str.isEmpty(query.nickname)) {
-            where.push(" user_nickname like ? ")
+            where.push(" up.user_nickname like ? ")
             params.push("%" + query.nickname + "%");
         }
 
         if (!str.isEmpty(query.phone)) {
-            where.push(" user_phone like ? ")
+            where.push(" up.user_phone like ? ")
             params.push("%" + query.phone + "%");
         }
 
         if (!str.isEmpty(query.email)) {
-            where.push(" user_email like ? ")
+            where.push(" up.user_email like ? ")
             params.push("%" + query.email + "%");
         }
 
         if (!str.isEmpty(query.poolId)) {
             if (query.poolId == "ALL") {
-                where.push(` pool_id is not null `);
+                where.push(` (up.pool_id is not null and up.pool_id != '' and uu.is_valid != -1) `);
             } else {
                 let poolIds = query.poolId.split(',')
-                where.push(` pool_id in ( ${poolIds.join(',')} ) `);
+                where.push(` up.pool_id in ( ${poolIds.join(',')} ) `);
             }
         } else {
-            where.push(" pool_id is null ")
+            where.push(" (up.pool_id is null or up.pool_id = '') ")
         }
 
         if (!str.isEmpty(query.unionId)) {
-            where.push(" union_id = ? ")
+            where.push(" up.union_id = ? ")
             params.push(query.unionId);
         }
         return new Promise(async (resolve, reject) => {
