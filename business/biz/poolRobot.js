@@ -14,7 +14,7 @@ async function buildErrMessage(errKey, requestParam, error) {
     let errMessage = {param: requestParam, error: error};
     await redis.lpush(errKey, JSON.stringify(errMessage), -1);
     await redis.ltrim(errKey, 0, 500);
-    console.log(await redis.lrange(errKey, 0, 10))
+    console.log(errMessage)
 }
 
 class biz {
@@ -188,8 +188,8 @@ class biz {
                     users = await biz.sliceArr(users, 5);
                     let i = 0;
                     for (let temp of users) {
+                        let userAccounttemp = [];
                         for (let user of temp) {
-                            userAccount.push(user);
                             console.log("获取usersBotassets:" + user.account)
                             let parameter = await biz.userBotParam(
                                 {account: str.isEmpty(user.old_account) ? user.account : user.old_account},
@@ -201,9 +201,11 @@ class biz {
                                 let parameterStr = JSON.stringify(parameter);
                                 console.log("获取usersBotassets:" + parameterStr)
                                 params.redis.set(user.account + "_userassets", parameterStr)
+                                userAccount.push(user);
+                                userAccounttemp.push(user)
                             }
                         }
-                        params.redis.set("user" + i, JSON.stringify(temp))
+                        params.redis.set("user" + i, JSON.stringify(userAccounttemp))
                         i++;
                     }
                     params.redis.set("users", JSON.stringify(userAccount))
