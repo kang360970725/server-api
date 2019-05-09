@@ -26,6 +26,7 @@ if (fs.existsSync(ctrlRoot)) {
             "users/login",
             "users/register",
             "users/forgotPwd",
+            "activity/activitys",
             "sendCode/sendCode"
         ];
     router.all('/:controller/:action', async function filter(ctx, next) {
