@@ -227,7 +227,7 @@ class biz {
 
     static async buildcry(params) {
         let parameters = await biz.cryptocurrencies(params, params.redis);
-        let type = params.url == 2 ? 0 : 1;
+        let type = params.url == 2 ? 1 : 0; // 0：bitmex 期货     1：huobi 现货
         let tocurrencie = {};
         if (parameters || parameters.length > 0) {
             for (let temp of parameters) {

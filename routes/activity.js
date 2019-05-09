@@ -392,13 +392,13 @@
  * @apiVersion 1.0.0
  *
  * @apiParam {String} id  申请加入矿池记录id 不可空
- * @apiParam {String} value  活动id 不可空
+ * @apiParam {String} value  活动id 可空
  * @apiParam {String} isValid  是否有效 可空 管理员需传 0有效 1无效
- * @apiParam {String} nickname  昵称 不可空
- * @apiParam {String} relname  真名 不可空
+ * @apiParam {String} nickname  昵称 可空
+ * @apiParam {String} relname  真名 可空
  * @apiParam {String} phone  电话 可空 邮件和电话必须有一个
  * @apiParam {String} email  邮件 可空
- * @apiParam {String} amount  币量 不可空
+ * @apiParam {String} amount  币量 可空
  * @apiParam {String} poolId  矿池id 可空 管理员传入字段 如果该字段不为空 则isValid为 0
  * @apiParam {String} token  矿池token 可空 管理员传入字段 如果矿池id不为空 则token不能为空
  *
