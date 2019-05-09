@@ -50,7 +50,7 @@
  * @apiVersion 1.0.0
  *
  * @apiParam {String} uuid  用户id 后台用户使用 可空
- * @apiParam {String} name  用户名称 不可空
+ * @apiParam {String} name  用户名称 可空
  * @apiParam {String} phone  用户电话 可空
  * @apiParam {String} email  用户email 可空
  * @apiParam {String} content  投诉建议内容 不可空

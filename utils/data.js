@@ -8,7 +8,7 @@ const
             status: status,
             message: message,
             data: data,
-            date: moment().format('YYYY-MM-DD HH:mm:ss:SSS')
+            date: moment().format('YYYY-MM-DD HH:mm:ss')
         }
     },
     self = {
