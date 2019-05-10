@@ -123,7 +123,11 @@ class ctrl {
                 throw exception.ParamException('账号[account]不能为空')
             }
         }
-        return await botBiz.getAccRecordChart(params)
+        let res = await botBiz.getAccRecordChart(params);
+        if (res && res.length > 1) {
+            res = res.reverse();
+        }
+        return res
     }
 
     static async getAccRecordList(params) {

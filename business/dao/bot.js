@@ -349,7 +349,7 @@ class dao {
             WHERE 
             ${where.join(' AND ')}
             ORDER BY bot_set_time DESC
-            ) e  GROUP BY ${time}(e.bot_set_time),bot_type ORDER BY bot_set_time ASC ${limit};
+            ) e  GROUP BY ${time}(e.bot_set_time) ORDER BY bot_set_time DESC ${limit};
         `;
 
         params.push(query.account);
@@ -382,8 +382,10 @@ class dao {
             (SELECT * FROM account_record WHERE 
             ${where.join(' AND ')}
             
-            ORDER BY bot_set_time DESC) e 
-            GROUP BY day ,bot_type desc ${limit};
+            ORDER BY bot_set_time DESC ) e 
+            GROUP BY day ,bot_type 
+            ORDER BY day
+            desc ${limit};
         `;
         params.push(query.account);
         where.push(' user_account = ? ');
