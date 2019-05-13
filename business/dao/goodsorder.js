@@ -102,74 +102,76 @@ class dao {
         var limit = "LIMIT ";
         var orderBy = "ORDER BY ";
         let rule = "desc";
-        var order = "order_time ";
+        var order = "go.order_time ";
         let sql = () => `
         SELECT 
         ${content.join(' , ')}
-        FROM goods_order
+        FROM goods_order go 
+        LEFT JOIN goods g ON go.good_id = g.good_id
         WHERE ${where.join(' and ')}
         ${orderBy}
         ${limit};
         `;
         let params = [];
-        content.push(' order_id ');
-        content.push(' order_no ');
-        content.push(' order_time ');
-        content.push(' good_id ');
-        content.push(' good_price ');
-        content.push(' pay_price ');
-        content.push(' `desc` ');
-        content.push(' address ');
-        content.push(' user_id ');
-        content.push(' phone ');
-        content.push(' name ');
-        content.push(' state ');
-        content.push(' waybill_no ');
+        content.push(' go.order_id ');
+        content.push(' go.order_no ');
+        content.push(' go.order_time ');
+        content.push(' go.good_id ');
+        content.push(' go.good_price ');
+        content.push(' go.pay_price ');
+        content.push(' go.`desc` ');
+        content.push(' go.address ');
+        content.push(' go.user_id ');
+        content.push(' go.phone ');
+        content.push(' go.name ');
+        content.push(' go.state ');
+        content.push(' go.waybill_no ');
+        content.push(' g.good_name ');
 
 
         where.push(' 1 = 1 ');
         if (!str.isEmpty(query.orderId)) {
-            where.push(' order_id = ? ');
+            where.push(' go.order_id = ? ');
             params.push(query.orderId);
         }
 
         if (!str.isEmpty(query.orderNo)) {
-            where.push(' order_no like ? ');
+            where.push(' go.order_no like ? ');
             params.push("%" + query.orderNo + "%");
         }
 
         if (!str.isEmpty(query.name)) {
-            where.push(' name like ? ');
+            where.push(' go.name like ? ');
             params.push("%" + query.name + "%");
         }
 
         if (!str.isEmpty(query.phone)) {
-            where.push(' phone like ? ');
+            where.push(' go.phone like ? ');
             params.push("%" + query.phone + "%");
         }
 
         if (query.startTime) {
-            where.push(' order_time >= ? ');
+            where.push(' go.order_time >= ? ');
             params.push(query.startTime);
         }
 
         if (query.endTime) {
-            where.push(' order_time <= ? ');
+            where.push(' go.order_time <= ? ');
             params.push(query.endTime);
         }
 
         if (!str.isEmpty(query.userId)) {
-            where.push(' user_id = ? ');
+            where.push(' go.user_id = ? ');
             params.push(query.userId);
         }
 
         if (!str.isEmpty(query.state)) {
-            where.push(' state = ? ');
+            where.push(' go.state = ? ');
             params.push(query.state);
         }
 
         if (!str.isEmpty(query.waybillNo)) {
-            where.push(' waybill_no = ? ');
+            where.push(' go.waybill_no = ? ');
             params.push(query.waybillNo);
         }
 
