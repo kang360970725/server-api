@@ -19,6 +19,9 @@
                 "begin": "2019-03-25T21:58:00+08:00",
                 "end": "2019-05-25T21:58:00+08:00",
                 "cost": 20.058,
+                "maxRetracement" : 0,最大回撤
+                "maxProfit" : 0,最大收益
+                "currntProfit":0,当前收益
                 "balance_total": 15.147972359999999,
                 "users": [
                     {
