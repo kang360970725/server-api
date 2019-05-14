@@ -14,9 +14,9 @@ class ctrl {
             for (let item of result) {
                 let balance = await poolBiz.minepools({poolId: item.id, balance: 1})
                 let info = await poolBiz.minepools({poolId: item.id})
-                info.maxRetracement = 0;
-                info.maxProfit = 0;
-                info.currntProfit = 0;
+                item.maxRetracement = 0;
+                item.maxProfit = 0;
+                item.currntProfit = 0;
                 redis.set("poolinfo_" + item.id, JSON.stringify(info))
                 redis.set("poolbalance_" + item.id, JSON.stringify(balance))
                 item.balance = balance.daybalance_set;
