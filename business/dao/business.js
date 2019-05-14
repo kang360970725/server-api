@@ -618,7 +618,8 @@ class dao {
         let sql = () => `
             UPDATE users set 
             starttime = IFNULL(starttime,now()),
-            endtime = DATE_add(IFNULL(endtime,now()),INTERVAL ${query.time} month) 
+            endtime = DATE_add(IFNULL(endtime,now()),INTERVAL ${query.time} month),
+            bot_type = 1 
             where uuid =  ?
         `;
         params.push(query.uuid);
