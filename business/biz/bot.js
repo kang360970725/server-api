@@ -147,14 +147,15 @@ class biz {
 
             bot.Integral = {
                 integral_current: 0,
-                integral_level: 0,
+                integral_level: "普通会员",
                 integral_total: 0
             };
             if (Integral && Integral[0]) {
                 bot.Integral = Integral[0];
             }
+            let integral_level = parseInt(bot.Integral.integral_total / 100)
             //积分换算等级
-            bot.Integral.integral_level = parseInt(bot.Integral.integral_total / 100);
+            bot.Integral.integral_level = integral_level < 1999 ? "普通会员" : integral_level < 5999 ? "黄金会员" : integral_level < 17999 ? "铂金会员" : "钻石会员";
             return bot;
         })
     }

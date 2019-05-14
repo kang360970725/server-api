@@ -178,7 +178,7 @@
             "user_uuid": "001332", 用户编号
             "integral_total": 240, 历史总积分
             "integral_current": 0, 当前余额积分
-            "integral_level": 0 积分等级
+            "integral_level": "普通会员" 积分等级
         }
     },
     "date": "2019-04-25T08:56:26.728Z"
