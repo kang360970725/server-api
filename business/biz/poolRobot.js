@@ -72,6 +72,36 @@ class biz {
     }
 
 
+    static async updateBotParam(params) {
+        return await new Promise(async (resolve, reject) => {
+            let paramsUrl = params.url == 1 ? "bluecat" : "";
+            let tokenValue = params && !str.isEmpty(params.tokenValue) ? params.tokenValue : config.pool.token_value;
+            let token = config.pool.token_type + tokenValue;
+            let url = `https://www.bluecatbot.com/${paramsUrl}api/parameters/${params.account}/update/`;
+            if (!params.body) {
+                return;
+            }
+            let requestparam = {
+                url: url,
+                method: "PUT",
+                json: true,
+                headers: {
+                    [config.pool.token_name]: token,
+                    "content-type": "application/json"
+                },
+                body: params.body
+            }
+            request(requestparam, function (error, response, body) {
+                if (error) return reject(error);
+                if (response.statusCode != 200) return reject(response);
+                resolve(body);
+            });
+        }).catch(async (error) => {
+            buildErrMessage("updateBotParamerr", requestparam, error);
+        })
+    }
+
+
     static async userBotParam(params, redis) {
         let paramsUrl = params.url == 1 ? "params" : "assets";
         let tokenValue = params && !str.isEmpty(params.tokenValue) ? params.tokenValue : config.pool.token_value;

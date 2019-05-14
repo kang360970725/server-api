@@ -3,6 +3,7 @@
 let dao = require("../../db_config/dao"),
     data = require('../../utils/data'),
     botDao = require('../../business/dao/bot'),
+    poolRobot = require('./poolRobot'),
     integralDao = require('../../business/dao/integral'),
     businessDao = require('../../business/dao/business');
 
@@ -45,7 +46,7 @@ class biz {
                     let balance = await params.redis.get("poolbalance_" + queryPool[i])
                     pool = JSON.parse(pool);
                     balance = JSON.parse(balance);
-                    if(balance && pool){
+                    if (balance && pool) {
                         pool.balance = balance.daybalance_set;
                         pollList.push(pool);
                     }
@@ -192,8 +193,40 @@ class biz {
     //修改bot相关参数
     static async exitBotParm(params) {
         return await dao.manageConnection(async (connection) => {
+            params.bot_type = params.bot_type ? params.bot_type : 0
             //修改会员bot参数
-            await botDao.setBotPram(connection, params)
+            await botDao.setBotPram(connection, params);
+
+            await poolRobot.updateBotParam({
+                account: params.currentUser.account,
+                url: params.bot_type,
+                body: params.bot_type == 0 ? { //期货
+                    "entry": params.entry,                   //---自定义头寸
+                    "trendfollow": params.trendfollow,             //---趋势交易
+                    "mm": params.mm,                      //---自动管理MM   0是关闭，1是启动
+                    "mmpercent": params.mmpercent,            // ---MM头寸比例
+                    "nanpin": params.nanpin,                //---自定义补仓
+                    "maxnanpin": params.maxnanpin,              //---最大补仓次数
+                    "mmnanpin": params.mmnanpin,             //MM每次补仓的比例
+                    "maxleverage": params.maxleverage,            //----最大持仓
+                    "leverage": params.leverage,                //---最大杠杆
+                    "sleep": params.sleep,                  //循环时间推荐40或70，单位秒
+                    "longrange": params.longrange,              //---多军止盈间距
+                    "longstop": params.longstop,               //---多军补仓间距
+                    "shortrange": params.shortrange,             //---空军止盈间距
+                    "shortstop": params.shortstop,              //---空军补仓间距
+                    "losscut": params.losscut,                 //根据钱包余额实时计算止损金额。(1表示不止损)
+                    "time": params.time,                    //k线指标:1表示1分钟线，5表示5分钟线
+                    "longstopx": params.longstopx,            //---多军点位止损
+                    "shortstopx": params.shortstopx,           //---空军点位止损
+                    "longorder": params.longorder,               //多军的单边交易    0关闭多军交易  1打开(市价建仓交易)  2打开(限价建仓交易)
+                    "shortorder": params.shortorder,              //空军的单边交易    0关闭空军交易  1打开(市价建仓交易)  2打开(限价建仓交易)
+                    "nanpin_cancel": params.nanpin_cancel,           //0无效,0.5空手道,1全仓认输,2.0乾坤大挪移
+                    "nanpin_order": params.nanpin_order,            //2=急速手续费,1=高速补,0=低速补                ---补仓模式
+                    "doten": params.doten
+                } : undefined //现货 先屏蔽
+            })
+
             let retUser = {
                 desc: '修改成功'
             };
