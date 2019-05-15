@@ -41,7 +41,7 @@ schedule.scheduleJob("*/1 * * * *", function () {
 });
 
 // 期货现货
-schedule.scheduleJob("*/1 * * * *", function () {
+schedule.scheduleJob("*/10 * * * * *", function () {
     botBiz.cryptocurrencies();
 });
 
